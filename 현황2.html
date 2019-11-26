@@ -17,7 +17,7 @@
         <button type = "button" onclick="load()">검색</button>
     </form>
     </div>
-    <div id="view">
+    <div id="view" style = "visibility: hidden;">
         <p>남은 개수:</p><input id = "n"/><br/>
         <p>가져갈 개수:</p>
             <input id = "minus" type = "text" value = "0"/>
@@ -38,6 +38,7 @@
             
             document.getElementById("minus").addEventListener("input", update2);
             document.getElementById("plus").addEventListener("input", update2);
+            document.getElementById("view").style.visibility = "visible";
         }
         var plus;
         var minus;
