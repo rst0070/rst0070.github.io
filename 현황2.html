@@ -35,26 +35,35 @@
             place = parseInt(place);
             
             document.getElementById("n").value = value[place];
+            
+            document.getElementById("minus").addEventListener("input", update2);
+            document.getElementById("plus").addEventListener("input", update2);
         }
         var plus;
         var minus;
-        function update(){
+        var tmp;
+        function update2(e){
             plus = document.getElementById("plus").value;
             minus = document.getElementById("minus").value;
             
             if( isNaN(plus) || isNaN(minus)
               || plus.length<1 || minus.length < 1){
-                alert("숫자가 아닌 입력입니다.");
+                document.getElementById("n").value = "올바른 입력이 아님";
             }else{
                 plus = parseInt(plus);
                 minus = parseInt(minus);
-                value[place] = value[place] + plus - minus;
-                if(value[place]<0){
-                    alert("요청한 만큼의 여분이 존재하지 않습니다.");
-                    value[place] = value[place] - plus + minus;
+                tmp = value[place] + plus - minus;
+                if(tmp<0){
+                    document.getElementById("n").value = "요청한 만큼의 여분이 존재하지 않습니다.";
+                    tmp = value[place] - plus + minus;
                 }else
-                    document.getElementById("n").value = value[place];
+                    document.getElementById("n").value = tmp;
             } 
+        }
+        function update(){
+            value[place] = tmp;
+            document.getElementById("plus").value = 0;
+            document.getElementById("minus").value = 0;
         }
         
     </script>
