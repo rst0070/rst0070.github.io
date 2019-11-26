@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta charset = "utf-8"/>
+    <style>
+        body{
+            display: grid;
+        }
+    </style>
+    
+</head>
+<body>
+    <form>
+        <select id = "value_place" name="위치">
+            <option value = "0" selected>오석관</option>
+            <option value = "1">창의관</option>
+        </select>
+        <button type = "button" onclick="load()">검색</button>
+    </form>
+    </div>
+    <div id="view">
+        <div style = "display: grid; grid-template-columns: auto auto;"><p>남은 개수:</p><input id = "n"/></div>
+        <p>가져갈 개수:</p>
+            <input id = "minus" type = "text" value = "0"/>
+        <p>채워 넣을 개수:</p>
+            <input id = "plus" type = "text" value = "0"/><br/><br/>
+        <button type = "button" onclick="update()">적용</button>
+    </div>
+   
+    <script>
+        var value = [50, 40];
+        var place;
+        function load(){
+            place = document.getElementById("value_place");
+            place = place.options[place.selectedIndex].value;
+            place = parseInt(place);
+            
+            document.getElementById("n").value = value[place];
+        }
+        var plus;
+        var minus;
+        function update(){
+            plus = document.getElementById("plus").value;
+            minus = document.getElementById("minus").value;
+            
+            if( isNaN(plus) || isNaN(minus)
+              || plus.length<1 || minus.length < 1){
+                alert("숫자가 아닌 입력입니다.");
+            }else{
+                plus = parseInt(plus);
+                minus = parseInt(minus);
+                value[place] = value[place] + plus - minus;
+                if(value[place]<0){
+                    alert("요청한 만큼의 여분이 존재하지 않습니다.");
+                    value[place] = value[place] - plus + minus;
+                }else
+                    document.getElementById("n").value = value[place];
+            } 
+        }
+        
+    </script>
+    
+</body>
+</html>
