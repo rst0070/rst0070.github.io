@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>Lagrange</title>
+		<description>a minimalist Jekyll theme</description>
+		<link></link>
+		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>My Name is</title>
+				
+					<dc:creator>wonbin</dc:creator>
+				
+				
+					<description>&lt;p&gt;```java
+import java.util.Scanner;
+class Main{&lt;/p&gt;
+</description>
+				
+				<pubDate>Sun, 12 Jan 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/algorithm/myname.html</link>
+				<guid isPermaLink="true">http://localhost:4000/algorithm/myname.html</guid>
+			</item>
+		
+			<item>
+				<title>Welcome to Lagrange!</title>
+				
+					<dc:creator>Paul Le</dc:creator>
+				
+				
+					<description>&lt;p&gt;Lagrange is a minimalist Jekyll theme. The purpose of this theme is to provide a simple, clean, content-focused blogging platform for your personal site or blog. Below you can find everything you need to get started.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 01 Jan 2016 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/journal/welcome-to-lagrange.html</link>
+				<guid isPermaLink="true">http://localhost:4000/journal/welcome-to-lagrange.html</guid>
+			</item>
+		
+			<item>
+				<title>Getting Started</title>
+				
+					<dc:creator>Paul Le</dc:creator>
+				
+				
+					<description>&lt;h1 id=&quot;lagrange&quot;&gt;Lagrange&lt;/h1&gt;
+</description>
+				
+				<pubDate>Sat, 10 Oct 2015 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/journal/getting-started.html</link>
+				<guid isPermaLink="true">http://localhost:4000/journal/getting-started.html</guid>
+			</item>
+		
+			<item>
+				<title>Text Formatting Examples</title>
+				
+					<dc:creator>Paul Le</dc:creator>
+				
+				
+					<description>&lt;h1 id=&quot;markdown-support&quot;&gt;Markdown Support&lt;/h1&gt;
+</description>
+				
+				<pubDate>Wed, 01 Jan 2014 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/journal/text-formatting-examples.html</link>
+				<guid isPermaLink="true">http://localhost:4000/journal/text-formatting-examples.html</guid>
+			</item>
+		
+			<item>
+				<title>Learning Resources</title>
+				
+					<dc:creator>Paul Le</dc:creator>
+				
+				
+					<description>&lt;p&gt;The beauty of computer programming is that you do not need to formally go to school to learn how to program. You can learn almost everything that you would need to know online, and for free. The following resources are some that I have used personally, that I highly recommend, for anyone looking to learn more about computer programming.&lt;/p&gt;
+</description>
+				
+				<pubDate>Thu, 10 Oct 2013 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/journal/learning-resources.html</link>
+				<guid isPermaLink="true">http://localhost:4000/journal/learning-resources.html</guid>
+			</item>
+		
+			<item>
+				<title>About the Author</title>
+				
+					<dc:creator>Paul Le</dc:creator>
+				
+				
+					<description>&lt;p&gt;Hi there! I’m Paul. I’m a physics major turned programmer. Ever since I first learned how to program while taking a scientific computing for physics course, I have pursued programming as a passion, and as a career. Check out &lt;a href=&quot;https://www.lenpaul.com/&quot;&gt;my personal website&lt;/a&gt; for more information on my other projects (including more Jekyll themes!), as well as some of my writing.&lt;/p&gt;
+</description>
+				
+				<pubDate>Thu, 04 Apr 2013 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/journal/about-the-author.html</link>
+				<guid isPermaLink="true">http://localhost:4000/journal/about-the-author.html</guid>
+			</item>
+		
+	</channel>
+</rss>
