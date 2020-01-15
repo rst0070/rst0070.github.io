@@ -5,7 +5,11 @@ layout: default
 <h1>
   {{ page.title }}
 </h1>
-
+{% if page.tags %}
+{% for Tag in page.tags%}
+{{Tag}}
+{% endfor %}
+{% endif %}
 {% if page.image %}
   <img src="{{ site.github.url }}/assets/img/{{ page.image }}">
 {% endif %}
