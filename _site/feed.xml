@@ -1,4 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-15T16:26:33+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle>Studying Computer Science at University Of Seoul</subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Git] 2.Checkout</title><link href="http://localhost:4000/git/git-2-checkout.html" rel="alternate" type="text/html" title="[Git] 2.Checkout" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-2-checkout</id><content type="html" xml:base="http://localhost:4000/git/git-2-checkout.html"></content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html"></summary></entry><entry><title type="html">[Git] 1.버전생성</title><link href="http://localhost:4000/git/git-1-create-version.html" rel="alternate" type="text/html" title="[Git] 1.버전생성" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-%201-create-version</id><content type="html" xml:base="http://localhost:4000/git/git-1-create-version.html">&lt;h2 id=&quot;버전관리&quot;&gt;버전관리&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-18T23:40:49+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle>Studying Computer Science</subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[HTML5] Outline과 Section</title><link href="http://localhost:4000/html5-outlines-and-section.html" rel="alternate" type="text/html" title="[HTML5] Outline과 Section" /><published>2020-01-18T00:00:00+09:00</published><updated>2020-01-18T00:00:00+09:00</updated><id>http://localhost:4000/html5-outlines-and-section</id><content type="html" xml:base="http://localhost:4000/html5-outlines-and-section.html">&lt;ul&gt;
+  &lt;li&gt;이 글은 &lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTML/HTML5_%EB%AC%B8%EC%84%9C%EC%9D%98_%EC%84%B9%EC%85%98%EA%B3%BC_%EC%9C%A4%EA%B3%BD&quot;&gt;MDN문서&lt;/a&gt;와 &lt;a href=&quot;https://m5designstudio.com/2013/orlando-web-design/html5-for-beginners-2&quot;&gt;M5 design studio&lt;/a&gt;를 참고하여 작성한 글 입니다.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gsnedders.html5.org/outliner/&quot;&gt;HTML5 Outliner&lt;/a&gt;을 이용하면 아웃라인을 확인할 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;outline&quot;&gt;Outline&lt;/h1&gt;
+&lt;p&gt;HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 
+아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;section&quot;&gt;Section&lt;/h1&gt;
+&lt;p&gt;HTML5에서는 명시적인 방법과 비명시적인 방법으로 문서를 부분(section)으로 나눌수 있습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;명시적-섹션&quot;&gt;명시적 섹션&lt;/h2&gt;
+&lt;p&gt;아래의 태그들을 사용합니다.
+&lt;img src=&quot;https://m5designstudio.com/wp-content/uploads/2013/01/HTML5_website_structure.jpg&quot; alt=&quot;dd&quot; /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;body&amp;gt;&lt;/code&gt;도 섹션 태그입니다. 각 섹션은 제목(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)을 가질 수 있으며 제목은 섹션내의 가장 위에 위치한 태그만 해당합니다. 그 외의 제목태그들은 뒤에서 설명할 비명시적인 섹션을 만들어냅니다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s-s&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s-2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위 코드는 아래의 아웃라인을 갖게됩니다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. body
+    1. body-s
+        1. body-s-s
+    2. body-s-2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;이를 통해 섹션으로 계층구조가 나눠짐을 알 수 있습니다. 
+하지만 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;aside&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;nav&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;header&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;footer&amp;gt;&lt;/code&gt;태그는 웹문서의 주요 아웃라인에 속하지 않습니다. 즉, 이 태그들은 해당 html5 문서의 주요 맥락에서 벗어난 내용을 다루는 용도로 사용됩니다.&lt;/p&gt;
+&lt;h2 id=&quot;비명시적-섹션&quot;&gt;비명시적 섹션&lt;/h2&gt;
+&lt;p&gt;제목 태그(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)는 자신이 속한 섹션의 첫번째 제목으로 정의되지 않았다면 비명시적(암묵적)으로 새로운 섹션으로 분류됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="html5" /><category term="web" /><summary type="html">이 글은 MDN문서와 M5 design studio를 참고하여 작성한 글 입니다. HTML5 Outliner을 이용하면 아웃라인을 확인할 수 있습니다. Outline HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.</summary></entry><entry><title type="html">[Git] 1.버전생성</title><link href="http://localhost:4000/git/git-1-create-version.html" rel="alternate" type="text/html" title="[Git] 1.버전생성" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-%201-create-version</id><content type="html" xml:base="http://localhost:4000/git/git-1-create-version.html">&lt;h2 id=&quot;버전관리&quot;&gt;버전관리&lt;/h2&gt;
 &lt;p&gt;git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다.&lt;br /&gt;
 아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다.&lt;/p&gt;
 &lt;ul&gt;
@@ -58,4 +96,4 @@ git log 명령을 통해 확인할 수 있다.&lt;/p&gt;
 
 git commit -am &quot;this is message&quot;
 #-am은 add와 message기능을 사용한다는 의미
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html">버전관리 git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다. 아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다. repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.) working tree: 변경사항들이 버전으로 전환되기 전 단계 staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html">버전관리 git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다. 아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다. repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.) working tree: 변경사항들이 버전으로 전환되기 전 단계 staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.</summary></entry><entry><title type="html">[Git] 2.Checkout</title><link href="http://localhost:4000/git/git-2-checkout.html" rel="alternate" type="text/html" title="[Git] 2.Checkout" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-2-checkout</id><content type="html" xml:base="http://localhost:4000/git/git-2-checkout.html"></content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html"></summary></entry></feed>

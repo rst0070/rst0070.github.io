@@ -2,9 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<channel>
 		<title>Rst</title>
-		<description>Studying Computer Science at University Of Seoul</description>
+		<description>Studying Computer Science</description>
 		<link></link>
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>[HTML5] Outline과 Section</title>
+				
+				
+					<description>&lt;ul&gt;
+  &lt;li&gt;이 글은 &lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTML/HTML5_%EB%AC%B8%EC%84%9C%EC%9D%98_%EC%84%B9%EC%85%98%EA%B3%BC_%EC%9C%A4%EA%B3%BD&quot;&gt;MDN문서&lt;/a&gt;와 &lt;a href=&quot;https://m5designstudio.com/2013/orlando-web-design/html5-for-beginners-2&quot;&gt;M5 design studio&lt;/a&gt;를 참고하여 작성한 글 입니다.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gsnedders.html5.org/outliner/&quot;&gt;HTML5 Outliner&lt;/a&gt;을 이용하면 아웃라인을 확인할 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;outline&quot;&gt;Outline&lt;/h1&gt;
+&lt;p&gt;HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 
+아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 18 Jan 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/html5-outlines-and-section.html</link>
+				<guid isPermaLink="true">http://localhost:4000/html5-outlines-and-section.html</guid>
+			</item>
 		
 			<item>
 				<title>[Git] 2.Checkout</title>

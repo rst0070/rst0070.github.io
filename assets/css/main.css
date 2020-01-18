@@ -21,9 +21,15 @@ body {
   font-family: "PT Serif", Georgia, "Times New Roman", serif;
   font-size: 18px;
   color: #515151;
+  /*background-color: dimgrey;*/
   line-height: 1.75rem;
 }
 
+/*
+.post-container{
+    background-color: aliceblue;
+}
+*/
 @media (max-width: 30em) {
   body {
     font-size: 14px;
