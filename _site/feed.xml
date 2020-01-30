@@ -1,4 +1,87 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-18T23:40:49+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle>Studying Computer Science</subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[HTML5] Outline과 Section</title><link href="http://localhost:4000/html5-outlines-and-section.html" rel="alternate" type="text/html" title="[HTML5] Outline과 Section" /><published>2020-01-18T00:00:00+09:00</published><updated>2020-01-18T00:00:00+09:00</updated><id>http://localhost:4000/html5-outlines-and-section</id><content type="html" xml:base="http://localhost:4000/html5-outlines-and-section.html">&lt;ul&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-30T20:52:21+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle>Studying Computer Science</subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Javascript] Callback 함수 with JQuery effect</title><link href="http://localhost:4000/javascript-callback-with-jquery-effect.html" rel="alternate" type="text/html" title="[Javascript] Callback 함수 with JQuery effect" /><published>2020-01-30T00:00:00+09:00</published><updated>2020-01-30T00:00:00+09:00</updated><id>http://localhost:4000/javascript-callback-with-jquery-effect</id><content type="html" xml:base="http://localhost:4000/javascript-callback-with-jquery-effect.html">&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
+&lt;p&gt;javascript는 한 문장씩 순차적으로 실행되는 언어이다.
+하지만 애니메이션등의 효과를 사용하게되면 효과를 모두 마치기 
+전에 다음 문장이 실행될 수 있다.&lt;br /&gt;
+다음의 코드를 실행시켜보면 쉽게 이해할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;click&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;click&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#pp&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slideUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;slow&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;어림도 없지!&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div style=&quot;border-style: solid; border-color: green;&quot;&gt;
+&lt;button id=&quot;click&quot;&gt;click&lt;/button&gt;
+&lt;p id=&quot;pp&quot;&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    $(&quot;#click&quot;).click(
+        function(){
+            $(&quot;#pp&quot;).slideUp(&quot;slow&quot;);
+            alert(&quot;어림도 없지!&quot;);
+        }
+    );
+&lt;/script&gt;
+
+&lt;p&gt;이러한 문제는 애니메이션 효과뿐만이 아니라
+javascript를 사용하는 여러순간에 발생할 수 있다.
+이를 해결하기 위해 Callback기능을 이용한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;사용방법&quot;&gt;사용방법&lt;/h2&gt;
+&lt;p&gt;애니메이션 효과의 경우 다음과 같은 형식으로 사용할 수 있다.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$(selector).effect(speed, callback)&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;effect는 slideUp, hide와 같은 효과 함수들을 가리킨다.&lt;/li&gt;
+  &lt;li&gt;callback은 함수이다. 효과가 다 끝나고 함수가 실행된다.&lt;br /&gt;
+아래의 예시를 실행해보자&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;click&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;click&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#pp&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slideUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;slow&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+                &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;그렇게 하렴~&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+            
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div style=&quot;border-style: solid; border-color: green;&quot;&gt;
+&lt;button id=&quot;clickk&quot;&gt;click&lt;/button&gt;
+&lt;p id=&quot;pppp&quot;&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
+&lt;/div&gt;
+&lt;script&gt;
+    $(&quot;#clickk&quot;).click(
+        function(){
+            $(&quot;#pppp&quot;).slideUp(&quot;slow&quot;,
+            function(){
+                alert(&quot;그렇게 하렴~&quot;);
+            });
+        }
+    );
+&lt;/script&gt;
+
+&lt;h2 id=&quot;마치며-새롭게-알게된점&quot;&gt;마치며, 새롭게 알게된점&lt;/h2&gt;
+&lt;p&gt;javascript의 callback함수를 ‘애니메이션 효과’에 관련된 부분의 공부를 하면서 ‘순차적 실행’에 관련해서만 이해했었다. 하지만 조금더 깊게 공부를 해보니 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$(selector).click(function(){...})&lt;/code&gt; 과 같은 jquery 구문도 callback을 
+이용한다는 사실을 알게되었다.&lt;/p&gt;
+
+&lt;p&gt;자바스크립트에서는 함수가 객체로 사용된다.
+함수1이 함수2를 파라미터로 받고 실행중 혹은 실행 마지막( 애니메이션 효과가 끝날때 
+처럼 )에서 함수2를 실행시킨다면 함수2를 콜백함수라고 할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;이러한 개념은 함수형 프로그래밍의 개념이라는데 좀 더 찾아봐야겠다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="javascript" /><category term="jquery" /><summary type="html"></summary></entry><entry><title type="html">[HTML5] Outline과 Section</title><link href="http://localhost:4000/html5-outlines-and-section.html" rel="alternate" type="text/html" title="[HTML5] Outline과 Section" /><published>2020-01-18T00:00:00+09:00</published><updated>2020-01-18T00:00:00+09:00</updated><id>http://localhost:4000/html5-outlines-and-section</id><content type="html" xml:base="http://localhost:4000/html5-outlines-and-section.html">&lt;ul&gt;
   &lt;li&gt;이 글은 &lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTML/HTML5_%EB%AC%B8%EC%84%9C%EC%9D%98_%EC%84%B9%EC%85%98%EA%B3%BC_%EC%9C%A4%EA%B3%BD&quot;&gt;MDN문서&lt;/a&gt;와 &lt;a href=&quot;https://m5designstudio.com/2013/orlando-web-design/html5-for-beginners-2&quot;&gt;M5 design studio&lt;/a&gt;를 참고하여 작성한 글 입니다.&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://gsnedders.html5.org/outliner/&quot;&gt;HTML5 Outliner&lt;/a&gt;을 이용하면 아웃라인을 확인할 수 있습니다.&lt;/li&gt;
 &lt;/ul&gt;
