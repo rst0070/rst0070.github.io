@@ -7,7 +7,7 @@ layout: default
 </h1>
 {% if page.tags %}
 {% for Tag in page.tags%}
-{{Tag}}
+{{site.data.tags.Tag.name}}
 {% endfor %}
 {% endif %}
 {% if page.image %}

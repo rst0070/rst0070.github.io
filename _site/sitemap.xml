@@ -1,34 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url>
-<loc>http://localhost:4000/git/git-1-create-version.html</loc>
-<lastmod>2020-01-14T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/git/git-2-checkout.html</loc>
-<lastmod>2020-01-14T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/html5-outlines-and-section.html</loc>
-<lastmod>2020-01-18T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/javascript-callback-with-jquery-effect.html</loc>
-<lastmod>2020-01-30T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/menu/about.html</loc>
-</url>
-<url>
-<loc>http://localhost:4000/menu/contact.html</loc>
-</url>
-<url>
-<loc>http://localhost:4000/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/menu/tag.html</loc>
-</url>
-<url>
-<loc>http://localhost:4000/menu/writing.html</loc>
-</url>
+  
+    <url>
+      <loc>http://localhost:4000/nodejs-global-object.html</loc>
+      
+        <lastmod>2020-02-04T00:00:00+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/javascript-callback-with-jquery-effect.html</loc>
+      
+        <lastmod>2020-01-30T00:00:00+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/html5-outlines-and-section.html</loc>
+      
+        <lastmod>2020-01-18T00:00:00+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/git/git-2-checkout.html</loc>
+      
+        <lastmod>2020-01-14T00:00:00+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
+    <url>
+      <loc>http://localhost:4000/git/git-1-create-version.html</loc>
+      
+        <lastmod>2020-01-14T00:00:00+09:00</lastmod>
+      
+
+      
+        <changefreq>weekly</changefreq>
+      
+
+      
+          <priority>0.5</priority>
+      
+
+    </url>
+  
 </urlset>

@@ -1,0 +1,51 @@
+I"	<p>이 글은 Node.js의 전역 변수와 전역 객체를
+정리한 글 입니다.</p>
+
+<h1 id="전역-변수">전역 변수</h1>
+<ul>
+  <li><code class="highlighter-rouge">__filename</code>: 현재 실행중인 코드의 파일 경로를 가지는 문자열</li>
+  <li><code class="highlighter-rouge">__dirname</code>: 현재 실행중인 코드의 디렉토리 경로를 가지는 문자열</li>
+</ul>
+
+<h1 id="console-객체">console 객체</h1>
+<p>console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체의 메서드는 아래와 같습니다.</p>
+<ul>
+  <li><code class="highlighter-rouge">log()</code>: print 기능을 가지며 특수문자를 
+이용해 문자열을 출력할 수 있습니다.
+    <ul>
+      <li><code class="highlighter-rouge">%d</code>: 숫자</li>
+      <li><code class="highlighter-rouge">%s</code>: 문자열</li>
+      <li><code class="highlighter-rouge">%j</code>: JSON</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">time(label)</code>: 시간 측정을 시작합니다.</li>
+  <li><code class="highlighter-rouge">timeEnd(label)</code>: 시간 측정을 종료합니다.</li>
+</ul>
+
+<p>예시 코드</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>console.log("%d * %d = %s", 10, 10, '100');
+console.log("json: %j", {"name" : "rst"});
+
+console.time('t');
+for(var i=0; i&lt;99999; i++);
+console.timeEnd('t');
+</code></pre></div></div>
+<p>결과</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10 * 10 = 100
+{"name":"rst}
+t: 18172.890ms
+</code></pre></div></div>
+
+<h1 id="process-객체">process 객체</h1>
+<p>process 객체는 프로그램과 관련된 정보를 포함하는 객체입니다.</p>
+<hr />
+<p>process 객체의 속성 - - -</p>
+<ul>
+  <li><code class="highlighter-rouge">argv</code>: 실행 매개 변수를 포함</li>
+  <li><code class="highlighter-rouge">env</code>: 컴퓨터 환경 정보 포함</li>
+  <li><code class="highlighter-rouge">version</code>: Node.js의 버전 정보</li>
+  <li><code class="highlighter-rouge">versions</code>: Node.js와 종속된 프로그램의 버전 정보</li>
+  <li><code class="highlighter-rouge">arch</code>: 프로세서의 아키텍쳐</li>
+  <li><code class="highlighter-rouge">platform</code>: 플랫포 정보</li>
+</ul>
+:ET

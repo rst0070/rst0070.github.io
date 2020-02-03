@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-30T20:52:21+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle>Studying Computer Science</subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Javascript] Callback 함수 with JQuery effect</title><link href="http://localhost:4000/javascript-callback-with-jquery-effect.html" rel="alternate" type="text/html" title="[Javascript] Callback 함수 with JQuery effect" /><published>2020-01-30T00:00:00+09:00</published><updated>2020-01-30T00:00:00+09:00</updated><id>http://localhost:4000/javascript-callback-with-jquery-effect</id><content type="html" xml:base="http://localhost:4000/javascript-callback-with-jquery-effect.html">&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-04T02:33:29+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</title><link href="http://localhost:4000/nodejs-global-object.html" rel="alternate" type="text/html" title="[Node.js] 전역 변수, 전역 객체 (console, process, exports)" /><published>2020-02-04T00:00:00+09:00</published><updated>2020-02-04T00:00:00+09:00</updated><id>http://localhost:4000/nodejs-global-object</id><content type="html" xml:base="http://localhost:4000/nodejs-global-object.html">&lt;p&gt;이 글은 Node.js의 전역 변수와 전역 객체를
+정리한 글 입니다.&lt;/p&gt;
+
+&lt;h1 id=&quot;전역-변수&quot;&gt;전역 변수&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__filename&lt;/code&gt;: 현재 실행중인 코드의 파일 경로를 가지는 문자열&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__dirname&lt;/code&gt;: 현재 실행중인 코드의 디렉토리 경로를 가지는 문자열&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;console-객체&quot;&gt;console 객체&lt;/h1&gt;
+&lt;p&gt;console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체의 메서드는 아래와 같습니다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;log()&lt;/code&gt;: print 기능을 가지며 특수문자를 
+이용해 문자열을 출력할 수 있습니다.
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%d&lt;/code&gt;: 숫자&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%s&lt;/code&gt;: 문자열&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%j&lt;/code&gt;: JSON&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;time(label)&lt;/code&gt;: 시간 측정을 시작합니다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;timeEnd(label)&lt;/code&gt;: 시간 측정을 종료합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;예시 코드&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;console.log(&quot;%d * %d = %s&quot;, 10, 10, '100');
+console.log(&quot;json: %j&quot;, {&quot;name&quot; : &quot;rst&quot;});
+
+console.time('t');
+for(var i=0; i&amp;lt;99999; i++);
+console.timeEnd('t');
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;결과&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10 * 10 = 100
+{&quot;name&quot;:&quot;rst}
+t: 18172.890ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;process-객체&quot;&gt;process 객체&lt;/h1&gt;
+&lt;p&gt;process 객체는 프로그램과 관련된 정보를 포함하는 객체입니다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;process 객체의 속성&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;argv&lt;/code&gt;: 실행 매개 변수를 포함&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt;: 컴퓨터 환경 정보 포함&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;version&lt;/code&gt;: Node.js의 버전 정보&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;versions&lt;/code&gt;: Node.js와 종속된 프로그램의 버전 정보&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;arch&lt;/code&gt;: 프로세서의 아키텍쳐&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;platform&lt;/code&gt;: 플랫포 정보&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;process 객체의 메서드&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;exit()&lt;/code&gt;: 프로그램 종료&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;memoryUsage()&lt;/code&gt;: 메모리 사용 정보 객체를 리턴&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;uptime()&lt;/code&gt;: 현재 프로그램이 실행된 시간을 리턴&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;exports-객체&quot;&gt;exports 객체&lt;/h1&gt;
+&lt;p&gt;exports 객체는 모듈을 생성할때 사용합니다.&lt;br /&gt;
+exports 객체의 속성을 정의하는 방식으로 작동합니다. 
+예시를 보는것이 이해하기 쉽습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;md.js&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;app.js&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;md&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./md.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;md&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;언급하지 않아도 되겠지만 결과는 &lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;가 출력됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><summary type="html">이 글은 Node.js의 전역 변수와 전역 객체를 정리한 글 입니다.</summary></entry><entry><title type="html">[Javascript] Callback 함수 with JQuery effect</title><link href="http://localhost:4000/javascript-callback-with-jquery-effect.html" rel="alternate" type="text/html" title="[Javascript] Callback 함수 with JQuery effect" /><published>2020-01-30T00:00:00+09:00</published><updated>2020-01-30T00:00:00+09:00</updated><id>http://localhost:4000/javascript-callback-with-jquery-effect</id><content type="html" xml:base="http://localhost:4000/javascript-callback-with-jquery-effect.html">&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&quot;&gt;&lt;/script&gt;
 
 &lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
 &lt;p&gt;javascript는 한 문장씩 순차적으로 실행되는 언어이다.
