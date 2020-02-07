@@ -7,6 +7,38 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</title>
+				
+				
+					<description>&lt;h1 id=&quot;배경&quot;&gt;배경&lt;/h1&gt;
+&lt;p&gt;Node.js를 처음 접했을때 &lt;em&gt;이벤트 기반 비동기 처리&lt;/em&gt; 방식을 
+사용한다는 사실을 알게됐다. &lt;em&gt;모던 웹을 위한 Node.js 프로그래밍&lt;/em&gt; 
+이라는 책에서는 이 방식을 아래의 &lt;em&gt;시장 대기표&lt;/em&gt; 예시로 
+설명했다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;시장 여러곳의 가게에서 물건을 구매해야한다.&lt;br /&gt;
+이때 각 가게에는 손님들이 줄을 서서 대기하고 있다.&lt;br /&gt;
+빠르게 모든 물건을 구매하기 위해선 두가지 방법이 있는데&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;몸을 복제해 동시에 여러가게에 간다.&lt;/li&gt;
+  &lt;li&gt;시장을 대기표를 나누어주는 시스템으로 바꾸고 
+대기표만 받고 기다린다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1번의 방식은 기존의 스레드 기반 네트워크 프로그램의 방식이며,&lt;br /&gt;
+2번은 이벤트 기반 비동기 방식이다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;이 예시를 통해서 이벤트 기반 비동기 방시기 어떤 
+방식인지 이해할 순 있었다. 하지만 이것이 어떻게 가능한지, 
+진짜 단일 스레드로 가능한건지 궁금해졌다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 07 Feb 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/nodejs-what-is-event-based-programming.html</link>
+				<guid isPermaLink="true">http://localhost:4000/nodejs-what-is-event-based-programming.html</guid>
+			</item>
+		
+			<item>
 				<title>[Node.js] 전역 변수, 전역 객체 (console, process, exports)</title>
 				
 				
@@ -14,9 +46,9 @@
 정리한 글 입니다.&lt;/p&gt;
 </description>
 				
-				<pubDate>Tue, 04 Feb 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/nodejs-global-object.html</link>
-				<guid isPermaLink="true">http://localhost:4000/nodejs-global-object.html</guid>
+				<pubDate>Mon, 03 Feb 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/nodejs-global-objects.html</link>
+				<guid isPermaLink="true">http://localhost:4000/nodejs-global-objects.html</guid>
 			</item>
 		
 			<item>

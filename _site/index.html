@@ -56,6 +56,7 @@
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Rst" />
+<link rel="next" href="http://localhost:4000/page2" />
 <script type="application/ld+json">
 {"@type":"WebSite","url":"http://localhost:4000/","headline":"Home","name":"Rst","author":{"@type":"Person","name":"Wonbin Kim"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
@@ -111,7 +112,44 @@
       
 <div class="posts">
   <h1>
-    <a href="/nodejs-global-object.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
+    <a href="/nodejs-what-is-event-based-programming.html">이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</a>
+  </h1>
+  
+  <p>
+    배경
+Node.js를 처음 접했을때 이벤트 기반 비동기 처리 방식을 
+사용한다는 사실을 알게됐다. 모던 웹을 위한 Node.js 프로그래밍 
+이라는 책에서는 이 방식을 아래의 시장 대기표 예시로 
+설명했다.
+
+시장 여러곳의 가게에서 물건을 구매해야한다.
+이때 각 가게에는 손님들이 줄을 서서 대기하고 있다.
+빠르게 모든 물건을 구매하기 위해선 두가지 방법이 있는데
+
+  몸을 복제해 동시에 여러가게에 간다.
+  시장을 대기표를 나누어주는 시스템으로 바꾸고 
+대기표만 받고 기다린다.
+
+
+1번의 방식은 기존의 스레드 기반 네트워크 프로그램의 방식이며,
+2번은 이벤트 기반 비동기 방식이다.
+
+이 예시를 통해서 이벤트 기반 ... <a href="/nodejs-what-is-event-based-programming.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 07 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    3 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/nodejs-global-objects.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
   </h1>
   
   <p>
@@ -136,8 +174,8 @@ console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체
     
   
   time(label): 시간 측정을 시작합니다.
-  tim... <a href="/nodejs-global-object.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 04 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  tim... <a href="/nodejs-global-objects.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
     1 minute read
@@ -160,7 +198,7 @@ console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체
 배경
 javascript는 한 문장씩 순차적으로 실행되는 언어이다.
 하지만 애니메이션등의 효과를 사용하게되면 효과를 모두 마치기 
-전에 다음 문장이 실행될 수 있다.
+전에 다음 문장이 실행됨을 볼 수 있다.
 다음의 코드를 실행시켜보면 쉽게 이해할 수 있다.
 &lt;button id = "click"&gt;click&lt;/button&gt;
 &lt;p id = "pp"&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
@@ -168,8 +206,7 @@ javascript는 한 문장씩 순차적으로 실행되는 언어이다.
     $("#click").click(
         function(){
             $("#pp").slideUp("slow");
-            alert("어림도 없지!");
-... <a href="/javascript-callback-with-jquery-effect.html">Read more</a>
+            alert("어림도 없지!"... <a href="/javascript-callback-with-jquery-effect.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 30 Jan 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -236,47 +273,11 @@ HTML5에서는 명시적인 방법과 비명시적인 방법으로 문서를 부
   </p>
 </div>
 
-<div class="posts">
-  <h1>
-    <a href="/git/git-1-create-version.html">[Git] 1.버전생성</a>
-  </h1>
-  
-  <p>
-    버전관리
-git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다.
-아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다.
-
-  repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.)
-  working tree: 변경사항들이 버전으로 전환되기 전 단계
-  staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.
-
-
-버전관리 시작
-
-git init .
-
-여기서 .은 현재 디렉토리를 가리킨다.
-이 명령을 수행하면 해당 디렉토리에 ‘.git’이라는 폴더가 생성된다.
-이 폴더안의 데이터를 이용해 git이 버전관리를 한다.
-
-... <a href="/git/git-1-create-version.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 14 Jan 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
 
 <!-- Pagination links -->
 <div class="pagination">
   
-    <span class="pagination-button">Older</span>
+    <a class="pagination-button pagination-active next" href="/page2">Older</a>
   
 
   

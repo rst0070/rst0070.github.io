@@ -9,7 +9,7 @@ tags: [javascript, jquery]
 ## 배경
 javascript는 한 문장씩 순차적으로 실행되는 언어이다.
 하지만 애니메이션등의 효과를 사용하게되면 효과를 모두 마치기 
-전에 다음 문장이 실행될 수 있다.  
+전에 다음 문장이 실행됨을 볼 수 있다.  
 다음의 코드를 실행시켜보면 쉽게 이해할 수 있다.  
 ``` html
 <button id = "click">click</button>

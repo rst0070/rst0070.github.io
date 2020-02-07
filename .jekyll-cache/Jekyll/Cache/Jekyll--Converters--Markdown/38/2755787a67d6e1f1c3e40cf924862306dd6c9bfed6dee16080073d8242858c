@@ -1,0 +1,134 @@
+I"�!<h1 id="배경">배경</h1>
+<p>Node.js를 처음 접했을때 <em>이벤트 기반 비동기 처리</em> 방식을 
+사용한다는 사실을 알게됐다. <em>모던 웹을 위한 Node.js 프로그래밍</em> 
+이라는 책에서는 이 방식을 아래의 <em>시장 대기표</em> 예시로 
+설명했다.</p>
+<hr />
+<p>시장 여러곳의 가게에서 물건을 구매해야한다.<br />
+이때 각 가게에는 손님들이 줄을 서서 대기하고 있다.<br />
+빠르게 모든 물건을 구매하기 위해선 두가지 방법이 있는데</p>
+<ol>
+  <li>몸을 복제해 동시에 여러가게에 간다.</li>
+  <li>시장을 대기표를 나누어주는 시스템으로 바꾸고 
+대기표만 받고 기다린다.</li>
+</ol>
+
+<p>1번의 방식은 기존의 스레드 기반 네트워크 프로그램의 방식이며,<br />
+2번은 이벤트 기반 비동기 방식이다.</p>
+<hr />
+<p>이 예시를 통해서 이벤트 기반 비동기 방시기 어떤 
+방식인지 이해할 순 있었다. 하지만 이것이 어떻게 가능한지, 
+진짜 단일 스레드로 가능한건지 궁금해졌다.</p>
+
+<h1 id="multi-thread-방식">Multi Thread 방식</h1>
+<p>Multi Thread 방식의 서버의 요청처리는 각 요청마다 
+새로운 Thread를 발생시켜 처리하는 방식이다. 
+아래의 java코드로 이해해 볼 수 있다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//server-socket 80번 포트에서 bind</span>
+<span class="nc">ServerSocket</span> <span class="n">ss</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ServerSocket</span><span class="o">(</span><span class="mi">80</span><span class="o">);</span>
+<span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">//연결 생성</span>
+  <span class="nc">Socket</span> <span class="n">s</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="na">accept</span><span class="o">();</span>
+  <span class="c1">//새로운 스레드 발생시켜 처리과정 넘기기</span>
+  <span class="nc">MutiThreadHttp</span> <span class="n">mt</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MutiThreadHttp</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+  <span class="c1">//스레드 시작             </span>
+  <span class="n">mt</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>이 방식은 클라이언트 요청이 몰릴수록 그에 대응되는 많은 
+스레드가 발생하므로 메모리 자원을 
+많이 소모하게 된다. 즉 서버의 자원에 제한을 받는다.<br />
+또 프로그래밍시 Thread간 공유자원 관리에 주의 해야하는 
+단점이 있다.</p>
+
+<h1 id="이벤트-기반-비동기-방식">이벤트 기반 비동기 방식</h1>
+<p>javascript는 이벤트 기반 비동기 방식으로 작동한다.<br />
+이 방식을 따르는 Node.js는 여러 클라이언트들의 요청을 
+하나의 스레드로 처리하며 각각의 요청에서 이벤트가 발생할 때만 그에 맞는 작업을 처리한다.</p>
+
+<p>어떠한 원리로 이벤트 기반 비동기 방식이 작동하는지 궁금해졌고 
+아래의 문서들을 통해 이해할 수 있었다.</p>
+<ul>
+  <li><a href="https://hackernoon.com/understanding-js-the-event-loop-959beae3ac40">Understanding JS: The Event Loop</a></li>
+  <li><a href="http://www.nextree.co.kr/p7292/">Node.js: 비동기 프로그래밍 이해</a></li>
+</ul>
+
+<p>이벤트 기반 비동기 방식은 <strong>Event Loop</strong>에 의해 이루어진다.
+Node.js에서 클라이언트의 요청을 처리하는 방식보면 
+이해할 수 있다.<br />
+<img src="/assets/img/what-is-event-based-programming-javascript.jpg" alt="eventbased-eg-req" /><br />
+위와같이 할 수 있는 이유는 요청에서 발생하는 이벤트와 콜백들을 
+이벤트 루프에서 처리하기 때문이다. 
+이 과정을 이해하려면 Call Stack, Event Table, Event Queue
+에 대해 알아야한다.</p>
+
+<h2 id="call-stack">Call Stack</h2>
+<p>Javascript에서 함수를 호출하게 되면 이를 Callstack에 넣는다.<br />
+이름 그대로 Stack이므로 나중에 들어간 함수가 먼저 실행되고 
+먼저들어간 함수가 나중에 실행된다.<br />
+실행중인 함수가 다른 함수를 호출하면 호출받은 함수가 
+Callstack의 맨 위에 올려진다.</p>
+
+<p>Javascript는 오직 하나의 Callstack을 가져서 모든 함수의 실행은 
+Callstack에서 이루어진다고 볼 수 있다.</p>
+
+<p>하지만 Callstack만으로는 javascript가 이벤트를 비동기처리 하는 
+과정을 설명할 수 없다.<br />
+예를들어 10초후에 특정함수가 실행되도록 타이머를 설정한다면, 
+모든 처리가 10초 늦춰진다고 밖에 설명할 수 없다.</p>
+
+<h2 id="event-table-event-queue">Event Table, Event Queue</h2>
+<p>위의 예시와같이 이벤트가 발생해야 실행되는 함수를 Event Table
+에서 저장한다. 이때 Event Table은 특정 이벤트와 그에 대응되는 
+함수를 저장하고 이벤트가 발생하면 대응되는 함수를 Event Queue에 
+넣는다.</p>
+
+<p>Event Queue는 말 그대로 ‘큐’이므로 들어온 순서대로 함수를 
+수행한다.<br />
+하지만 함수를 실행시키는것은 Callstack에 쌓인 함수만 가능하므로 
+아직 수행해야할 작업이 남아있다.</p>
+
+<h2 id="event-loop">Event Loop</h2>
+<p>Event Loop는 이벤트에 대응되는 함수를 Callstack에 쌓는 
+역할을 한다.<br />
+작업의 과정은 다음과 같이 진행된다.</p>
+<ol>
+  <li>Callstack이 비어있는지 확인한다.</li>
+  <li>비어있다면 Event Queue가 비어있는지 확인한다.</li>
+  <li>큐가 비어있지 않다면 Event Queue의 앞에서 함수를 가져와 Callstack에 쌓는다.</li>
+</ol>
+
+<h1 id="결론">결론</h1>
+<p>전체적으로 Event Loop를 통해 이벤트 기반 비동기 방식이 작동한다.<br />
+곧 코드작성자의 코드가 하나의 Thread에 기반해서 실행될 수 있도록 
+내부적으로 여러개의 Thread를 발생시키는 방법인것이다.</p>
+
+<p>지금까지 살펴본 Event Loop의 작업방식을 확인해 볼 수 있는 
+코드가 있다.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">first</span><span class="dl">'</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">second</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>실행시켜보면 ‘second’가 먼저 출력되고 ‘first’가 나중에 출력된다.<br />
+다음의 과정으로 처리가 된 것이다.</p>
+<ol>
+  <li>setTimeout()이 호출되어 콜스택에서 실행된다.</li>
+  <li>event table에 ‘first’출력 함수가 저장된다.</li>
+  <li>‘second’출력이 콜스텍에 올라가고 ‘first’출력이 이벤트 큐에 올라간다.</li>
+  <li>Event Loop는 콜스텍이 비어야 Event Queue에서 함수를 꺼내오므로 ‘second’출력이 먼저 발생하고 ‘first’출력이 콜스텍에 올라가 실행된다.</li>
+</ol>
+
+<p>이벤트 기반 비동기 방식은 Multi Thread 방식보다 Thread를 적게 
+사용하여 메모리 자원을 절약할 수 있는 이점이 있다.<br />
+하지만 각각의 이벤트들에 많은 연산이 필요하거나 대용량의 IO를 
+다루는 작업등의 많은 시간이 필요한 작업이라면 성능의 저하를 
+가져올 수 있다.</p>
+
+<p>프로그래밍시 주의해야 할 점은 javascript가 비동기 언어라는 
+점을 꼭 인식해야한다는 것이다.<br />
+자신이 작성한 코드중 무엇이 먼저 실행될지 모르기 때문에 
+콜백방법을 이용하여 순차적으로 실행시키게 해야한다.<br />
+또 콜백함수를 받는 함수를 작성할때도 비동기적 방식이라는 것을 
+유의하고 콜백함수를(콜백을 쓰거나 다른 라이브러리를 사용하여) 
+원하는 시점에 실행시키도록 주의해야한다.</p>
+
+:ET
