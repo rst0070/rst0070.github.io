@@ -1,4 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-19T18:36:29+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</title><link href="http://localhost:4000/oracle-user-create-grant-alter.html" rel="alternate" type="text/html" title="[Oracle] 스키마 생성, 권한부여, 수정, 삭제" /><published>2020-02-19T00:00:00+09:00</published><updated>2020-02-19T00:00:00+09:00</updated><id>http://localhost:4000/oracle-user-create-grant-alter</id><content type="html" xml:base="http://localhost:4000/oracle-user-create-grant-alter.html">&lt;h2 id=&quot;사용자-생성하기-create-user&quot;&gt;사용자 생성하기: ‘create user’&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-21T19:51:02+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title><link href="http://localhost:4000/oracle-create-table.html" rel="alternate" type="text/html" title="[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)" /><published>2020-02-20T00:00:00+09:00</published><updated>2020-02-20T00:00:00+09:00</updated><id>http://localhost:4000/oracle-create-table</id><content type="html" xml:base="http://localhost:4000/oracle-create-table.html">&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
+그 방법을 정리하려 포스팅을 하게 되었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;테이블-만들기-기본적인-형태&quot;&gt;테이블 만들기: 기본적인 형태&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;create table [스키마.]&amp;lt;테이블 이름&amp;gt; (
+&amp;lt;열 이름&amp;gt; &amp;lt;데이터 타입&amp;gt; [default &amp;lt;표현식&amp;gt;] [&amp;lt;제약조건&amp;gt;]
+[,&amp;lt;열 이름&amp;gt; &amp;lt;데이터 타입&amp;gt; [default &amp;lt;표현식&amp;gt;] [&amp;lt;제약조건&amp;gt;]]
+[,...]
+);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;[]: 선택사항&lt;br /&gt;
+&amp;lt;&amp;gt;: 필수사항&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;스키마&lt;/em&gt;: 만들어질 테이블이 속하는 스키마&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;테이블 이름&lt;/em&gt;: 만들어질 테이블의 이름&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;열 이름&lt;/em&gt;: 테이블의 열 이름&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;데이터 타입&lt;/em&gt;: 해당하는 열의 데이터 타입&lt;/li&gt;
+  &lt;li&gt;*default &lt;표현식&gt;*: insert 구문에서 열의 값이 지정되지 않는 경우 
+디폴트 값을 지정한다. &lt;표현식&gt;에는 정적값이나 sql함수를 지정할 수 있다.&lt;/표현식&gt;&lt;/표현식&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;제약조건&lt;/em&gt;: 각 열의 데이터가 갖춰야할 제약조건을 정의할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;테이블-만들기-select-구문-이용&quot;&gt;테이블 만들기: select 구문 이용&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;create table &amp;lt;table name&amp;gt; as select...&lt;/code&gt;형태의 구문으로 
+select를 사용해 table을 생성할 수 있다.&lt;br /&gt;
+&lt;strong&gt;예시&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;create table another_dept
+as select * from scott.dept;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;제약조건이란&quot;&gt;제약조건이란?&lt;/h2&gt;
+&lt;p&gt;Oracle은 데이터베이스의 데이터가 의도한 대로 저장되고 
+데이터베이스의 다른 부분과 결함없이 작동하도록 제약조건을 제공한다.&lt;/p&gt;
+
+&lt;p&gt;이때 제약조건을 적용하는 방법을 두가지로 분류할 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;선언적 방법&lt;/strong&gt;: 
+테이블의 선언(생성 및 변경)과 함께 규칙을 저장한다. 
+테이블간의 관계에 대한 규칙, 테이블 열에 들어가야할 데이터의 규칙등을 지정한다. 
+테이블에 저장되는 모든 행에 적용된다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;절차적 방법&lt;/strong&gt;: 
+작업과정중에는 데이터에 제약조건을 추가해야하는 상황이 발생하며 선언적 
+방법만으로는 이를 충족하기 어렵다. 따라서 절차적 방법으로 
+데이터에 제약조건을 추가하는데 이를 &lt;em&gt;사용자 정의 무결성&lt;/em&gt; 이라고 한다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이 글에서는 Oracle의 &lt;strong&gt;선언적 무결성 제약조건&lt;/strong&gt; 추가방법을 알아보려한다.&lt;br /&gt;
+Table을 새로 생성할때는 &lt;code class=&quot;highlighter-rouge&quot;&gt;create table&lt;/code&gt; 구문에서 제약조건을 추가 할 수 있다(앞에서 살펴봤다).&lt;br /&gt;
+이미 존재하는 Table에 제약조건을 추가할 때는 아래와 같이 &lt;code class=&quot;highlighter-rouge&quot;&gt;alter table add&lt;/code&gt;를 사용한다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alter table [스키마.]&amp;lt;Table이름&amp;gt;
+add [constraint &amp;lt;제약조건의 이름&amp;gt;]
+&amp;lt;제약조건 정의&amp;gt;
+/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;제약조건-추가하기-1-기본키-추가&quot;&gt;제약조건 추가하기: 1. 기본키 추가&lt;/h2&gt;
+&lt;p&gt;기본키는 Table에서 각각의 행을 구분짓는 키의 역할을 한다. 
+따라서 NULL이 될 수 없고 행을 구분 지을수 있도록 유일한 것 이어야 한다.&lt;br /&gt;
+기본키는 하나의 열이나 여러개 열의 모음으로 정의할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Table 생성시 기본키 정의&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;this_is_test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;primary&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위의 sql을 실행한 결과는 아래와 같은데 NO 항목이 기본키(Primary Key)로 
+정의된 것을 확인할 수 있다.&lt;br /&gt;
+&lt;img src=&quot;/assets/img/2020-02-20-oracle-create-table/pk1.png&quot; alt=&quot;pk&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;이미 생성된 Table에 기본키 제약조건 적용&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;this_is_test&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;constraint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ct_name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;primary&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;제약조건-추가하기-2-외부키-추가&quot;&gt;제약조건 추가하기: 2. 외부키 추가&lt;/h2&gt;
+&lt;p&gt;외부키는 다른 Table과 연결되는 기능을 한다.&lt;br /&gt;
+이때 테이블간에 부모-자식 관계가 발생한다. 제약조건이 적용되는 테이블은 
+자식이고 그것이 아닌쪽이 부모이다.&lt;/p&gt;
+
+&lt;p&gt;외부키를 적용할때 &lt;code class=&quot;highlighter-rouge&quot;&gt;references&lt;/code&gt;라는 키워드로 부모 테이블과 연결 시킨다.&lt;/p&gt;
+
+&lt;p&gt;이미 존재하는 테이블에는 다음과 같이 사용한다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
+alter table [스키마.]&amp;lt;Table이름&amp;gt;
+add [constraint &amp;lt;제약조건의 이름&amp;gt;]
+foreign key (&amp;lt;외부키에 해당되는 한 열 또는 여러 열&amp;gt;)
+references &amp;lt;부모테이블 이름&amp;gt; (&amp;lt;외부키와 연결되는 한 열 또는 여러 열&amp;gt;)
+/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;테이블 생성시 외부키 정의방법은 &lt;code class=&quot;highlighter-rouge&quot;&gt;references&lt;/code&gt;키워드만 사용한다.&lt;br /&gt;
+&lt;strong&gt;테이블 생성 예시&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;references&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;phone&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;제약조건-추가하기-3-유일조건-추가&quot;&gt;제약조건 추가하기: 3. 유일조건 추가&lt;/h2&gt;
+&lt;p&gt;유일조건은 지정하는 열들이 NULL값이 아닐때 
+테이블내에서 행마다 유일하도록 하는 제약조건이다.&lt;br /&gt;
+곧 행을 구분할 수 있는 수단이 될 수 있다.&lt;/p&gt;
+
+&lt;p&gt;다음의 방법으로 사용하면 된다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unique(&amp;lt;열1&amp;gt;[,&amp;lt;열2&amp;gt;][,...])
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;제약조건-추가하기-4-check조건-추가&quot;&gt;제약조건 추가하기: 4. CHECK조건 추가&lt;/h2&gt;
+&lt;p&gt;이 조건은 테이블 내의 모든 행에 적용되는 조건이다.&lt;br /&gt;
+대상이 되는 행이 check 조건을 만족해야한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;예시&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;people_who_is_male&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;constraint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;check_gender&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;check&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'MALE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위의 예시에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;gender&lt;/code&gt;는 &lt;code class=&quot;highlighter-rouge&quot;&gt;people_who_is_male&lt;/code&gt;테이블의 
+열이다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="oracle" /><category term="sql" /><summary type="html">Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 그 방법을 정리하려 포스팅을 하게 되었다. 테이블 만들기: 기본적인 형태</summary></entry><entry><title type="html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</title><link href="http://localhost:4000/oracle-user-create-grant-alter.html" rel="alternate" type="text/html" title="[Oracle] 스키마 생성, 권한부여, 수정, 삭제" /><published>2020-02-19T00:00:00+09:00</published><updated>2020-02-19T00:00:00+09:00</updated><id>http://localhost:4000/oracle-user-create-grant-alter</id><content type="html" xml:base="http://localhost:4000/oracle-user-create-grant-alter.html">&lt;h2 id=&quot;사용자-생성하기-create-user&quot;&gt;사용자 생성하기: ‘create user’&lt;/h2&gt;
 &lt;p&gt;oracle에서 사용자(스키마)를 생성하기 위해선 create user 
 명령을 사용한다.&lt;/p&gt;
 &lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;

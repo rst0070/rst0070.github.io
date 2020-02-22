@@ -7,6 +7,21 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title>
+				
+				
+					<description>&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
+그 방법을 정리하려 포스팅을 하게 되었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;테이블-만들기-기본적인-형태&quot;&gt;테이블 만들기: 기본적인 형태&lt;/h2&gt;
+</description>
+				
+				<pubDate>Thu, 20 Feb 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/oracle-create-table.html</link>
+				<guid isPermaLink="true">http://localhost:4000/oracle-create-table.html</guid>
+			</item>
+		
+			<item>
 				<title>[Oracle] 스키마 생성, 권한부여, 수정, 삭제</title>
 				
 				

@@ -1,0 +1,60 @@
+I"@<p>Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
+그 방법을 정리하려 포스팅을 하게 되었다.</p>
+<h2 id="테이블-만들기-기본적인-형태">테이블 만들기: 기본적인 형태</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table [스키마.]&lt;테이블 이름&gt; (
+&lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]
+[,&lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]]
+[,...]
+);
+</code></pre></div></div>
+<p>[]: 선택사항<br />
+&lt;&gt;: 필수사항</p>
+
+<ul>
+  <li><em>스키마</em>: 만들어질 테이블이 속하는 스키마</li>
+  <li><em>테이블 이름</em>: 만들어질 테이블의 이름</li>
+  <li><em>열 이름</em>: 테이블의 열 이름</li>
+  <li><em>데이터 타입</em>: 해당하는 열의 데이터 타입</li>
+  <li>*default <표현식>*: insert 구문에서 열의 값이 지정되지 않는 경우 
+디폴트 값을 지정한다. <표현식>에는 정적값이나 sql함수를 지정할 수 있다.</표현식></표현식></li>
+  <li><em>제약조건</em>: 각 열의 데이터가 갖춰야할 제약조건을 정의할 수 있다.</li>
+</ul>
+
+<h2 id="테이블-만들기-select-구문-이용">테이블 만들기: select 구문 이용</h2>
+<p><code class="highlighter-rouge">create table &lt;table name&gt; as select...</code>형태의 구문으로 
+select를 사용해 table을 생성할 수 있다.<br />
+<strong>예시</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table another_dept
+as select * from scott.dept;
+</code></pre></div></div>
+
+<h2 id="제약조건이란">제약조건이란?</h2>
+<p>Oracle은 데이터베이스의 데이터가 의도한 대로 저장되고 
+데이터베이스의 다른 부분과 결함없이 작동하도록 제약조건을 제공한다.</p>
+
+<p>이때 제약조건을 적용하는 방법을 두가지로 분류할 수 있다.</p>
+
+<ul>
+  <li>
+    <p>선언적 방법: 
+테이블의 선언(생성 및 변경)과 함께 규칙을 저장한다. 
+테이블간의 관계에 대한 규칙, 테이블 열에 들어가야할 데이터의 규칙등을 지정한다. 
+테이블에 저장되는 모든 행에 적용된다.</p>
+  </li>
+  <li>
+    <p>절차적 방법: 
+작업과정중에는 데이터에 제약조건을 추가해야하는 상황이 발생하며 선언적 
+방법만으로는 이를 충족하기 어렵다. 따라서 절차적 방법으로 
+데이터에 제약조건을 추가하는데 이를 사용자 정의 무결성 이라고 한다.</p>
+  </li>
+</ul>
+
+<h3 id="제약조건-추가하기-1-기본키-추가">제약조건 추가하기: 1. 기본키 추가</h3>
+
+<h3 id="제약조건-추가하기-2-외부키-추가">제약조건 추가하기: 2. 외부키 추가</h3>
+
+<h3 id="제약조건-추가하기-3-유일조건-추가">제약조건 추가하기: 3. 유일조건 추가</h3>
+
+<h3 id="제약조건-추가하기-4-check조건-추가">제약조건 추가하기: 4. CHECK조건 추가</h3>
+:ET
