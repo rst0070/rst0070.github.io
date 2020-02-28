@@ -1,0 +1,116 @@
+I"<hr />
+<h2 id="1-oracledb-모듈-불러오기-oracledb-객체-생성">1. <a href="https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class">Oracledb 모듈 불러오기: Oracledb 객체 생성</a></h2>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">oracledb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">oracledb</span><span class="dl">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>위와 같이 oracledb 모듈을 불러오면 <code class="highlighter-rouge">oracledb</code>라는 변수에는 
+oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
+oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.</p>
+
+<h3 id="11-oracledb-객체는-무엇을-하는가">1.1 oracledb 객체는 무엇을 하는가?</h3>
+<p><em>Pool</em> 객체와 <em>Connection</em> 객체를 생성할 기반의 역할을 하고 
+DB관련 작업시 사용할 많은 <a href="https://oracle.github.io/node-oracledb/doc/api.html#-31-oracledb-constants">상수들을 갖고있다.</a></p>
+
+<p><em>Pool</em> 과 <em>Connection</em> 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.</p>
+<hr />
+<h2 id="2-pool-생성하기">2. Pool 생성하기</h2>
+
+<h3 id="21-pool의-개념">2.1 Pool의 개념</h3>
+<p>문서에 따르면 각각의 Pool 객체는 <em><a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/lnoci/session-and-connection-pooling.html#GUID-F9662FFB-EAEF-495C-96FC-49C6D1D9625C">Oracle Call Interface Session Pool</a></em> 라고 한다.<br />
+이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다.<br />
+이런 특성의 장점은 다음과 같다.</p>
+<ul>
+  <li>여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다.</li>
+  <li>새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 
+유지하고 있다.)</li>
+</ul>
+
+<h3 id="22-생성하기-oracledbcreatepool">2.2 생성하기: <a href="https://oracle.github.io/node-oracledb/doc/api.html#createpool">oracledb.createPool()</a></h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">oracledb</span><span class="p">.</span><span class="nx">createPool</span><span class="p">(</span><span class="nb">Object</span> <span class="nx">poolAttrs</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nb">Error</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">Pool</span> <span class="nx">pool</span><span class="p">){});</span>
+</code></pre></div></div>
+<p>위와 같이 oracledb 객체에 속한 함수를 통해 콜백방법으로 생성할 수 있다.</p>
+
+<h4 id="221-parameters-object-poolattrs">2.2.1 Parameters: Object poolAttrs</h4>
+<p>Pool을 생성하는데 필요한 세부사항들을 key:value(javascript 객체)
+로 정의한 객체이다.</p>
+
+<p><a href="https://oracle.github.io/node-oracledb/doc/api.html#-3311-createpool-parameters-and-attributes">문서</a>를 보면 여러가지 속성들을 찾을수 있다. 
+이 글에서는 중요한 속성들만 언급하려한다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>속성 이름</th>
+      <th>Type</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>connectString</td>
+      <td>String</td>
+      <td>tnsnames.ora에 등록된 서비스 이름이 <em>MYDB</em>이고 리스너가 <em>localhost:1521</em>에 위치해 있다면 값은 <code class="highlighter-rouge">"localhost:1521/MYDB"</code>가 될 것이다.</td>
+    </tr>
+    <tr>
+      <td>user</td>
+      <td>String</td>
+      <td>사용하려는 Oracle 계정의 이름이다.</td>
+    </tr>
+    <tr>
+      <td>password</td>
+      <td>String</td>
+      <td>위 user의 패스워드</td>
+    </tr>
+    <tr>
+      <td>poolAlias</td>
+      <td>String</td>
+      <td>생성되는 <em>Pool</em>은 <em>Connection Pool Cache</em>에 등록되는데 이때 해당 <em>Pool</em>을 구별하는 식별자의 역할을 하는것이 <em>poolAlias</em>이다. <em>oracledb.getPool()</em>등의 함수에 파라미터로 전달하여 해당 <em>Pool</em>을 얻을수 있다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이것들 외에도 Pool에서 관리할 Conection의 개수를 제한하거나, 
+관리되는 Connection들에 같은 속성을 부여할 것 인지 설정하는등 
+여러가지를 설정할 수 있다.</p>
+
+<h4 id="222-callback-function">2.2.2 Callback function</h4>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span><span class="p">(</span><span class="nb">Error</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">Pool</span> <span class="nx">pool</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Error error</td>
+      <td>createPool()이 성공한다면 NULL값이지만 실패한다면 <a href="https://oracle.github.io/node-oracledb/doc/api.html#errorobj">오류 메세지</a>를 포함한다.</td>
+    </tr>
+    <tr>
+      <td><a href="https://oracle.github.io/node-oracledb/doc/api.html#poolclass">Pool</a> pool</td>
+      <td>새로 생성된 connection Pool이다. Pool 생성을 실패했다면 NULL 값을 가진다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+<h2 id="3-connection-만들기-oracledbgetconnection">3. Connection 만들기: oracledb.getConnection()</h2>
+<p>getConnection() 합수는 여러 종류가 있어서 Pool 없이 연결을 만들수도 있다. 
+하지만 Pool을 사용하는 것이 Oracle의 권장사항이어서 Pool을 사용하는 콜백방법에 
+대해서만 알아보려한다. 다른 방법들은 <a href="https://oracle.github.io/node-oracledb/doc/api.html#-332-oracledbgetconnection">이곳</a>에 있다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">oracledb</span><span class="p">.</span><span class="nx">getConnection</span><span class="p">(</span><span class="nb">String</span> <span class="nx">poolAlias</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nb">Error</span> <span class="nx">error</span><span class="p">,</span> <span class="nx">Connection</span> <span class="nx">connection</span><span class="p">){})</span>
+</code></pre></div></div>
+<p>위와 같이 oracledb객체의 메소드로 Connection을 얻을 수 있다.</p>
+
+<p>poolAlias는 위에서 언급한 ‘pool을 식별하는 문자열’이다. poolAlias를 파라미터로 전달하지 
+않으면 가장 최근에 Pool cache에 올라간 Pool을 사용한다.</p>
+
+<p>콜백함수의 error 파라미터는 
+connection 생성에 성공하면 NULL이고, 실패하면 Error 객체가 된다.<br />
+생성에 실패하면 Connection 객체는 NULL값으로 들어온다.</p>
+
+<!-- ## 4. SQL 실행하기: connection.execute()생성된 connection객체에서 execute()함수를 통해 쿼리를 실행할 수 있다.  -->
+:ET

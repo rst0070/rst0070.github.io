@@ -7,6 +7,81 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title>
+				
+				
+					<description>&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
+&lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
+&quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
+See https://oracle.github.io/odpi/doc/installation.html#windows for help
+Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html
+You must have 64-bit Oracle client libraries in your PATH environment variable.
+If you do not have Oracle Database on this computer, then install the Instant Client 
+Basic or Basic Light package from
+http://www.oracle.com/technetwork/topics/winx64soft-089540.html
+A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
+version must be available.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;local 컴퓨터에 32bit 오라클이 설치되어있어 따로 Oracle Client 를 설치하지 않고 
+64bit node.js를 사용하다 이와 같은 오류가 발생한것이다.&lt;/p&gt;
+
+&lt;p&gt;해결방법은 간단하다.&lt;br /&gt;
+&lt;em&gt;64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다.&lt;/em&gt; 
+만약 32bit가 필요하다면 32bit Instant Client를 받으면 된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-instant-client-다운받기&quot;&gt;1. Instant Client 다운받기&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.oracle.com/kr/database/technologies/instant-client/downloads.html&quot;&gt;Oracle에서 받는다.&lt;/a&gt; 
+자신에게 해당되는 버전을 선택하고 &lt;em&gt;Basic Package&lt;/em&gt;와 &lt;em&gt;SDK Package&lt;/em&gt;를 받으면 된다.&lt;/p&gt;
+
+&lt;p&gt;두 압축파일을 풀어 하나의 폴더로 합치면 끝.&lt;/p&gt;
+
+&lt;h2 id=&quot;2-환경변수-설정&quot;&gt;2. 환경변수 설정&lt;/h2&gt;
+&lt;p&gt;앞에서 합친 폴더를 시스템 환경변수의 &lt;em&gt;Path&lt;/em&gt; 변수에 추가한다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 29 Feb 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/err-node-oracle-bit-dif.html</link>
+				<guid isPermaLink="true">http://localhost:4000/err-node-oracle-bit-dif.html</guid>
+			</item>
+		
+			<item>
+				<title>[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</title>
+				
+				
+					<description>&lt;hr /&gt;
+&lt;h2 id=&quot;1-oracledb-모듈-불러오기-oracledb-객체-생성&quot;&gt;1. &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class&quot;&gt;Oracledb 모듈 불러오기: Oracledb 객체 생성&lt;/a&gt;&lt;/h2&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위와 같이 oracledb 모듈을 불러오면 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;라는 변수에는 
+oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
+oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.&lt;/p&gt;
+
+&lt;h3 id=&quot;11-oracledb-객체는-무엇을-하는가&quot;&gt;1.1 oracledb 객체는 무엇을 하는가?&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 객체와 &lt;em&gt;Connection&lt;/em&gt; 객체를 생성할 기반의 역할을 하고 
+DB관련 작업시 사용할 많은 &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-31-oracledb-constants&quot;&gt;상수들을 갖고있다.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 과 &lt;em&gt;Connection&lt;/em&gt; 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;2-pool-생성하기&quot;&gt;2. Pool 생성하기&lt;/h2&gt;
+
+&lt;h3 id=&quot;21-pool의-개념&quot;&gt;2.1 Pool의 개념&lt;/h3&gt;
+&lt;p&gt;문서에 따르면 각각의 Pool 객체는 &lt;em&gt;&lt;a href=&quot;https://docs.oracle.com/en/database/oracle/oracle-database/19/lnoci/session-and-connection-pooling.html#GUID-F9662FFB-EAEF-495C-96FC-49C6D1D9625C&quot;&gt;Oracle Call Interface Session Pool&lt;/a&gt;&lt;/em&gt; 라고 한다.&lt;br /&gt;
+이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다.&lt;br /&gt;
+이런 특성의 장점은 다음과 같다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다.&lt;/li&gt;
+  &lt;li&gt;새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 
+유지하고 있다.)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+				
+				<pubDate>Thu, 27 Feb 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/nodejs-oracledb-how-to-connect.html</link>
+				<guid isPermaLink="true">http://localhost:4000/nodejs-oracledb-how-to-connect.html</guid>
+			</item>
+		
+			<item>
 				<title>[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title>
 				
 				

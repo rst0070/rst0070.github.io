@@ -41,7 +41,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '', 'auto');
+  ga('create', 'UA-156320954-1', 'auto');
   ga('send', 'pageview');
 </script>
 
@@ -110,6 +110,63 @@
 
     <div class="post-container">
       
+<div class="posts">
+  <h1>
+    <a href="/err-node-oracle-bit-dif.html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</a>
+  </h1>
+  
+  <p>
+    배경
+node.js에서 oracledb모듈을 사용하는데 아래와 같은 오류가 발생했다.
+Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
+"D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture". 
+See https://oracle.github.io/odpi/doc/installation.html#windows for help
+Node-oracledb installation instructions: https://oracle.github.io/node-oracled... <a href="/err-node-oracle-bit-dif.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 29 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/nodejs-oracledb-how-to-connect.html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</a>
+  </h1>
+  
+  <p>
+    
+1. Oracledb 모듈 불러오기: Oracledb 객체 생성
+const oracledb = require("oracledb");
+
+위와 같이 oracledb 모듈을 불러오면 oracledb라는 변수에는 
+oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
+oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.
+
+1.1 oracledb 객체는 무엇을 하는가?
+Pool 객체와 Connection 객체를 생성할 기반의 역할을 하고 
+DB관련 작업시 사용할 많은 상수들을 갖고있다.
+
+Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.
+
+2... <a href="/nodejs-oracledb-how-to-connect.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 27 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
 <div class="posts">
   <h1>
     <a href="/oracle-create-table.html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</a>
@@ -210,78 +267,6 @@ Node.js를 처음 접했을때 이벤트 기반 비동기 처리 방식을
   
   
     3 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/nodejs-global-objects.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
-  </h1>
-  
-  <p>
-    이 글은 Node.js의 전역 변수와 전역 객체를
-정리한 글 입니다.
-
-전역 변수
-
-  __filename: 현재 실행중인 코드의 파일 경로를 가지는 문자열
-  __dirname: 현재 실행중인 코드의 디렉토리 경로를 가지는 문자열
-
-
-console 객체
-console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체의 메서드는 아래와 같습니다.
-
-  log(): print 기능을 가지며 특수문자를 
-이용해 문자열을 출력할 수 있습니다.
-    
-      %d: 숫자
-      %s: 문자열
-      %j: JSON
-    
-  
-  time(label): 시간 측정을 시작합니다.
-  tim... <a href="/nodejs-global-objects.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/javascript-callback-with-jquery-effect.html">[Javascript] Callback 함수 with JQuery effect</a>
-  </h1>
-  
-  <p>
-    
-
-배경
-javascript는 한 문장씩 순차적으로 실행되는 언어이다.
-하지만 애니메이션등의 효과를 사용하게되면 효과를 모두 마치기 
-전에 다음 문장이 실행됨을 볼 수 있다.
-다음의 코드를 실행시켜보면 쉽게 이해할 수 있다.
-&lt;button id = "click"&gt;click&lt;/button&gt;
-&lt;p id = "pp"&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
-&lt;script&gt;
-    $("#click").click(
-        function(){
-            $("#pp").slideUp("slow");
-            alert("어림도 없지!"... <a href="/javascript-callback-with-jquery-effect.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 30 Jan 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    1 minute read
   
 
 
