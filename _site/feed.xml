@@ -1,4 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-29T03:43:16+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-03-25T19:43:02+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
+있습니다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
+&lt;p&gt;static은 모든 요소에 기본적으로 설정된 값입니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;relative&quot;&gt;relative&lt;/h2&gt;
+&lt;p&gt;relative 속성은 두가지 특징이 있습니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위의 예시의 경우 &lt;em&gt;.example&lt;/em&gt;은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 
+아래로 5px, 왼쪽으로 4px 이동합니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;absolute&quot;&gt;absolute&lt;/h2&gt;
+&lt;p&gt;절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다.&lt;/li&gt;
+  &lt;li&gt;절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;fixed&quot;&gt;fixed&lt;/h2&gt;
+&lt;p&gt;고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
+  &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. static static은 모든 요소에 기본적으로 설정된 값입니다. relative relative 속성은 두가지 특징이 있습니다. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다. 예시 .example { position: relative; top: 5px; right: 4px; } 위의 예시의 경우 .example은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 아래로 5px, 왼쪽으로 4px 이동합니다. absolute 절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다. static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다. 절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다. 예시 .example { position: absolute; top: 5px; right: 5px; } fixed 고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다. 고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다. 웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.</summary></entry><entry><title type="html">CSS font 속기형 작성법</title><link href="http://localhost:4000/css-shorthand-font-set.html" rel="alternate" type="text/html" title="CSS font 속기형 작성법" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-shorthand-font-set</id><content type="html" xml:base="http://localhost:4000/css-shorthand-font-set.html"></content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html"></summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
 &lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
 &quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
@@ -632,64 +677,4 @@ javascript를 사용하는 여러순간에 발생할 수 있다.
 &lt;p&gt;이를 통해 섹션으로 계층구조가 나눠짐을 알 수 있습니다. 
 하지만 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;aside&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;nav&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;header&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;footer&amp;gt;&lt;/code&gt;태그는 웹문서의 주요 아웃라인에 속하지 않습니다. 즉, 이 태그들은 해당 html5 문서의 주요 맥락에서 벗어난 내용을 다루는 용도로 사용됩니다.&lt;/p&gt;
 &lt;h2 id=&quot;비명시적-섹션&quot;&gt;비명시적 섹션&lt;/h2&gt;
-&lt;p&gt;제목 태그(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)는 자신이 속한 섹션의 첫번째 제목으로 정의되지 않았다면 비명시적(암묵적)으로 새로운 섹션으로 분류됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="html5" /><category term="web" /><summary type="html">이 글은 MDN문서와 M5 design studio를 참고하여 작성한 글 입니다. HTML5 Outliner을 이용하면 아웃라인을 확인할 수 있습니다. Outline HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.</summary></entry><entry><title type="html">[Git] 1.버전생성</title><link href="http://localhost:4000/git/git-1-create-version.html" rel="alternate" type="text/html" title="[Git] 1.버전생성" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-%201-create-version</id><content type="html" xml:base="http://localhost:4000/git/git-1-create-version.html">&lt;h2 id=&quot;버전관리&quot;&gt;버전관리&lt;/h2&gt;
-&lt;p&gt;git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다.&lt;br /&gt;
-아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.)&lt;/li&gt;
-  &lt;li&gt;working tree: 변경사항들이 버전으로 전환되기 전 단계&lt;/li&gt;
-  &lt;li&gt;staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;버전관리-시작&quot;&gt;버전관리 시작&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git init .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;여기서 .은 현재 디렉토리를 가리킨다.
-이 명령을 수행하면 해당 디렉토리에 ‘.git’이라는 폴더가 생성된다.
-이 폴더안의 데이터를 이용해 git이 버전관리를 한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;버전-생성&quot;&gt;버전 생성&lt;/h2&gt;
-
-&lt;p&gt;git은 버전관리를 했던 파일에 대해 추적을 한다.&lt;br /&gt;
-즉 버전관리를 하지 않은 파일은 추적하지 않는다.&lt;br /&gt;
-대상 파일을 staging area로 올리면 버전관리의 대상이 된다.&lt;br /&gt;
-staging area로 올리기 위해선 &lt;code class=&quot;highlighter-rouge&quot;&gt;add&lt;/code&gt; 명령을 이용하면 된다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add file.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;이제 commit 명령을 하면 버전이 생성된다.
-곧 repository에 저장되는것이다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git commit -m &quot;this is message&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;확인하기위해선 &lt;code class=&quot;highlighter-rouge&quot;&gt;log&lt;/code&gt;명령을 하면 된다. &lt;a href=&quot;https://git-scm.com/docs/git-log&quot;&gt;git 문서 참조&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;이제 git이 추적하는 파일을 수정하면 어떻게 될까?
-파일 수정후 status 명령을 하면&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ git status
-On branch master
-Changes not staged for commit:
-  (use &quot;git add &amp;lt;file&amp;gt;...&quot; to update what will be committed)
-  (use &quot;git restore &amp;lt;file&amp;gt;...&quot; to discard changes in working directory)
-        modified:   file.txt
-
-no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;‘changes not staged for commit’ 메세지를 보면 수정된 file.txt파일이 staging area에 올라가 있지 않다는 것을 알 수 있다.&lt;br /&gt;
-즉 working tree에 변경사항이 있다는 것이며 &lt;code class=&quot;highlighter-rouge&quot;&gt;add&lt;/code&gt; 명령으로 staging area에 추가하여 commit의 대상으로 지정할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add file.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;이후 commit 명령을 하면 변경사항이 repository에 저장되며
-git log 명령을 통해 확인할 수 있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;편의를-위한-명령어들&quot;&gt;편의를 위한 명령어들&lt;/h2&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git add .
-#현재폴더의 모든 파일을 staging area에 올린다.
-
-git commit -am &quot;this is message&quot;
-#-am은 add와 message기능을 사용한다는 의미
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html">버전관리 git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다. 아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다. repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.) working tree: 변경사항들이 버전으로 전환되기 전 단계 staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.</summary></entry><entry><title type="html">[Git] 2.Checkout</title><link href="http://localhost:4000/git/git-2-checkout.html" rel="alternate" type="text/html" title="[Git] 2.Checkout" /><published>2020-01-14T00:00:00+09:00</published><updated>2020-01-14T00:00:00+09:00</updated><id>http://localhost:4000/git/git-2-checkout</id><content type="html" xml:base="http://localhost:4000/git/git-2-checkout.html"></content><author><name>Wonbin Kim</name></author><category term="git" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;제목 태그(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)는 자신이 속한 섹션의 첫번째 제목으로 정의되지 않았다면 비명시적(암묵적)으로 새로운 섹션으로 분류됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="html5" /><category term="web" /><summary type="html">이 글은 MDN문서와 M5 design studio를 참고하여 작성한 글 입니다. HTML5 Outliner을 이용하면 아웃라인을 확인할 수 있습니다. Outline HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.</summary></entry></feed>

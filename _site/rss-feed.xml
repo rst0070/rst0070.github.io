@@ -7,6 +7,75 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>CSS font 속기형 작성법</title>
+				
+				
+					<description>
+</description>
+				
+				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/css-shorthand-font-set.html</link>
+				<guid isPermaLink="true">http://localhost:4000/css-shorthand-font-set.html</guid>
+			</item>
+		
+			<item>
+				<title>CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title>
+				
+				
+					<description>&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
+있습니다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
+&lt;p&gt;static은 모든 요소에 기본적으로 설정된 값입니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;relative&quot;&gt;relative&lt;/h2&gt;
+&lt;p&gt;relative 속성은 두가지 특징이 있습니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위의 예시의 경우 &lt;em&gt;.example&lt;/em&gt;은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 
+아래로 5px, 왼쪽으로 4px 이동합니다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;absolute&quot;&gt;absolute&lt;/h2&gt;
+&lt;p&gt;절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다.&lt;/li&gt;
+  &lt;li&gt;절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;fixed&quot;&gt;fixed&lt;/h2&gt;
+&lt;p&gt;고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
+  &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+				
+				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/css-position-relative-absolute-fixed.html</link>
+				<guid isPermaLink="true">http://localhost:4000/css-position-relative-absolute-fixed.html</guid>
+			</item>
+		
+			<item>
 				<title>[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title>
 				
 				
@@ -188,37 +257,6 @@ DB관련 작업시 사용할 많은 &lt;a href=&quot;https://oracle.github.io/no
 				<pubDate>Sat, 18 Jan 2020 00:00:00 +0900</pubDate>
 				<link>http://localhost:4000/html5-outlines-and-section.html</link>
 				<guid isPermaLink="true">http://localhost:4000/html5-outlines-and-section.html</guid>
-			</item>
-		
-			<item>
-				<title>[Git] 2.Checkout</title>
-				
-				
-					<description>
-</description>
-				
-				<pubDate>Tue, 14 Jan 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/git/git-2-checkout.html</link>
-				<guid isPermaLink="true">http://localhost:4000/git/git-2-checkout.html</guid>
-			</item>
-		
-			<item>
-				<title>[Git] 1.버전생성</title>
-				
-				
-					<description>&lt;h2 id=&quot;버전관리&quot;&gt;버전관리&lt;/h2&gt;
-&lt;p&gt;git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다.&lt;br /&gt;
-아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.)&lt;/li&gt;
-  &lt;li&gt;working tree: 변경사항들이 버전으로 전환되기 전 단계&lt;/li&gt;
-  &lt;li&gt;staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Tue, 14 Jan 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/git/git-1-create-version.html</link>
-				<guid isPermaLink="true">http://localhost:4000/git/git-1-create-version.html</guid>
 			</item>
 		
 	</channel>
