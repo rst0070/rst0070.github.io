@@ -17,8 +17,9 @@ http://www.oracle.com/technetwork/topics/winx64soft-089540.html
 A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
 version must be available.
 ```  
-local 컴퓨터에 32bit 오라클이 설치되어있어 따로 Oracle Client 를 설치하지 않고 
-64bit node.js를 사용하다 이와 같은 오류가 발생한것이다.  
+local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 
+node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 
+이와 같은 오류가 발생한것이다.  
   
 해결방법은 간단하다.  
 *64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다.* 

@@ -7,10 +7,54 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>CSS font 속기형 작성법</title>
+				<title>CSS font 속성들과 속기형 작성법</title>
 				
 				
-					<description>
+					<description>&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 
+속기형 작성법에 대해 포스팅하려 한다.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;h2 id=&quot;css에서-글자-스타일을-지정하는-속성들&quot;&gt;CSS에서 글자 스타일을 지정하는 속성들&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;글꼴: font-family&lt;/li&gt;
+  &lt;li&gt;크기: font-size&lt;/li&gt;
+  &lt;li&gt;행간: line-height&lt;/li&gt;
+  &lt;li&gt;기울기: font-style&lt;/li&gt;
+  &lt;li&gt;두께: font-weight&lt;/li&gt;
+  &lt;li&gt;음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font-family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;font-size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;line-height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;font-style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;font-weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;font-variant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;예시 처럼 각 속성들을 따로 지정할 수도 있지만, 속기형으로 빠르게 지정할 수 도 있다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;font-속기형-작성법&quot;&gt;font 속기형 작성법&lt;/h2&gt;
+&lt;p&gt;font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는 
+방법이 존재한다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;필수요소: &lt;em&gt;font-size&lt;/em&gt; 와 &lt;em&gt;font-family&lt;/em&gt;는 필수로 지정해야한다.
+    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;옵션요소: &lt;em&gt;line-height&lt;/em&gt;를 지정할 때는 &lt;em&gt;font-size&lt;/em&gt;뒤에 슬래시(/)를
+붙이고 그 뒷부분에 작성한다.
+    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;옵션요소: &lt;em&gt;font-weight&lt;/em&gt;, &lt;em&gt;font-style&lt;/em&gt;, &lt;em&gt;font-variant&lt;/em&gt;등은 &lt;em&gt;font-size&lt;/em&gt;
+앞부분에 작성한다.
+    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
 </description>
 				
 				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
@@ -92,8 +136,9 @@ http://www.oracle.com/technetwork/topics/winx64soft-089540.html
 A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
 version must be available.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;local 컴퓨터에 32bit 오라클이 설치되어있어 따로 Oracle Client 를 설치하지 않고 
-64bit node.js를 사용하다 이와 같은 오류가 발생한것이다.&lt;/p&gt;
+&lt;p&gt;local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 
+node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 
+이와 같은 오류가 발생한것이다.&lt;/p&gt;
 
 &lt;p&gt;해결방법은 간단하다.&lt;br /&gt;
 &lt;em&gt;64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다.&lt;/em&gt; 
