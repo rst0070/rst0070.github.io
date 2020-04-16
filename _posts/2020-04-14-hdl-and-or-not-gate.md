@@ -11,6 +11,8 @@ title: "HDL: nand gate를 사용해 and, or, not gate 만들기"
 즉 input과 output만을 이용하여 설계해야합니다.  
 
 예시로 아래의 Nand 칩을 설계해 보겠습니다.  
+
+
 ``` hdl
 CHIP Nand{
   //IN에서는 input pin들을 정의
