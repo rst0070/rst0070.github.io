@@ -1,4 +1,126 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-03-26T00:40:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-14T17:19:47+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">HDL: nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL: nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;&quot;&gt;HardwareDescriptionLanguage&lt;/a&gt;의 줄임말인 HDL은&lt;/p&gt;
+&lt;h2 id=&quot;not-gate&quot;&gt;Not gate&lt;/h2&gt;
+&lt;p&gt;not gate는 input을 반전 시켜 output으로 출력합니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;not(a)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Not{
+    IN in;
+    OUT out;
+    
+    PARTS:
+    Nand(a = in, b = in, out = out);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;and-gate&quot;&gt;And gate&lt;/h2&gt;
+&lt;p&gt;and gate는 두 input이 모두 1 일때만 1을 출력합니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;b&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;and(a, b)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP And{
+    IN a, b;
+    OUT out;
+    PARTS:
+    Nand(a = a, b = b, out = notAnd);
+    Nand(a = notAnd, b = notAnd, out = out);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;or-gate&quot;&gt;Or gate&lt;/h2&gt;
+&lt;p&gt;or gate는 입력 a, b중 하나라도 1이면 1을 출력합니다.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;b&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;or(a, b)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;이를 Nand gate만으로 만들기 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EB%93%9C_%EB%AA%A8%EB%A5%B4%EA%B0%84%EC%9D%98_%EB%B2%95%EC%B9%99&quot;&gt;드모르간의 법칙&lt;/a&gt;을 사용할 수 있습니다.&lt;br /&gt;
+즉 &lt;code class=&quot;highlighter-rouge&quot;&gt;a + b = ~a * ~b&lt;/code&gt;(+: or, *: and)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Or{
+    IN a, b;
+    OUT out;
+    PARTS:
+    Nand(a = a, b = b, out = nota); //  ~a
+    Nand(a = b, b = b, out = notb); //  ~b
+    Nand(a = nota, b = notb, out = o1); //  ~(~a*~b)
+    Nand(a = o1, b = o1, out = out);    //  ~(~(~a*~b))
+}
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본 HardwareDescriptionLanguage의 줄임말인 HDL은 Not gate not gate는 input을 반전 시켜 output으로 출력합니다.</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
 있습니다.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
@@ -44,7 +166,7 @@
   &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
   &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
 &lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. static static은 모든 요소에 기본적으로 설정된 값입니다. relative relative 속성은 두가지 특징이 있습니다. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다. 예시 .example { position: relative; top: 5px; right: 4px; } 위의 예시의 경우 .example은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 아래로 5px, 왼쪽으로 4px 이동합니다. absolute 절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다. static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다. 절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다. 예시 .example { position: absolute; top: 5px; right: 5px; } fixed 고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다. 고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다. 웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.</summary></entry><entry><title type="html">CSS font 속성들과 속기형 작성법</title><link href="http://localhost:4000/css-shorthand-font-set.html" rel="alternate" type="text/html" title="CSS font 속성들과 속기형 작성법" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-shorthand-font-set</id><content type="html" xml:base="http://localhost:4000/css-shorthand-font-set.html">&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 
-속기형 작성법에 대해 포스팅하려 한다.&lt;/p&gt;
+속기형 작성법에 대해 정리하려 한다.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2 id=&quot;css에서-글자-스타일을-지정하는-속성들&quot;&gt;CSS에서 글자 스타일을 지정하는 속성들&lt;/h2&gt;
 &lt;ul&gt;
@@ -86,7 +208,7 @@
     &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 속기형 작성법에 대해 포스팅하려 한다. CSS에서 글자 스타일을 지정하는 속성들 글꼴: font-family 크기: font-size 행간: line-height 기울기: font-style 두께: font-weight 음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용) 예시 font-family: &quot;Times New Roman&quot;; font-size: 10px; line-height: 1.5; font-style: italic; font-weight: bold; font-variant: small-caps; 예시 처럼 각 속성들을 따로 지정할 수도 있지만, 속기형으로 빠르게 지정할 수 도 있다. font 속기형 작성법 font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는 방법이 존재한다. 필수요소: font-size 와 font-family는 필수로 지정해야한다. font: 10px &quot;Times New Roman&quot;; 옵션요소: line-height를 지정할 때는 font-size뒤에 슬래시(/)를 붙이고 그 뒷부분에 작성한다. font: 10px/1.5 &quot;Times New Roman&quot;; 옵션요소: font-weight, font-style, font-variant등은 font-size 앞부분에 작성한다. font: bold italic small-caps 10px/1.5 &quot;Times New Roman&quot;;</summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 속기형 작성법에 대해 정리하려 한다. CSS에서 글자 스타일을 지정하는 속성들 글꼴: font-family 크기: font-size 행간: line-height 기울기: font-style 두께: font-weight 음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용) 예시 font-family: &quot;Times New Roman&quot;; font-size: 10px; line-height: 1.5; font-style: italic; font-weight: bold; font-variant: small-caps; 예시 처럼 각 속성들을 따로 지정할 수도 있지만, 속기형으로 빠르게 지정할 수 도 있다. font 속기형 작성법 font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는 방법이 존재한다. 필수요소: font-size 와 font-family는 필수로 지정해야한다. font: 10px &quot;Times New Roman&quot;; 옵션요소: line-height를 지정할 때는 font-size뒤에 슬래시(/)를 붙이고 그 뒷부분에 작성한다. font: 10px/1.5 &quot;Times New Roman&quot;; 옵션요소: font-weight, font-style, font-variant등은 font-size 앞부분에 작성한다. font: bold italic small-caps 10px/1.5 &quot;Times New Roman&quot;;</summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
 &lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
 &quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
@@ -683,42 +805,4 @@ javascript를 사용하는 여러순간에 발생할 수 있다.
 함수1이 함수2를 파라미터로 받고 실행중 혹은 실행 마지막( 애니메이션 효과가 끝날때 
 처럼 )에서 함수2를 실행시킨다면 함수2를 콜백함수라고 할 수 있다.&lt;/p&gt;
 
-&lt;p&gt;이러한 개념은 함수형 프로그래밍의 개념이라는데 좀 더 찾아봐야겠다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="javascript" /><category term="jquery" /><summary type="html"></summary></entry><entry><title type="html">[HTML5] Outline과 Section</title><link href="http://localhost:4000/html5-outlines-and-section.html" rel="alternate" type="text/html" title="[HTML5] Outline과 Section" /><published>2020-01-18T00:00:00+09:00</published><updated>2020-01-18T00:00:00+09:00</updated><id>http://localhost:4000/html5-outlines-and-section</id><content type="html" xml:base="http://localhost:4000/html5-outlines-and-section.html">&lt;ul&gt;
-  &lt;li&gt;이 글은 &lt;a href=&quot;https://developer.mozilla.org/ko/docs/Web/HTML/HTML5_%EB%AC%B8%EC%84%9C%EC%9D%98_%EC%84%B9%EC%85%98%EA%B3%BC_%EC%9C%A4%EA%B3%BD&quot;&gt;MDN문서&lt;/a&gt;와 &lt;a href=&quot;https://m5designstudio.com/2013/orlando-web-design/html5-for-beginners-2&quot;&gt;M5 design studio&lt;/a&gt;를 참고하여 작성한 글 입니다.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gsnedders.html5.org/outliner/&quot;&gt;HTML5 Outliner&lt;/a&gt;을 이용하면 아웃라인을 확인할 수 있습니다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;outline&quot;&gt;Outline&lt;/h1&gt;
-&lt;p&gt;HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 
-아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.&lt;/p&gt;
-
-&lt;h1 id=&quot;section&quot;&gt;Section&lt;/h1&gt;
-&lt;p&gt;HTML5에서는 명시적인 방법과 비명시적인 방법으로 문서를 부분(section)으로 나눌수 있습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;명시적-섹션&quot;&gt;명시적 섹션&lt;/h2&gt;
-&lt;p&gt;아래의 태그들을 사용합니다.
-&lt;img src=&quot;https://m5designstudio.com/wp-content/uploads/2013/01/HTML5_website_structure.jpg&quot; alt=&quot;dd&quot; /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;body&amp;gt;&lt;/code&gt;도 섹션 태그입니다. 각 섹션은 제목(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)을 가질 수 있으며 제목은 섹션내의 가장 위에 위치한 태그만 해당합니다. 그 외의 제목태그들은 뒤에서 설명할 비명시적인 섹션을 만들어냅니다.&lt;/p&gt;
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
-            &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s-s&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;body-s-2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위 코드는 아래의 아웃라인을 갖게됩니다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. body
-    1. body-s
-        1. body-s-s
-    2. body-s-2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;이를 통해 섹션으로 계층구조가 나눠짐을 알 수 있습니다. 
-하지만 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;aside&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;nav&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;header&amp;gt;&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;footer&amp;gt;&lt;/code&gt;태그는 웹문서의 주요 아웃라인에 속하지 않습니다. 즉, 이 태그들은 해당 html5 문서의 주요 맥락에서 벗어난 내용을 다루는 용도로 사용됩니다.&lt;/p&gt;
-&lt;h2 id=&quot;비명시적-섹션&quot;&gt;비명시적 섹션&lt;/h2&gt;
-&lt;p&gt;제목 태그(&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;부터 &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;)는 자신이 속한 섹션의 첫번째 제목으로 정의되지 않았다면 비명시적(암묵적)으로 새로운 섹션으로 분류됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="html5" /><category term="web" /><summary type="html">이 글은 MDN문서와 M5 design studio를 참고하여 작성한 글 입니다. HTML5 Outliner을 이용하면 아웃라인을 확인할 수 있습니다. Outline HTML5에서는 이전보다 파악하기 쉬운 아웃라인을 사용합니다. 아웃라인은 ‘섹션의 계층구조(트리구조)’라고 이해할 수 있습니다.</summary></entry></feed>
+&lt;p&gt;이러한 개념은 함수형 프로그래밍의 개념이라는데 좀 더 찾아봐야겠다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="javascript" /><category term="jquery" /><summary type="html"></summary></entry></feed>

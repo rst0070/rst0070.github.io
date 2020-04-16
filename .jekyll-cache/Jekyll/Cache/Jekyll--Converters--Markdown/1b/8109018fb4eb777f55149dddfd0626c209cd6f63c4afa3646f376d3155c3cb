@@ -1,0 +1,25 @@
+I"�<h2 id="not-gate">Not gate</h2>
+<p>not gate는 input을 반전 시켜 output으로 출력한다.</p>
+
+<p>| a | not(a) |
+| :—: | :—: |
+| 0 | 1 |
+| 1 | 0 |</p>
+<pre><code class="language-hdl">CHIP Not{
+    IN in;
+    OUT out;
+    
+    PARTS:
+    Nand(a = in, b = in, out = out);
+}
+</code></pre>
+
+<h2 id="and-gate">And gate</h2>
+<p>and gate는 두 input이 모두 1 일때만 1을 출력한다.
+| a | b | and(a, b) |
+| :—: | :—: | :—: |
+| 0 | 0 | 0 |
+| 0 | 1 | 0 |
+| 1 | 0 | 0 |
+| 1 | 1 | 1 |</p>
+:ET

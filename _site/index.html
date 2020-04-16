@@ -112,12 +112,70 @@
       
 <div class="posts">
   <h1>
+    <a href="/hdl-and-or-not-gate.html">HDL: nand gate를 사용해 and, or, not gate 만들기</a>
+  </h1>
+  
+  <p>
+    HDL 기본
+HardwareDescriptionLanguage의 줄임말인 HDL은
+Not gate
+not gate는 input을 반전 시켜 output으로 출력합니다.
+
+
+  
+    
+      a
+      not(a)
+    
+  
+  
+    
+      0
+      1
+    
+    
+      1
+      0
+    
+  
+
+
+CHIP Not{
+    IN in;
+    OUT out;
+    
+    PARTS:
+    Nand(a = in, b = in, out = out);
+}
+
+
+And gate
+and gate는 두 input이 모두 1 일때만 1을 출력합니다.
+
+
+  
+    
+      ... <a href="/hdl-and-or-not-gate.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 14 Apr 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
     <a href="/css-shorthand-font-set.html">CSS font 속성들과 속기형 작성법</a>
   </h1>
   
   <p>
     CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 
-속기형 작성법에 대해 포스팅하려 한다.
+속기형 작성법에 대해 정리하려 한다.
 
 CSS에서 글자 스타일을 지정하는 속성들
 
@@ -135,7 +193,7 @@ font-size: 10px;
 line-height: 1.5;
 font-style: italic;
 font-weight: bold;
-font-variant: smal... <a href="/css-shorthand-font-set.html">Read more</a>
+font-variant: small... <a href="/css-shorthand-font-set.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 25 Mar 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -237,42 +295,6 @@ Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역�
   
   
     1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/oracle-create-table.html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</a>
-  </h1>
-  
-  <p>
-    Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
-그 방법을 정리하려 포스팅을 하게 되었다.
-
-테이블 만들기: 기본적인 형태
-
-create table [스키마.]&lt;테이블 이름&gt; (
-&lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]
-[,&lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]]
-[,...]
-);
-
-[]: 선택사항
-&lt;&gt;: 필수사항
-
-
-  스키마: 만들어질 테이블이 속하는 스키마
-  테이블 이름: 만들어질 테이블의 이름
-  열 이름:... <a href="/oracle-create-table.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 20 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    2 minute read
   
 
 
