@@ -3,15 +3,15 @@ layout: post
 tag: [logicgate, hdl]
 title: "HDL: nand gate를 사용해 and, or, not gate 만들기"
 ---
-## HDL 기본
-[Hardware Description Language]()의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.  
+## HDL 기본  
+
+[Hardware Description Language](https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4)의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.  
 기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
 형식의 데이터가 이동하게 됩니다.  
  이때 내부적인 연산은 다른 칩들에 intput을 넣고 output을 받는 과정으로 이루어집니다.
 즉 input과 output만을 이용하여 설계해야합니다.  
 
 예시로 아래의 Nand 칩을 설계해 보겠습니다.  
-
 
 ``` hdl
 CHIP Nand{
