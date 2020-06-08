@@ -1,0 +1,14 @@
+I"<p>CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
+속기형 작성법에 대해 정리하려 한다.</p>
+<hr />
+
+<h2 id="css에서-글자-스타일을-지정하는-속성들">CSS에서 글자 스타일을 지정하는 속성들</h2>
+<ul>
+  <li>글꼴: font-family</li>
+  <li>크기: font-size</li>
+  <li>행간: line-height</li>
+  <li>기울기: font-style</li>
+  <li>두께: font-weight</li>
+  <li>음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)</li>
+</ul>
+:ET

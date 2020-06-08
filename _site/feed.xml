@@ -1,5 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-04-14T17:19:47+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">HDL: nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL: nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;&quot;&gt;HardwareDescriptionLanguage&lt;/a&gt;의 줄임말인 HDL은&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-09T02:39:58+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</title><link href="http://localhost:4000/datastructure-graph.html" rel="alternate" type="text/html" title="자료구조: 그래프의 개념과 구현, 탐색(BFS)" /><published>2020-04-16T00:00:00+09:00</published><updated>2020-04-16T00:00:00+09:00</updated><id>http://localhost:4000/datastructure-graph</id><content type="html" xml:base="http://localhost:4000/datastructure-graph.html">&lt;h2 id=&quot;1-그래프의-개념&quot;&gt;1. 그래프의 개념&lt;/h2&gt;
+
+&lt;h2 id=&quot;2-그래프의-구현&quot;&gt;2. 그래프의 구현&lt;/h2&gt;
+
+&lt;h2 id=&quot;3-탐색-bfs&quot;&gt;3. 탐색: BFS&lt;/h2&gt;</content><author><name>Wonbin Kim</name></author><category term="자료구조" /><summary type="html">1. 그래프의 개념</summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4&quot;&gt;Hardware Description Language&lt;/a&gt;의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.&lt;br /&gt;
+기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
+형식의 데이터가 이동하게 됩니다.&lt;br /&gt;
+ 이때 내부적인 연산은 다른 칩들에 intput을 넣고 output을 받는 과정으로 이루어집니다.
+즉 input과 output만을 이용하여 설계해야합니다.&lt;/p&gt;
+
+&lt;p&gt;예시로 아래의 Nand 칩을 설계해 보겠습니다.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Nand{
+  //IN에서는 input pin들을 정의
+  IN x, y;
+  //OUT에서는 output pin을 정의
+  OUT ret;
+
+  /* 이때 배열의 형태로 pin들을 정의할 수 있다.
+   * 위의 x, y 대신 x[2]로 하여 x[0]와 x[1]으로 각 pin원소를 접근할 수 있다.
+   * output pin도 마찬가지로 정의가능
+   */
+
+  //PARTS에서는 처리할 내용을 작성한다.
+  PARTS:
+  And(a = x, b = y, out = o1);
+  Not(in = o1, out = ret)
+
+  /* 다른칩에 접근할때는 '칩이름(핀이름 = 현재핀에서사용하는핀)'식으로
+   * 접근한다.
+   * input pin에 접근하는 pin은 값을 전달,
+   * output pin에 접근하는 pin은 값을 받아온다.
+   * ex. Nand(x = a, y = b, ret = out);
+   *
+   * 이때 out에 해당하는 핀에 internal pin을 연결할 수 있다.
+   * 예를들어 위의 'o1'이 internal pin인데 여러 칩들을 연결할때
+   * output의 이름을 붙여주는 역할을 한다.
+   */
+}
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&quot;not-gate&quot;&gt;Not gate&lt;/h2&gt;
 &lt;p&gt;not gate는 input을 반전 시켜 output으로 출력합니다.&lt;/p&gt;
 
@@ -25,7 +66,7 @@
 &lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Not{
     IN in;
     OUT out;
-    
+
     PARTS:
     Nand(a = in, b = in, out = out);
 }
@@ -120,7 +161,7 @@
     Nand(a = nota, b = notb, out = o1); //  ~(~a*~b)
     Nand(a = o1, b = o1, out = out);    //  ~(~(~a*~b))
 }
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본 HardwareDescriptionLanguage의 줄임말인 HDL은 Not gate not gate는 input을 반전 시켜 output으로 출력합니다.</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
 있습니다.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
@@ -165,7 +206,7 @@
 &lt;ol&gt;
   &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
   &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. static static은 모든 요소에 기본적으로 설정된 값입니다. relative relative 속성은 두가지 특징이 있습니다. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다. 예시 .example { position: relative; top: 5px; right: 4px; } 위의 예시의 경우 .example은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 아래로 5px, 왼쪽으로 4px 이동합니다. absolute 절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다. static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다. 절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다. 예시 .example { position: absolute; top: 5px; right: 5px; } fixed 고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다. 고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다. 웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.</summary></entry><entry><title type="html">CSS font 속성들과 속기형 작성법</title><link href="http://localhost:4000/css-shorthand-font-set.html" rel="alternate" type="text/html" title="CSS font 속성들과 속기형 작성법" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-shorthand-font-set</id><content type="html" xml:base="http://localhost:4000/css-shorthand-font-set.html">&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 
+&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. static static은 모든 요소에 기본적으로 설정된 값입니다. relative relative 속성은 두가지 특징이 있습니다. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다. 예시 .example { position: relative; top: 5px; right: 4px; } 위의 예시의 경우 .example은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 아래로 5px, 왼쪽으로 4px 이동합니다. absolute 절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다. static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다. 절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다. 예시 .example { position: absolute; top: 5px; right: 5px; } fixed 고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다. 고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다. 웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.</summary></entry><entry><title type="html">CSS font 속성들과 속기형 작성법</title><link href="http://localhost:4000/css-shorthand-font-set.html" rel="alternate" type="text/html" title="CSS font 속성들과 속기형 작성법" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-shorthand-font-set</id><content type="html" xml:base="http://localhost:4000/css-shorthand-font-set.html">&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
 속기형 작성법에 대해 정리하려 한다.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2 id=&quot;css에서-글자-스타일을-지정하는-속성들&quot;&gt;CSS에서 글자 스타일을 지정하는 속성들&lt;/h2&gt;
@@ -190,7 +231,7 @@
 
 &lt;hr /&gt;
 &lt;h2 id=&quot;font-속기형-작성법&quot;&gt;font 속기형 작성법&lt;/h2&gt;
-&lt;p&gt;font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는 
+&lt;p&gt;font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는
 방법이 존재한다.&lt;/p&gt;
 
 &lt;ul&gt;
@@ -208,7 +249,7 @@
     &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 속기형 작성법에 대해 정리하려 한다. CSS에서 글자 스타일을 지정하는 속성들 글꼴: font-family 크기: font-size 행간: line-height 기울기: font-style 두께: font-weight 음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용) 예시 font-family: &quot;Times New Roman&quot;; font-size: 10px; line-height: 1.5; font-style: italic; font-weight: bold; font-variant: small-caps; 예시 처럼 각 속성들을 따로 지정할 수도 있지만, 속기형으로 빠르게 지정할 수 도 있다. font 속기형 작성법 font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는 방법이 존재한다. 필수요소: font-size 와 font-family는 필수로 지정해야한다. font: 10px &quot;Times New Roman&quot;; 옵션요소: line-height를 지정할 때는 font-size뒤에 슬래시(/)를 붙이고 그 뒷부분에 작성한다. font: 10px/1.5 &quot;Times New Roman&quot;; 옵션요소: font-weight, font-style, font-variant등은 font-size 앞부분에 작성한다. font: bold italic small-caps 10px/1.5 &quot;Times New Roman&quot;;</summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 속기형 작성법에 대해 정리하려 한다. CSS에서 글자 스타일을 지정하는 속성들 글꼴: font-family 크기: font-size 행간: line-height 기울기: font-style 두께: font-weight 음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)</summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
 &lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
 &quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
@@ -722,87 +763,4 @@ exports 객체의 속성을 정의하는 방식으로 작동합니다.
 &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;언급하지 않아도 되겠지만 결과는 &lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;가 출력됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><summary type="html">이 글은 Node.js의 전역 변수와 전역 객체를 정리한 글 입니다.</summary></entry><entry><title type="html">[Javascript] Callback 함수 with JQuery effect</title><link href="http://localhost:4000/javascript-callback-with-jquery-effect.html" rel="alternate" type="text/html" title="[Javascript] Callback 함수 with JQuery effect" /><published>2020-01-30T00:00:00+09:00</published><updated>2020-01-30T00:00:00+09:00</updated><id>http://localhost:4000/javascript-callback-with-jquery-effect</id><content type="html" xml:base="http://localhost:4000/javascript-callback-with-jquery-effect.html">&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js&quot;&gt;&lt;/script&gt;
-
-&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
-&lt;p&gt;javascript는 한 문장씩 순차적으로 실행되는 언어이다.
-하지만 애니메이션등의 효과를 사용하게되면 효과를 모두 마치기 
-전에 다음 문장이 실행됨을 볼 수 있다.&lt;br /&gt;
-다음의 코드를 실행시켜보면 쉽게 이해할 수 있다.&lt;/p&gt;
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;click&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;click&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#pp&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slideUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;slow&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;어림도 없지!&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div style=&quot;border-style: solid; border-color: green;&quot;&gt;
-&lt;button id=&quot;click&quot;&gt;click&lt;/button&gt;
-&lt;p id=&quot;pp&quot;&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
-&lt;/div&gt;
-&lt;script&gt;
-    $(&quot;#click&quot;).click(
-        function(){
-            $(&quot;#pp&quot;).slideUp(&quot;slow&quot;);
-            alert(&quot;어림도 없지!&quot;);
-        }
-    );
-&lt;/script&gt;
-
-&lt;p&gt;이러한 문제는 애니메이션 효과뿐만이 아니라
-javascript를 사용하는 여러순간에 발생할 수 있다.
-이를 해결하기 위해 Callback기능을 이용한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;사용방법&quot;&gt;사용방법&lt;/h2&gt;
-&lt;p&gt;애니메이션 효과의 경우 다음과 같은 형식으로 사용할 수 있다.&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$(selector).effect(speed, callback)&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;effect는 slideUp, hide와 같은 효과 함수들을 가리킨다.&lt;/li&gt;
-  &lt;li&gt;callback은 함수이다. 효과가 다 끝나고 함수가 실행된다.&lt;br /&gt;
-아래의 예시를 실행해보자&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;click&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;click&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id = &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;script&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;#pp&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slideUp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;slow&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-                &lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;그렇게 하렴~&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-            
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div style=&quot;border-style: solid; border-color: green;&quot;&gt;
-&lt;button id=&quot;clickk&quot;&gt;click&lt;/button&gt;
-&lt;p id=&quot;pppp&quot;&gt;저는 알림이 뜨기전에 사라지고 싶어요&lt;/p&gt;
-&lt;/div&gt;
-&lt;script&gt;
-    $(&quot;#clickk&quot;).click(
-        function(){
-            $(&quot;#pppp&quot;).slideUp(&quot;slow&quot;,
-            function(){
-                alert(&quot;그렇게 하렴~&quot;);
-            });
-        }
-    );
-&lt;/script&gt;
-
-&lt;h2 id=&quot;마치며-새롭게-알게된점&quot;&gt;마치며, 새롭게 알게된점&lt;/h2&gt;
-&lt;p&gt;javascript의 callback함수를 ‘애니메이션 효과’에 관련된 부분의 공부를 하면서 ‘순차적 실행’에 관련해서만 이해했었다. 하지만 조금더 깊게 공부를 해보니 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$(selector).click(function(){...})&lt;/code&gt; 과 같은 jquery 구문도 callback을 
-이용한다는 사실을 알게되었다.&lt;/p&gt;
-
-&lt;p&gt;자바스크립트에서는 함수가 객체로 사용된다.
-함수1이 함수2를 파라미터로 받고 실행중 혹은 실행 마지막( 애니메이션 효과가 끝날때 
-처럼 )에서 함수2를 실행시킨다면 함수2를 콜백함수라고 할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;이러한 개념은 함수형 프로그래밍의 개념이라는데 좀 더 찾아봐야겠다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="javascript" /><category term="jquery" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;언급하지 않아도 되겠지만 결과는 &lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;가 출력됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><summary type="html">이 글은 Node.js의 전역 변수와 전역 객체를 정리한 글 입니다.</summary></entry></feed>

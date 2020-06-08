@@ -81,6 +81,8 @@
     
       <a href="/menu/tag.html">Tag</a>
     
+      <a href="/menu/category.html">Category</a>
+    
       <a href="/menu/contact.html">Contact</a>
     
   </nav>
@@ -112,54 +114,52 @@
       
 <div class="posts">
   <h1>
-    <a href="/hdl-and-or-not-gate.html">HDL: nand gate를 사용해 and, or, not gate 만들기</a>
+    <a href="/datastructure-graph.html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</a>
+  </h1>
+  
+  <p>
+    1. 그래프의 개념
+
+2. 그래프의 구현
+
+3. 탐색: BFS
+ <a href="/datastructure-graph.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 16 Apr 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/hdl-and-or-not-gate.html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</a>
   </h1>
   
   <p>
     HDL 기본
-HardwareDescriptionLanguage의 줄임말인 HDL은
-Not gate
-not gate는 input을 반전 시켜 output으로 출력합니다.
 
+Hardware Description Language의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.
+기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
+형식의 데이터가 이동하게 됩니다.
+ 이때 내부적인 연산은 다른 칩들에 intput을 넣고 output을 받는 과정으로 이루어집니다.
+즉 input과 output만을 이용하여 설계해야합니다.
 
-  
-    
-      a
-      not(a)
-    
-  
-  
-    
-      0
-      1
-    
-    
-      1
-      0
-    
-  
+예시로 아래의 Nand 칩을 설계해 보겠습니다.
 
-
-CHIP Not{
-    IN in;
-    OUT out;
-    
-    PARTS:
-    Nand(a = in, b = in, out = out);
-}
-
-
-And gate
-and gate는 두 input이 모두 1 일때만 1을 출력합니다.
-
-
-  
-    
-      ... <a href="/hdl-and-or-not-gate.html">Read more</a>
+CHIP Nand{
+  //IN에서는 input pin들을 정의
+  IN x, y;
+  //OUT에서는 o... <a href="/hdl-and-or-not-gate.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 14 Apr 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
-    1 minute read
+    2 minute read
   
 
 
@@ -174,7 +174,7 @@ and gate는 두 input이 모두 1 일때만 1을 출력합니다.
   </h1>
   
   <p>
-    CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 
+    CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
 속기형 작성법에 대해 정리하려 한다.
 
 CSS에서 글자 스타일을 지정하는 속성들
@@ -193,7 +193,7 @@ font-size: 10px;
 line-height: 1.5;
 font-style: italic;
 font-weight: bold;
-font-variant: small... <a href="/css-shorthand-font-set.html">Read more</a>
+font-variant: small-... <a href="/css-shorthand-font-set.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 25 Mar 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -262,39 +262,6 @@ Node-oracledb installation instructions: https://oracle.github.io/node-oracled..
   
   
     less than 1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/nodejs-oracledb-how-to-connect.html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</a>
-  </h1>
-  
-  <p>
-    
-1. Oracledb 모듈 불러오기: Oracledb 객체 생성
-const oracledb = require("oracledb");
-
-위와 같이 oracledb 모듈을 불러오면 oracledb라는 변수에는 
-oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
-oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.
-
-1.1 oracledb 객체는 무엇을 하는가?
-Pool 객체와 Connection 객체를 생성할 기반의 역할을 하고 
-DB관련 작업시 사용할 많은 상수들을 갖고있다.
-
-Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.
-
-2... <a href="/nodejs-oracledb-how-to-connect.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 27 Feb 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    1 minute read
   
 
 
