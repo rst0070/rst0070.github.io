@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Node_js
 tags: [node.js]
 title: "[Node.js] 전역 변수, 전역 객체 (console, process, exports)"
 ---

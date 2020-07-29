@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Oracle
 tags: [oracle, sql]
 title: "[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)"
 ---

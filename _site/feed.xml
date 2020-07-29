@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-06-09T02:39:58+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</title><link href="http://localhost:4000/datastructure-graph.html" rel="alternate" type="text/html" title="자료구조: 그래프의 개념과 구현, 탐색(BFS)" /><published>2020-04-16T00:00:00+09:00</published><updated>2020-04-16T00:00:00+09:00</updated><id>http://localhost:4000/datastructure-graph</id><content type="html" xml:base="http://localhost:4000/datastructure-graph.html">&lt;h2 id=&quot;1-그래프의-개념&quot;&gt;1. 그래프의 개념&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-07-29T18:31:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">Kotlin Basic Syntax</title><link href="http://localhost:4000/kotlin/kotlin-syntax-basic.html" rel="alternate" type="text/html" title="Kotlin Basic Syntax" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-basic</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-basic.html">&lt;ul&gt;
+  &lt;li&gt;Default Parameter Valuese&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Valuese</summary></entry><entry><title type="html">Kotlin Syntax about Functions</title><link href="http://localhost:4000/kotlin/kotlin-syntax-functions.html" rel="alternate" type="text/html" title="Kotlin Syntax about Functions" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-functions</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-functions.html">&lt;ul&gt;
+  &lt;li&gt;Default Parameter Values&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;vararg-parameters&quot;&gt;Vararg Parameters&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vararg&lt;/code&gt;is keyword used to define a parameter. This keyword means the parameter is numberically variable.&lt;br /&gt;
+Thus the parameter can be used as an array, even as an empty array.&lt;/p&gt;
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printTexts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;vararg&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEacch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$item&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;printTexts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;arrayOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//using spread operation&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;If do not pass any parameter to &lt;code class=&quot;highlighter-rouge&quot;&gt;printText()&lt;/code&gt;, the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;texts&lt;/code&gt; would be an empty array.
+Reference: &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax&quot;&gt;spread operation&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;named-argument&quot;&gt;Named argument&lt;/h2&gt;
+&lt;p&gt;Calling a function, each argument can be named like ket-value pair.&lt;br /&gt;
+This can reduce errors in complex codes.&lt;/p&gt;
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to $to , $ms, from $from&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;sendMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;rst&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;home&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;message&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;default-parameter-values&quot;&gt;Default Parameter Values&lt;/h2&gt;
+&lt;p&gt;Parameters of a function can have default values at defining the function.&lt;br /&gt;
+Below code will print ‘Hello’.&lt;/p&gt;
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">Kotlin syntax: Class</title><link href="http://localhost:4000/kotlin/kotlin-syntax-class.html" rel="alternate" type="text/html" title="Kotlin syntax: Class" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-class</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-class.html"></content><author><name>Wonbin Kim</name></author><summary type="html"></summary></entry><entry><title type="html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</title><link href="http://localhost:4000/datastructure-graph.html" rel="alternate" type="text/html" title="자료구조: 그래프의 개념과 구현, 탐색(BFS)" /><published>2020-04-16T00:00:00+09:00</published><updated>2020-04-16T00:00:00+09:00</updated><id>http://localhost:4000/datastructure-graph</id><content type="html" xml:base="http://localhost:4000/datastructure-graph.html">&lt;h2 id=&quot;1-그래프의-개념&quot;&gt;1. 그래프의 개념&lt;/h2&gt;
 
 &lt;h2 id=&quot;2-그래프의-구현&quot;&gt;2. 그래프의 구현&lt;/h2&gt;
 
@@ -277,7 +320,7 @@ node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이�
 &lt;p&gt;두 압축파일을 풀어 하나의 폴더로 합치면 끝.&lt;/p&gt;
 
 &lt;h2 id=&quot;2-환경변수-설정&quot;&gt;2. 환경변수 설정&lt;/h2&gt;
-&lt;p&gt;앞에서 합친 폴더를 시스템 환경변수의 &lt;em&gt;Path&lt;/em&gt; 변수에 추가한다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="err" /><category term="oracle" /><category term="node.js" /><summary type="html">배경 node.js에서 oracledb모듈을 사용하는데 아래와 같은 오류가 발생했다. Error: DPI-1047: Cannot locate a 64-bit Oracle Client library: &quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. See https://oracle.github.io/odpi/doc/installation.html#windows for help Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html You must have 64-bit Oracle client libraries in your PATH environment variable. If you do not have Oracle Database on this computer, then install the Instant Client Basic or Basic Light package from http://www.oracle.com/technetwork/topics/winx64soft-089540.html A Microsoft Visual Studio Redistributable suitable for your Oracle client library version must be available. local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 이와 같은 오류가 발생한것이다. 해결방법은 간단하다. 64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다. 만약 32bit가 필요하다면 32bit Instant Client를 받으면 된다. 1. Instant Client 다운받기 Oracle에서 받는다. 자신에게 해당되는 버전을 선택하고 Basic Package와 SDK Package를 받으면 된다. 두 압축파일을 풀어 하나의 폴더로 합치면 끝. 2. 환경변수 설정 앞에서 합친 폴더를 시스템 환경변수의 Path 변수에 추가한다.</summary></entry><entry><title type="html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</title><link href="http://localhost:4000/nodejs-oracledb-how-to-connect.html" rel="alternate" type="text/html" title="[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기" /><published>2020-02-27T00:00:00+09:00</published><updated>2020-02-27T00:00:00+09:00</updated><id>http://localhost:4000/nodejs-oracledb-how-to-connect</id><content type="html" xml:base="http://localhost:4000/nodejs-oracledb-how-to-connect.html">&lt;hr /&gt;
+&lt;p&gt;앞에서 합친 폴더를 시스템 환경변수의 &lt;em&gt;Path&lt;/em&gt; 변수에 추가한다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="err" /><category term="oracle" /><category term="node.js" /><summary type="html">배경 node.js에서 oracledb모듈을 사용하는데 아래와 같은 오류가 발생했다. Error: DPI-1047: Cannot locate a 64-bit Oracle Client library: &quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. See https://oracle.github.io/odpi/doc/installation.html#windows for help Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html You must have 64-bit Oracle client libraries in your PATH environment variable. If you do not have Oracle Database on this computer, then install the Instant Client Basic or Basic Light package from http://www.oracle.com/technetwork/topics/winx64soft-089540.html A Microsoft Visual Studio Redistributable suitable for your Oracle client library version must be available. local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 이와 같은 오류가 발생한것이다. 해결방법은 간단하다. 64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다. 만약 32bit가 필요하다면 32bit Instant Client를 받으면 된다. 1. Instant Client 다운받기 Oracle에서 받는다. 자신에게 해당되는 버전을 선택하고 Basic Package와 SDK Package를 받으면 된다. 두 압축파일을 풀어 하나의 폴더로 합치면 끝. 2. 환경변수 설정 앞에서 합친 폴더를 시스템 환경변수의 Path 변수에 추가한다.</summary></entry><entry><title type="html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</title><link href="http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html" rel="alternate" type="text/html" title="[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기" /><published>2020-02-27T00:00:00+09:00</published><updated>2020-02-27T00:00:00+09:00</updated><id>http://localhost:4000/node_js/nodejs-oracledb-how-to-connect</id><content type="html" xml:base="http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html">&lt;hr /&gt;
 &lt;h2 id=&quot;1-oracledb-모듈-불러오기-oracledb-객체-생성&quot;&gt;1. &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class&quot;&gt;Oracledb 모듈 불러오기: Oracledb 객체 생성&lt;/a&gt;&lt;/h2&gt;
 &lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -391,7 +434,7 @@ DB관련 작업시 사용할 많은 &lt;a href=&quot;https://oracle.github.io/no
 connection 생성에 성공하면 NULL이고, 실패하면 Error 객체가 된다.&lt;br /&gt;
 생성에 실패하면 Connection 객체는 NULL값으로 들어온다.&lt;/p&gt;
 
-&lt;!-- ## 4. SQL 실행하기: connection.execute()생성된 connection객체에서 execute()함수를 통해 쿼리를 실행할 수 있다.  --&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="oracle" /><summary type="html">1. Oracledb 모듈 불러오기: Oracledb 객체 생성 const oracledb = require(&quot;oracledb&quot;); 위와 같이 oracledb 모듈을 불러오면 oracledb라는 변수에는 oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다. 1.1 oracledb 객체는 무엇을 하는가? Pool 객체와 Connection 객체를 생성할 기반의 역할을 하고 DB관련 작업시 사용할 많은 상수들을 갖고있다. Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다. 2. Pool 생성하기 2.1 Pool의 개념 문서에 따르면 각각의 Pool 객체는 Oracle Call Interface Session Pool 라고 한다. 이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다. 이런 특성의 장점은 다음과 같다. 여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다. 새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 유지하고 있다.)</summary></entry><entry><title type="html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title><link href="http://localhost:4000/oracle-create-table.html" rel="alternate" type="text/html" title="[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)" /><published>2020-02-20T00:00:00+09:00</published><updated>2020-02-20T00:00:00+09:00</updated><id>http://localhost:4000/oracle-create-table</id><content type="html" xml:base="http://localhost:4000/oracle-create-table.html">&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
+&lt;!-- ## 4. SQL 실행하기: connection.execute()생성된 connection객체에서 execute()함수를 통해 쿼리를 실행할 수 있다.  --&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="oracle" /><summary type="html">1. Oracledb 모듈 불러오기: Oracledb 객체 생성 const oracledb = require(&quot;oracledb&quot;); 위와 같이 oracledb 모듈을 불러오면 oracledb라는 변수에는 oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다. 1.1 oracledb 객체는 무엇을 하는가? Pool 객체와 Connection 객체를 생성할 기반의 역할을 하고 DB관련 작업시 사용할 많은 상수들을 갖고있다. Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다. 2. Pool 생성하기 2.1 Pool의 개념 문서에 따르면 각각의 Pool 객체는 Oracle Call Interface Session Pool 라고 한다. 이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다. 이런 특성의 장점은 다음과 같다. 여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다. 새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 유지하고 있다.)</summary></entry><entry><title type="html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title><link href="http://localhost:4000/oracle/oracle-create-table.html" rel="alternate" type="text/html" title="[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)" /><published>2020-02-20T00:00:00+09:00</published><updated>2020-02-20T00:00:00+09:00</updated><id>http://localhost:4000/oracle/oracle-create-table</id><content type="html" xml:base="http://localhost:4000/oracle/oracle-create-table.html">&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
 그 방법을 정리하려 포스팅을 하게 되었다.&lt;/p&gt;
 
 &lt;h2 id=&quot;테이블-만들기-기본적인-형태&quot;&gt;테이블 만들기: 기본적인 형태&lt;/h2&gt;
@@ -516,251 +559,4 @@ references &amp;lt;부모테이블 이름&amp;gt; (&amp;lt;외부키와 연결�
 &lt;span class=&quot;k&quot;&gt;check&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'MALE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;위의 예시에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;gender&lt;/code&gt;는 &lt;code class=&quot;highlighter-rouge&quot;&gt;people_who_is_male&lt;/code&gt;테이블의 
-열이다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="oracle" /><category term="sql" /><summary type="html">Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 그 방법을 정리하려 포스팅을 하게 되었다. 테이블 만들기: 기본적인 형태</summary></entry><entry><title type="html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</title><link href="http://localhost:4000/oracle-user-create-grant-alter.html" rel="alternate" type="text/html" title="[Oracle] 스키마 생성, 권한부여, 수정, 삭제" /><published>2020-02-19T00:00:00+09:00</published><updated>2020-02-19T00:00:00+09:00</updated><id>http://localhost:4000/oracle-user-create-grant-alter</id><content type="html" xml:base="http://localhost:4000/oracle-user-create-grant-alter.html">&lt;h2 id=&quot;사용자-생성하기-create-user&quot;&gt;사용자 생성하기: ‘create user’&lt;/h2&gt;
-&lt;p&gt;oracle에서 사용자(스키마)를 생성하기 위해선 create user 
-명령을 사용한다.&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;identified&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;사용자에게-권한-부여하기&quot;&gt;사용자에게 권한 부여하기&lt;/h2&gt;
-&lt;p&gt;oracle에서 사용자에게 권한을 부여하기 위해선 &lt;code class=&quot;highlighter-rouge&quot;&gt;grant ... to ...&lt;/code&gt;
-명령을 사용한다.&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;grant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;권한&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;권한&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,...&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;사용자-관련-사항-수정하기-alter-user&quot;&gt;사용자 관련 사항 수정하기: alter user&lt;/h2&gt;
-&lt;p&gt;사용자 계정과 관련된 사항을 수정할때는 &lt;code class=&quot;highlighter-rouge&quot;&gt;alter user&lt;/code&gt;로 시작하는 
-구문을 이용해 수정한다.&lt;/p&gt;
-&lt;h3 id=&quot;1-암호-변경하기&quot;&gt;1. 암호 변경하기&lt;/h3&gt;
-&lt;p&gt;사용자를 생성할때 사용한 암호 정의 구문을 이용한다.&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;identified&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;2-계정-잠금해제&quot;&gt;2. 계정 잠금/해제&lt;/h3&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;account&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;3-테이블-스페이스-변경&quot;&gt;3. 테이블 스페이스 변경&lt;/h3&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;defualt&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tablespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;space&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;temporary&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tablespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;space&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;4-테이블-스페이스-할당량-변경&quot;&gt;4. 테이블 스페이스 할당량 변경&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;quota &amp;lt;할당량&amp;gt; on &amp;lt;tablespace 이름&amp;gt;&lt;/code&gt;을 이용하면 된다.&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;quota&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unlimited&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;quota&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;temp&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;...;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;사용자-삭제하기&quot;&gt;사용자 삭제하기&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;drop user&lt;/code&gt; 명령을 사용한다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="oracle" /><category term="sql" /><summary type="html">사용자 생성하기: ‘create user’ oracle에서 사용자(스키마)를 생성하기 위해선 create user 명령을 사용한다. create user &amp;lt;user name&amp;gt; identified by &amp;lt;user password&amp;gt;; 사용자에게 권한 부여하기 oracle에서 사용자에게 권한을 부여하기 위해선 grant ... to ... 명령을 사용한다. grant &amp;lt;권한1&amp;gt;, &amp;lt;권한2&amp;gt;,... to &amp;lt;user name&amp;gt;;</summary></entry><entry><title type="html">이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</title><link href="http://localhost:4000/nodejs-what-is-event-based-programming.html" rel="alternate" type="text/html" title="이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript" /><published>2020-02-07T00:00:00+09:00</published><updated>2020-02-07T00:00:00+09:00</updated><id>http://localhost:4000/nodejs-what-is-event-based-programming</id><content type="html" xml:base="http://localhost:4000/nodejs-what-is-event-based-programming.html">&lt;h1 id=&quot;배경&quot;&gt;배경&lt;/h1&gt;
-&lt;p&gt;Node.js를 처음 접했을때 &lt;em&gt;이벤트 기반 비동기 처리&lt;/em&gt; 방식을
-사용한다는 사실을 알게됐다. &lt;em&gt;모던 웹을 위한 Node.js 프로그래밍&lt;/em&gt;
-이라는 책에서는 이 방식을 아래의 &lt;em&gt;시장 대기표&lt;/em&gt; 예시로
-설명했다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;시장 여러곳의 가게에서 물건을 구매해야한다.&lt;br /&gt;
-이때 각 가게에는 손님들이 줄을 서서 대기하고 있다.&lt;br /&gt;
-빠르게 모든 물건을 구매하기 위해선 두가지 방법이 있는데&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;몸을 복제해 동시에 여러가게에 간다.&lt;/li&gt;
-  &lt;li&gt;시장을 대기표를 나누어주는 시스템으로 바꾸고
-대기표만 받고 기다린다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;1번의 방식은 기존의 스레드 기반 네트워크 프로그램의 방식이며,&lt;br /&gt;
-2번은 이벤트 기반 비동기 방식이다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;이 예시를 통해서 이벤트 기반 비동기 방시기 어떤
-방식인지 이해할 순 있었다. 하지만 이것이 어떻게 가능한지,
-진짜 단일 스레드로 가능한건지 궁금해졌다.&lt;/p&gt;
-
-&lt;h1 id=&quot;multi-thread-방식&quot;&gt;Multi Thread 방식&lt;/h1&gt;
-&lt;p&gt;Multi Thread 방식의 서버의 요청처리는 각 요청마다
-새로운 Thread를 발생시켜 처리하는 방식이다.
-아래의 java코드로 이해해 볼 수 있다.&lt;/p&gt;
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//server-socket 80번 포트에서 bind&lt;/span&gt;
-&lt;span class=&quot;nc&quot;&gt;ServerSocket&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ss&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ServerSocket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;//연결 생성&lt;/span&gt;
-  &lt;span class=&quot;nc&quot;&gt;Socket&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ss&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;//새로운 스레드 발생시켜 처리과정 넘기기&lt;/span&gt;
-  &lt;span class=&quot;nc&quot;&gt;MutiThreadHttp&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MutiThreadHttp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;//스레드 시작             &lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;mt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;이 방식은 클라이언트 요청이 몰릴수록 그에 대응되는 많은
-스레드가 발생하므로 메모리 자원을
-많이 소모하게 된다. 즉 서버의 자원에 제한을 받는다.&lt;br /&gt;
-또 프로그래밍시 Thread간 공유자원 관리에 주의 해야하는
-단점이 있다.&lt;/p&gt;
-
-&lt;h1 id=&quot;이벤트-기반-비동기-방식&quot;&gt;이벤트 기반 비동기 방식&lt;/h1&gt;
-&lt;p&gt;javascript는 이벤트 기반 비동기 방식으로 작동한다.&lt;br /&gt;
-이 방식을 따르는 Node.js는 여러 클라이언트들의 요청을
-하나의 스레드로 처리하며 각각의 요청에서 이벤트가 발생할 때만 그에 맞는 작업을 처리한다.&lt;/p&gt;
-
-&lt;p&gt;어떠한 원리로 이벤트 기반 비동기 방식이 작동하는지 궁금해졌고
-아래의 문서들을 통해 이해할 수 있었다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/understanding-js-the-event-loop-959beae3ac40&quot;&gt;Understanding JS: The Event Loop&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.nextree.co.kr/p7292/&quot;&gt;Node.js: 비동기 프로그래밍 이해&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;이벤트 기반 비동기 방식은 &lt;strong&gt;Event Loop&lt;/strong&gt;에 의해 이루어진다.
-Node.js에서 클라이언트의 요청을 처리하는 방식을 보면
-이해할 수 있다.&lt;br /&gt;
-&lt;img src=&quot;/assets/img/what-is-event-based-programming-javascript.jpg&quot; alt=&quot;eventbased-eg-req&quot; /&gt;&lt;br /&gt;
-위와같이 할 수 있는 이유는 요청에서 발생하는 이벤트와 콜백들을
-이벤트 루프에서 처리하기 때문이다.
-이 과정을 이해하려면 Call Stack, Event Table, Event Queue
-에 대해 알아야한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;call-stack&quot;&gt;Call Stack&lt;/h2&gt;
-&lt;p&gt;Javascript에서 함수를 호출하게 되면 이를 Callstack에 넣는다.&lt;br /&gt;
-이름 그대로 Stack이므로 나중에 들어간 함수가 먼저 실행되고
-먼저들어간 함수가 나중에 실행된다.&lt;br /&gt;
-실행중인 함수가 다른 함수를 호출하면 호출받은 함수가
-Callstack의 맨 위에 올려진다.&lt;/p&gt;
-
-&lt;p&gt;Javascript는 오직 하나의 Callstack을 가져서 모든 함수의 실행은
-Callstack에서 이루어진다고 볼 수 있다.&lt;/p&gt;
-
-&lt;p&gt;하지만 Callstack만으로는 javascript가 이벤트를 비동기처리 하는
-과정을 설명할 수 없다.&lt;br /&gt;
-예를들어 10초후에 특정함수가 실행되도록 타이머를 설정한다면,
-모든 처리가 10초 늦춰진다고 밖에 설명할 수 없다.&lt;/p&gt;
-
-&lt;h2 id=&quot;event-table-event-queue&quot;&gt;Event Table, Event Queue&lt;/h2&gt;
-&lt;p&gt;위의 예시와같이 이벤트가 발생해야 실행되는 함수를 Event Table
-에서 저장한다. 이때 Event Table은 특정 이벤트와 그에 대응되는
-함수를 저장하고 이벤트가 발생하면 대응되는 함수를 Event Queue에
-넣는다.&lt;/p&gt;
-
-&lt;p&gt;Event Queue는 말 그대로 ‘큐’이므로 들어온 순서대로 함수를
-수행한다.&lt;br /&gt;
-하지만 함수를 실행시키는것은 Callstack에 쌓인 함수만 가능하므로
-아직 수행해야할 작업이 남아있다.&lt;/p&gt;
-
-&lt;h2 id=&quot;event-loop&quot;&gt;Event Loop&lt;/h2&gt;
-&lt;p&gt;Event Loop는 이벤트에 대응되는 함수를 Callstack에 쌓는
-역할을 한다.&lt;br /&gt;
-작업의 과정은 다음과 같이 진행된다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Callstack이 비어있는지 확인한다.&lt;/li&gt;
-  &lt;li&gt;비어있다면 Event Queue가 비어있는지 확인한다.&lt;/li&gt;
-  &lt;li&gt;큐가 비어있지 않다면 Event Queue의 앞에서 함수를 가져와 Callstack에 쌓는다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;결론&quot;&gt;결론&lt;/h1&gt;
-&lt;p&gt;전체적으로 Event Loop를 통해 이벤트 기반 비동기 방식이 작동한다.&lt;br /&gt;
-곧 코드작성자의 코드가 하나의 Thread에 기반해서 실행될 수 있도록
-내부적으로 여러개의 Thread를 발생시키는 방법인것이다.&lt;/p&gt;
-
-&lt;p&gt;지금까지 살펴본 Event Loop의 작업방식을 확인해 볼 수 있는
-코드가 있다.&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;실행시켜보면 ‘second’가 먼저 출력되고 ‘first’가 나중에 출력된다.&lt;br /&gt;
-다음의 과정으로 처리가 된 것이다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;setTimeout()이 호출되어 콜스택에서 실행된다.&lt;/li&gt;
-  &lt;li&gt;event table에 ‘first’출력 함수가 저장된다.&lt;/li&gt;
-  &lt;li&gt;‘second’출력이 콜스텍에 올라가고 ‘first’출력이 이벤트 큐에 올라간다.&lt;/li&gt;
-  &lt;li&gt;Event Loop는 콜스텍이 비어야 Event Queue에서 함수를 꺼내오므로 ‘second’출력이 먼저 발생하고 ‘first’출력이 콜스텍에 올라가 실행된다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;이벤트 기반 비동기 방식은 Multi Thread 방식보다 Thread를 적게
-사용하여 메모리 자원을 절약할 수 있는 이점이 있다.&lt;br /&gt;
-하지만 각각의 이벤트들이 많은 연산이 필요하거나 대용량의 IO를
-다루는 작업등의 많은 시간이 필요한 작업이라면 성능의 저하를
-가져올 수 있다.&lt;/p&gt;
-
-&lt;p&gt;프로그래밍시 주의해야 할 점은 javascript가 비동기 언어라는
-점을 꼭 인식해야한다는 것이다.&lt;br /&gt;
-자신이 작성한 코드중 무엇이 먼저 실행될지 모르기 때문에
-콜백방법을 이용하여 순차적으로 실행되도록 해야한다.&lt;br /&gt;
-또, 콜백함수를 받는 함수를 작성할때도 비동기적 방식으로 처리된다는
-것을 유의하고 콜백함수를(콜백을 쓰거나 다른 라이브러리를 사용하여)
-원하는 시점에 실행시키도록 주의해야한다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="javascript" /><summary type="html">배경 Node.js를 처음 접했을때 이벤트 기반 비동기 처리 방식을 사용한다는 사실을 알게됐다. 모던 웹을 위한 Node.js 프로그래밍 이라는 책에서는 이 방식을 아래의 시장 대기표 예시로 설명했다. 시장 여러곳의 가게에서 물건을 구매해야한다. 이때 각 가게에는 손님들이 줄을 서서 대기하고 있다. 빠르게 모든 물건을 구매하기 위해선 두가지 방법이 있는데 몸을 복제해 동시에 여러가게에 간다. 시장을 대기표를 나누어주는 시스템으로 바꾸고 대기표만 받고 기다린다.</summary></entry><entry><title type="html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</title><link href="http://localhost:4000/nodejs-global-objects.html" rel="alternate" type="text/html" title="[Node.js] 전역 변수, 전역 객체 (console, process, exports)" /><published>2020-02-03T00:00:00+09:00</published><updated>2020-02-03T00:00:00+09:00</updated><id>http://localhost:4000/nodejs-global-objects</id><content type="html" xml:base="http://localhost:4000/nodejs-global-objects.html">&lt;p&gt;이 글은 Node.js의 전역 변수와 전역 객체를
-정리한 글 입니다.&lt;/p&gt;
-
-&lt;h1 id=&quot;전역-변수&quot;&gt;전역 변수&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__filename&lt;/code&gt;: 현재 실행중인 코드의 파일 경로를 가지는 문자열&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__dirname&lt;/code&gt;: 현재 실행중인 코드의 디렉토리 경로를 가지는 문자열&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;console-객체&quot;&gt;console 객체&lt;/h1&gt;
-&lt;p&gt;console 객체는 Node.js의 콘솔화면 기능을 다룹니다. console 객체의 메서드는 아래와 같습니다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;log()&lt;/code&gt;: print 기능을 가지며 특수문자를 
-이용해 문자열을 출력할 수 있습니다.
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%d&lt;/code&gt;: 숫자&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%s&lt;/code&gt;: 문자열&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;%j&lt;/code&gt;: JSON&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;time(label)&lt;/code&gt;: 시간 측정을 시작합니다.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;timeEnd(label)&lt;/code&gt;: 시간 측정을 종료합니다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;em&gt;예시 코드&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;console.log(&quot;%d * %d = %s&quot;, 10, 10, '100');
-console.log(&quot;json: %j&quot;, {&quot;name&quot; : &quot;rst&quot;});
-
-console.time('t');
-for(var i=0; i&amp;lt;99999; i++);
-console.timeEnd('t');
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;결과&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10 * 10 = 100
-{&quot;name&quot;:&quot;rst}
-t: 18172.890ms
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;process-객체&quot;&gt;process 객체&lt;/h1&gt;
-&lt;p&gt;process 객체는 프로그램과 관련된 정보를 포함하는 객체입니다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;process 객체의 속성&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;argv&lt;/code&gt;: 실행 매개 변수를 포함&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt;: 컴퓨터 환경 정보 포함&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;version&lt;/code&gt;: Node.js의 버전 정보&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;versions&lt;/code&gt;: Node.js와 종속된 프로그램의 버전 정보&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;arch&lt;/code&gt;: 프로세서의 아키텍쳐&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;platform&lt;/code&gt;: 플랫포 정보&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;process 객체의 메서드&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;exit()&lt;/code&gt;: 프로그램 종료&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;memoryUsage()&lt;/code&gt;: 메모리 사용 정보 객체를 리턴&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;uptime()&lt;/code&gt;: 현재 프로그램이 실행된 시간을 리턴&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;exports-객체&quot;&gt;exports 객체&lt;/h1&gt;
-&lt;p&gt;exports 객체는 모듈을 생성할때 사용합니다.&lt;br /&gt;
-exports 객체의 속성을 정의하는 방식으로 작동합니다. 
-예시를 보는것이 이해하기 쉽습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;md.js&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;app.js&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;md&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;./md.js&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;md&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;언급하지 않아도 되겠지만 결과는 &lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;가 출력됩니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><summary type="html">이 글은 Node.js의 전역 변수와 전역 객체를 정리한 글 입니다.</summary></entry></feed>
+열이다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="oracle" /><category term="sql" /><summary type="html">Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 그 방법을 정리하려 포스팅을 하게 되었다. 테이블 만들기: 기본적인 형태</summary></entry></feed>

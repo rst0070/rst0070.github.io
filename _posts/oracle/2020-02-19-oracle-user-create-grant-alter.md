@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Oracle
 tags: [oracle, sql]
 title: "[Oracle] 스키마 생성, 권한부여, 수정, 삭제"
 ---

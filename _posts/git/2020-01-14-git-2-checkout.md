@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: git
+categories: Git
 title: "[Git] 2.Checkout"
 tags: [git]
 ---

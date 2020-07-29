@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Node_js
 tags: [node.js, javascript]
 title: "이벤트 기반 비동기 방식이란? 어떻게 동작하는거지?
 Node.js Javascript"

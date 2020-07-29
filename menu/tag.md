@@ -2,19 +2,27 @@
 layout: page
 title: "Tags"
 ---
-{% for Tag in site.data.tags %}
-# {{Tag.name}}
 <ul>
-{% for mypost in site.tags[Tag.tag] %}
-        {% if listed_posts_urls contains mypost.url %}
-        {% else %}
+  {% for tag in site.tags %}
+    <li>
+      <p onclick="slide_post_list('{{ tag | first }}')">{{ tag | first }}</p>
+      <ul style="display: none;" id="posts_in_{{ tag | first }}">
+        {% for post in tag.last %}
           <li>
-              <a href="{{ site.github.url }}{{ mypost.url }}">
-                  {{ mypost.title }}    <small>{{ mypost.date | date: "%B %-d, %Y" }}</small>
-              </a>
+            <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+            <small>{{ post.date | date: "%B %-d, %Y" }}</small>
           </li>
-          {% assign listed_posts_urls = listed_posts_urls | push: mypost.url %}
-        {% endif %}
-      {% endfor %}
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
 </ul>
-{% endfor %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+  function slide_post_list(tag){
+    var id = "#posts_in_"+tag;
+    $(id).slideToggle();
+  }
+</script>

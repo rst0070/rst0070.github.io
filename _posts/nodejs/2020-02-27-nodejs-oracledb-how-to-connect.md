@@ -1,5 +1,6 @@
 ---
 layout: post
+categories: Node_js
 tags: [node.js, oracle]
 title: "[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기"
 ---

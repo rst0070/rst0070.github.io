@@ -1,8 +1,71 @@
-I"J<ul class="posts">
+I"r<ul class="posts">
   
 
     
       <h3>2020</h3>
+    
+
+    <li itemscope="">
+      <a href="/kotlin/kotlin-syntax-functions.html">Kotlin Syntax about Functions</a>
+      <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> July 22 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
+  
+
+
+
+</span></p>
+    </li>
+
+  
+
+    
+      
+      
+      
+    
+
+    <li itemscope="">
+      <a href="/kotlin/kotlin-syntax-class.html">Kotlin syntax: Class</a>
+      <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> July 22 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
+  
+
+
+
+</span></p>
+    </li>
+
+  
+
+    
+      
+      
+      
+    
+
+    <li itemscope="">
+      <a href="/kotlin/kotlin-syntax-basic.html">Kotlin Basic Syntax</a>
+      <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> July 22 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
+  
+
+
+
+</span></p>
+    </li>
+
+  
+
+    
+      
+      
+      
     
 
     <li itemscope="">
@@ -111,7 +174,7 @@
     
 
     <li itemscope="">
-      <a href="/nodejs-oracledb-how-to-connect.html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</a>
+      <a href="/node_js/nodejs-oracledb-how-to-connect.html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> February 27 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -132,7 +195,7 @@
     
 
     <li itemscope="">
-      <a href="/oracle-create-table.html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</a>
+      <a href="/oracle/oracle-create-table.html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> February 20 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -153,7 +216,7 @@
     
 
     <li itemscope="">
-      <a href="/oracle-user-create-grant-alter.html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</a>
+      <a href="/oracle/oracle-user-create-grant-alter.html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> February 19 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -174,7 +237,7 @@
     
 
     <li itemscope="">
-      <a href="/nodejs-what-is-event-based-programming.html">이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</a>
+      <a href="/node_js/nodejs-what-is-event-based-programming.html">이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> February 7 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -195,7 +258,7 @@
     
 
     <li itemscope="">
-      <a href="/nodejs-global-objects.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
+      <a href="/node_js/nodejs-global-objects.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> February 3 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
@@ -258,11 +321,11 @@
     
 
     <li itemscope="">
-      <a href="/git/git-1-create-version.html">[Git] 1.버전생성</a>
+      <a href="/git/git-2-checkout.html">[Git] 2.Checkout</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> January 14 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
-    1 minute read
+    less than 1 minute read
   
 
 
@@ -279,11 +342,11 @@
     
 
     <li itemscope="">
-      <a href="/git/git-2-checkout.html">[Git] 2.Checkout</a>
+      <a href="/git/git-1-create-version.html">[Git] 1.버전생성</a>
       <p class="post-date"><span><i class="fa fa-calendar" aria-hidden="true"></i> January 14 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
-    less than 1 minute read
+    1 minute read
   
 
 

@@ -1,8 +1,7 @@
 ---
 layout: post
-categories: git
+categories: Git
 tags: [git]
-categories: [Git]
 title: "[Git] 1.버전생성"
 ---
 
