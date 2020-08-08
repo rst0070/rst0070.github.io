@@ -1,0 +1,30 @@
+I"�<h2 id="배경">배경</h2>
+<p>node.js에서 <code class="highlighter-rouge">oracledb</code>모듈을 사용하는데 아래와 같은 오류가 발생했다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
+"D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture". 
+See https://oracle.github.io/odpi/doc/installation.html#windows for help
+Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html
+You must have 64-bit Oracle client libraries in your PATH environment variable.
+If you do not have Oracle Database on this computer, then install the Instant Client 
+Basic or Basic Light package from
+http://www.oracle.com/technetwork/topics/winx64soft-089540.html
+A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
+version must be available.
+</code></pre></div></div>
+<p>local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 
+node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 
+이와 같은 오류가 발생한것이다.</p>
+
+<p>해결방법은 간단하다.<br />
+<em>64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다.</em> 
+만약 32bit가 필요하다면 32bit Instant Client를 받으면 된다.</p>
+
+<h2 id="1-instant-client-다운받기">1. Instant Client 다운받기</h2>
+<p><a href="https://www.oracle.com/kr/database/technologies/instant-client/downloads.html">Oracle에서 받는다.</a> 
+자신에게 해당되는 버전을 선택하고 <em>Basic Package</em>와 <em>SDK Package</em>를 받으면 된다.</p>
+
+<p>두 압축파일을 풀어 하나의 폴더로 합치면 끝.</p>
+
+<h2 id="2-환경변수-설정">2. 환경변수 설정</h2>
+<p>앞에서 합친 폴더를 시스템 환경변수의 <em>Path</em> 변수에 추가한다.</p>
+:ET

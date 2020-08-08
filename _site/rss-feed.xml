@@ -54,8 +54,8 @@
 </description>
 				
 				<pubDate>Thu, 16 Apr 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/algorithm/datastructure/datastructure-graph.html</link>
-				<guid isPermaLink="true">http://localhost:4000/algorithm/datastructure/datastructure-graph.html</guid>
+				<link>http://localhost:4000/algorithm/datastructure-graph.html</link>
+				<guid isPermaLink="true">http://localhost:4000/algorithm/datastructure-graph.html</guid>
 			</item>
 		
 			<item>
@@ -155,9 +155,9 @@
 				
 				
 					<description>&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
-&lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했다.&lt;/p&gt;
+&lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했습니다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
-&quot;D:\app\kwb07\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
+&quot;D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
 See https://oracle.github.io/odpi/doc/installation.html#windows for help
 Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html
 You must have 64-bit Oracle client libraries in your PATH environment variable.
@@ -167,22 +167,8 @@ http://www.oracle.com/technetwork/topics/winx64soft-089540.html
 A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
 version must be available.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;local 컴퓨터에 32bit 오라클과 64bit node.js 가 설치되어있는 상황에서 
-node.js와 오라클에서 기본으로 제공하는 클라이언트 툴 사이의 호환이 되지 않아 
-이와 같은 오류가 발생한것이다.&lt;/p&gt;
-
-&lt;p&gt;해결방법은 간단하다.&lt;br /&gt;
-&lt;em&gt;64bit Oracle Instant Client 를 다운받아 환경 변수 설정을 한다.&lt;/em&gt; 
-만약 32bit가 필요하다면 32bit Instant Client를 받으면 된다.&lt;/p&gt;
-
-&lt;h2 id=&quot;1-instant-client-다운받기&quot;&gt;1. Instant Client 다운받기&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.oracle.com/kr/database/technologies/instant-client/downloads.html&quot;&gt;Oracle에서 받는다.&lt;/a&gt; 
-자신에게 해당되는 버전을 선택하고 &lt;em&gt;Basic Package&lt;/em&gt;와 &lt;em&gt;SDK Package&lt;/em&gt;를 받으면 된다.&lt;/p&gt;
-
-&lt;p&gt;두 압축파일을 풀어 하나의 폴더로 합치면 끝.&lt;/p&gt;
-
-&lt;h2 id=&quot;2-환경변수-설정&quot;&gt;2. 환경변수 설정&lt;/h2&gt;
-&lt;p&gt;앞에서 합친 폴더를 시스템 환경변수의 &lt;em&gt;Path&lt;/em&gt; 변수에 추가한다.&lt;/p&gt;
+&lt;p&gt;위의 메세지를 읽어보면 64bit Oracle client libraries를사용하라고 합니다.&lt;br /&gt;
+저는 64bit node.js와 32bit Oracle DB를 사용하고 있었는데 둘의 호환에 문제가 생긴것입니다.&lt;/p&gt;
 </description>
 				
 				<pubDate>Sat, 29 Feb 2020 00:00:00 +0900</pubDate>

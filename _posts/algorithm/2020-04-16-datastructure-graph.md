@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: [algorithm/datastructure]
+categories: [algorithm]
 tags: [자료구조]
 title: "자료구조: 그래프의 개념과 구현, 탐색(BFS)"
 ---
