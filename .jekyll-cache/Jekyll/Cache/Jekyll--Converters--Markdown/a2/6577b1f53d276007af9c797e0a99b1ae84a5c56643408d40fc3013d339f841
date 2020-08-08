@@ -1,7 +1,7 @@
-I",<ul>
+I"�<ul>
   
     <li>
-      <p>git</p>
+      <p onclick="slide_post_list('git')">git</p>
       <ul style="display: none;" id="posts_in_git">
         
           <li>
@@ -18,7 +18,7 @@
     </li>
   
     <li>
-      <p>html5</p>
+      <p onclick="slide_post_list('html5')">html5</p>
       <ul style="display: none;" id="posts_in_html5">
         
           <li>
@@ -30,7 +30,7 @@
     </li>
   
     <li>
-      <p>web</p>
+      <p onclick="slide_post_list('web')">web</p>
       <ul style="display: none;" id="posts_in_web">
         
           <li>
@@ -42,7 +42,7 @@
     </li>
   
     <li>
-      <p>javascript</p>
+      <p onclick="slide_post_list('javascript')">javascript</p>
       <ul style="display: none;" id="posts_in_javascript">
         
           <li>
@@ -59,7 +59,7 @@
     </li>
   
     <li>
-      <p>jquery</p>
+      <p onclick="slide_post_list('jquery')">jquery</p>
       <ul style="display: none;" id="posts_in_jquery">
         
           <li>
@@ -71,7 +71,7 @@
     </li>
   
     <li>
-      <p>node.js</p>
+      <p onclick="slide_post_list('node.js')">node.js</p>
       <ul style="display: none;" id="posts_in_node.js">
         
           <li>
@@ -98,7 +98,7 @@
     </li>
   
     <li>
-      <p>oracle</p>
+      <p onclick="slide_post_list('oracle')">oracle</p>
       <ul style="display: none;" id="posts_in_oracle">
         
           <li>
@@ -125,7 +125,7 @@
     </li>
   
     <li>
-      <p>sql</p>
+      <p onclick="slide_post_list('sql')">sql</p>
       <ul style="display: none;" id="posts_in_sql">
         
           <li>
@@ -142,7 +142,7 @@
     </li>
   
     <li>
-      <p>err</p>
+      <p onclick="slide_post_list('err')">err</p>
       <ul style="display: none;" id="posts_in_err">
         
           <li>
@@ -154,7 +154,7 @@
     </li>
   
     <li>
-      <p>css</p>
+      <p onclick="slide_post_list('css')">css</p>
       <ul style="display: none;" id="posts_in_css">
         
           <li>
@@ -171,7 +171,7 @@
     </li>
   
     <li>
-      <p>logicgate</p>
+      <p onclick="slide_post_list('logicgate')">logicgate</p>
       <ul style="display: none;" id="posts_in_logicgate">
         
           <li>
@@ -183,7 +183,7 @@
     </li>
   
     <li>
-      <p>hdl</p>
+      <p onclick="slide_post_list('hdl')">hdl</p>
       <ul style="display: none;" id="posts_in_hdl">
         
           <li>
@@ -195,11 +195,11 @@
     </li>
   
     <li>
-      <p>자료구조</p>
+      <p onclick="slide_post_list('자료구조')">자료구조</p>
       <ul style="display: none;" id="posts_in_자료구조">
         
           <li>
-            <a href="http://localhost:4000/datastructure-graph.html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</a>
+            <a href="http://localhost:4000/algorithm/datastructure/datastructure-graph.html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</a>
             <small>April 16, 2020</small>
           </li>
         
@@ -207,4 +207,14 @@
     </li>
   
 </ul>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+  function slide_post_list(tag){
+    var id = "#posts_in_"+tag;
+    $(id).slideToggle();
+  }
+</script>
+
 :ET
