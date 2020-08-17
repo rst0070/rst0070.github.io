@@ -2,7 +2,7 @@
 layout: post
 categories: Git
 tags: [git]
-title: "[Git] 1.버전생성"
+title: "[Git] 1. 버전관리의 개요와 버전관리 시작하기"
 ---
 
 ## 버전관리

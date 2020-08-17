@@ -1,4 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-08-09T02:10:51+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">Kotlin Basic Syntax</title><link href="http://localhost:4000/kotlin/kotlin-syntax-basic.html" rel="alternate" type="text/html" title="Kotlin Basic Syntax" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-basic</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-basic.html">&lt;ul&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-08-17T17:00:22+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="http://localhost:4000/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>http://localhost:4000/html/html-move-to-specified-element</id><content type="html" xml:base="http://localhost:4000/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;1-해당-element의-id-혹은-name이-필요하다&quot;&gt;1. 해당 Element의 id 혹은 name이 필요하다.&lt;/h3&gt;
+&lt;p&gt;특정 element에 링크를 연결하기 위해선 id나 name을 사용해야 합니다.&lt;br /&gt;
+링크에서는 &lt;code class=&quot;highlighter-rouge&quot;&gt;#id&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;#name&lt;/code&gt;과 같은 방법으로 접근합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;2-1의-element를-가리키는-링크를-사용한다&quot;&gt;2. 1의 Element를 가리키는 링크를 사용한다.&lt;/h3&gt;
+&lt;p&gt;id나 name을 사용하여 특정 element를 가리키는 링크를 만들 수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#link&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link to link&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link to pp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;hi&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;현재 페이지가 아닌 외부페이지에 접근할때도 위의 방식을 사용할 수 있습니다.  즉, url뒤에 붙여 사용가능.&lt;/p&gt;
+
+&lt;h3 id=&quot;기타-name이나-id가-중복된-경우에는&quot;&gt;기타: name이나 id가 중복된 경우에는?&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;같은 name을 가진 element가 여러개인 경우&lt;br /&gt;
+상대적으로 문서의 위쪽에 있는 element가 연결된다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;name과 id가 같은 경우&lt;br /&gt;
+아래와 같은 상황에선 a tag가 p element를 연결한다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">HTML 문서의 특정 element로 이동하는 방법입니다.</summary></entry><entry><title type="html">Kotlin Basic Syntax</title><link href="http://localhost:4000/kotlin/kotlin-syntax-basic.html" rel="alternate" type="text/html" title="Kotlin Basic Syntax" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-basic</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-basic.html">&lt;ul&gt;
   &lt;li&gt;Default Parameter Valuese&lt;/li&gt;
 &lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Valuese</summary></entry><entry><title type="html">Kotlin Syntax about Functions</title><link href="http://localhost:4000/kotlin/kotlin-syntax-functions.html" rel="alternate" type="text/html" title="Kotlin Syntax about Functions" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-functions</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-functions.html">&lt;ul&gt;
   &lt;li&gt;Default Parameter Values&lt;/li&gt;
@@ -41,11 +75,7 @@ Below code will print ‘Hello’.&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
     &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">Kotlin syntax: Class</title><link href="http://localhost:4000/kotlin/kotlin-syntax-class.html" rel="alternate" type="text/html" title="Kotlin syntax: Class" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-class</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-class.html"></content><author><name>Wonbin Kim</name></author><summary type="html"></summary></entry><entry><title type="html">자료구조: 그래프의 개념과 구현, 탐색(BFS)</title><link href="http://localhost:4000/algorithm/datastructure-graph.html" rel="alternate" type="text/html" title="자료구조: 그래프의 개념과 구현, 탐색(BFS)" /><published>2020-04-16T00:00:00+09:00</published><updated>2020-04-16T00:00:00+09:00</updated><id>http://localhost:4000/algorithm/datastructure-graph</id><content type="html" xml:base="http://localhost:4000/algorithm/datastructure-graph.html">&lt;h2 id=&quot;1-그래프의-개념&quot;&gt;1. 그래프의 개념&lt;/h2&gt;
-
-&lt;h2 id=&quot;2-그래프의-구현&quot;&gt;2. 그래프의 구현&lt;/h2&gt;
-
-&lt;h2 id=&quot;3-탐색-bfs&quot;&gt;3. 탐색: BFS&lt;/h2&gt;</content><author><name>Wonbin Kim</name></author><category term="자료구조" /><summary type="html">1. 그래프의 개념</summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">Kotlin syntax: Class</title><link href="http://localhost:4000/kotlin/kotlin-syntax-class.html" rel="alternate" type="text/html" title="Kotlin syntax: Class" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-class</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-class.html"></content><author><name>Wonbin Kim</name></author><summary type="html"></summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4&quot;&gt;Hardware Description Language&lt;/a&gt;의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.&lt;br /&gt;
 기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
