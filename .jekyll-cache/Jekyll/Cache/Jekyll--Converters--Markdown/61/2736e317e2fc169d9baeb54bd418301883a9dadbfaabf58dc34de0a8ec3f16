@@ -1,0 +1,104 @@
+I"><ul>
+  
+  <li>
+    <p onclick="slide_post_list('Git')">Git</p>
+    <ul id="posts_in_Git" style="display: none">
+      
+      <li>
+      <a href="/git/git-1-create-version.html">[Git] 1. 버전관리의 개요와 버전관리 시작하기</a>
+      <small>14 Jan 2020</small>
+      </li>
+      
+    </ul>
+  </li>
+  
+  <li>
+    <p onclick="slide_post_list('html')">html</p>
+    <ul id="posts_in_html" style="display: none">
+      
+      <li>
+      <a href="/html/html-move-to-specified-element.html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</a>
+      <small>17 Aug 2020</small>
+      </li>
+      
+      <li>
+      <a href="/html/html5-outlines-and-section.html">[HTML5] Outline과 Section</a>
+      <small>18 Jan 2020</small>
+      </li>
+      
+    </ul>
+  </li>
+  
+  <li>
+    <p onclick="slide_post_list('Node_js')">Node_js</p>
+    <ul id="posts_in_Node_js" style="display: none">
+      
+      <li>
+      <a href="/node_js/nodejs-oracledb-how-to-connect.html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</a>
+      <small>27 Feb 2020</small>
+      </li>
+      
+      <li>
+      <a href="/node_js/nodejs-what-is-event-based-programming.html">이벤트 기반 비동기 방식이란? 어떻게 동작하는거지? Node.js Javascript</a>
+      <small>07 Feb 2020</small>
+      </li>
+      
+      <li>
+      <a href="/node_js/nodejs-global-objects.html">[Node.js] 전역 변수, 전역 객체 (console, process, exports)</a>
+      <small>03 Feb 2020</small>
+      </li>
+      
+    </ul>
+  </li>
+  
+  <li>
+    <p onclick="slide_post_list('Oracle')">Oracle</p>
+    <ul id="posts_in_Oracle" style="display: none">
+      
+      <li>
+      <a href="/oracle/oracle-create-table.html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</a>
+      <small>20 Feb 2020</small>
+      </li>
+      
+      <li>
+      <a href="/oracle/oracle-user-create-grant-alter.html">[Oracle] 스키마 생성, 권한부여, 수정, 삭제</a>
+      <small>19 Feb 2020</small>
+      </li>
+      
+    </ul>
+  </li>
+  
+  <li>
+    <p onclick="slide_post_list('Kotlin')">Kotlin</p>
+    <ul id="posts_in_Kotlin" style="display: none">
+      
+      <li>
+      <a href="/kotlin/kotlin-syntax-functions.html">Kotlin Syntax about Functions</a>
+      <small>22 Jul 2020</small>
+      </li>
+      
+      <li>
+      <a href="/kotlin/kotlin-syntax-class.html">Kotlin syntax: Class</a>
+      <small>22 Jul 2020</small>
+      </li>
+      
+      <li>
+      <a href="/kotlin/kotlin-syntax-basic.html">Kotlin Basic Syntax</a>
+      <small>22 Jul 2020</small>
+      </li>
+      
+    </ul>
+  </li>
+  
+</ul>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+  function slide_post_list(category){
+    var list_id = '#posts_in_'+category;
+    console.log(list_id);
+    $(list_id).slideToggle();
+  }
+</script>
+
+:ET
