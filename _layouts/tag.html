@@ -9,9 +9,12 @@
     {% include header.html %}
 
     <div class="post-container">
-        {% for tag in site.tags %}
-            <a href="#{{ tag | first }}">{{ tag | first }}</a>
-        {% endfor %}
+        <div class="tagbutton-container">
+            {% for tag in site.tags %}
+                <a href="#{{ tag | first }}">{{ tag | first }}</a>
+            {% endfor %}
+        </div>
+        
 
         {% for tag in site.tags %}
             <a name="{{ tag | first }}">{{ tag | first }}</a>
