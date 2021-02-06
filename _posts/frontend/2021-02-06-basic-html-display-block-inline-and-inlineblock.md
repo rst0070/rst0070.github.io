@@ -20,4 +20,4 @@ HTML element는 크게 Block element와 Inline element로 나뉜다.
 즉 화면 배치는 inline이지만 크기는 block인 것이다.  
    
 위의 속성들은 모두 css를 통해 직접적으로 element에 적용이 가능하다.  
-[예시](https://codepen.io/collection/AQRJvR)를 통해 확인할 수 있다.
+[예시](https://codepen.io/rst0070/pen/XWNdJWB)를 통해 확인할 수 있다.
