@@ -14,7 +14,7 @@
         {% endfor %}
 
         {% for tag in site.tags %}
-            <a name="#{{ tag | first }}">{{ tag | first }}</a>
+            <a name="{{ tag | first }}">{{ tag | first }}</a>
             <ul>
                 {% for post in tag.last %}
                     <li>
