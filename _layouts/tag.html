@@ -11,7 +11,7 @@
     <div class="post-container">
         <div class="tagbutton-container">
             {% for tag in site.tags %}
-                <a href="#{{ tag | first }}">{{ tag | first }}</a>
+                <a class="tag-button" href="#{{ tag | first }}">{{ tag | first }}</a>
             {% endfor %}
         </div>
         
@@ -21,7 +21,7 @@
             <ul>
                 {% for post in tag.last %}
                     <li>
-                        <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+                        <a class="tag" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
                         <small>{{ post.date | date: "%B %-d, %Y" }}</small>
                     </li>
                 {% endfor %}
