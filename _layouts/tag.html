@@ -17,11 +17,11 @@
         
 
         {% for tag in site.tags %}
-            <a name="{{ tag | first }}">{{ tag | first }}</a>
+            <a class="tag" name="{{ tag | first }}">{{ tag | first }}</a>
             <ul>
                 {% for post in tag.last %}
                     <li>
-                        <a class="tag" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+                        <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
                         <small>{{ post.date | date: "%B %-d, %Y" }}</small>
                     </li>
                 {% endfor %}
