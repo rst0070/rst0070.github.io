@@ -5,6 +5,8 @@ title: "CSS position: 기본위치, 상대위치, 절대위치, 고정위치"
 ---
 css의 `position`속성에는 *static*, *relative*, *absolute*, *fixed*가 
 있습니다.  
+이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.  
+
 - - -  
 ## static
 static은 모든 요소에 기본적으로 설정된 값입니다.  
@@ -12,8 +14,8 @@ static은 모든 요소에 기본적으로 설정된 값입니다.
 - - -
 ## relative
 relative 속성은 두가지 특징이 있습니다.  
-1. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다.
-2. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다.  
+1. relative 속성을 가진 요소가 static일때 있던 공간을 다른 요소가 침범하지 못한다.
+2. relative 속성을 가진 요소가 자신의 static일때 위치를 기준으로 움직인다.  
   
 *예시*
 ``` css
