@@ -25,6 +25,7 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
   
 ## 3. 구현
 위의 변수와 for 문을 사용해서 간단히 구현 할 수 있다.
+for문이 처리되지 않게하기위해 앞에 - 를 붙였다.
 ``` liquid
 <!doctype html>
 <html>
@@ -35,23 +36,23 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 
     <div class="post-container">
         <div class="tagbutton-container">
-            {% for tag in site.tags %}
+            {-% for tag in site.tags %}
                 <a class="tag-button" href="#{{ tag | first }}">{{ tag | first }}</a>
-            {% endfor %}
+            {-% endfor %}
         </div>
         
 
-        {% for tag in site.tags %}
+        {-% for tag in site.tags %}
             <a class="tag" name="{{ tag | first }}">{{ tag | first }}</a>
             <ul>
-                {% for post in tag.last %}
+                {-% for post in tag.last %}
                     <li>
                         <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
                         <small>{{ post.date | date: "%B %-d, %Y" }}</small>
                     </li>
-                {% endfor %}
+                {-% endfor %}
             </ul>
-        {% endfor %}
+        {-% endfor %}
     </div>
 
   </div>
