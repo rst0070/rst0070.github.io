@@ -27,6 +27,55 @@
 			</item>
 		
 			<item>
+				<title>css 가상요소: after , before 요소 위치지정하기</title>
+				
+				
+					<description>&lt;p&gt;가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.&lt;/p&gt;
+
+&lt;p&gt;결론 부터 말하자면 아래와 같다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute&lt;/code&gt;여야 한다.&lt;/li&gt;
+  &lt;li&gt;after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.&lt;/li&gt;
+  &lt;li&gt;위치 지정시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;left&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate()&lt;/code&gt;는 같은 효과를 가진다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;이제 하나씩 설명하겠다.&lt;/p&gt;
+&lt;h1 id=&quot;1-대상-엘리먼트와-after-before-엘리먼트는-position-absolute여야-한다&quot;&gt;1. 대상 엘리먼트와 after, before 엘리먼트는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute;&lt;/code&gt;여야 한다.&lt;/h1&gt;
+&lt;p&gt;위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다.&lt;br /&gt;
+앞으로 사용할 코드이다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------html----------
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+----------css-----------
+#base { position: absolute;}
+#base::before, #base::after {position: absolute;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2-가상요소after-before는-대상엘리먼트를-기준으로-위치가-지정된다&quot;&gt;2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.&lt;/h1&gt;
+&lt;p&gt;즉 코드에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::after&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#parent&lt;/code&gt;가 아닌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;를 기준으로 위치가 지정된다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+-----------css-------
+#base { position: absolute;}
+#base::before {
+    position: absolute;
+    top: 20px;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;따라서 위처럼 스타일을 지정하면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;로 부터 20px 아래에 위치한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;3-가상요소after-before에서-top-left는-traslate와-같은-효과이다&quot;&gt;3. 가상요소(after, before)에서 top, left는 traslate와 같은 효과이다.&lt;/h1&gt;
+&lt;p&gt;즉 위에서 언급한 가상요소의 스타일 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top: 20px; left:30px&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate(20px, 30px);&lt;/code&gt;와 같다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0900</pubDate>
+				<link>/css-pseudo-element-positioning.html</link>
+				<guid isPermaLink="true">/css-pseudo-element-positioning.html</guid>
+			</item>
+		
+			<item>
 				<title>ssh key 생성, port변경, 접속하기</title>
 				
 				
@@ -138,29 +187,6 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 				<pubDate>Tue, 14 Apr 2020 00:00:00 +0900</pubDate>
 				<link>/hdl-and-or-not-gate.html</link>
 				<guid isPermaLink="true">/hdl-and-or-not-gate.html</guid>
-			</item>
-		
-			<item>
-				<title>CSS font 속성들과 속기형 작성법</title>
-				
-				
-					<description>&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
-속기형 작성법에 대해 정리하려 한다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;css에서-글자-스타일을-지정하는-속성들&quot;&gt;CSS에서 글자 스타일을 지정하는 속성들&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;글꼴: font-family&lt;/li&gt;
-  &lt;li&gt;크기: font-size&lt;/li&gt;
-  &lt;li&gt;행간: line-height&lt;/li&gt;
-  &lt;li&gt;기울기: font-style&lt;/li&gt;
-  &lt;li&gt;두께: font-weight&lt;/li&gt;
-  &lt;li&gt;음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
-				<link>/css-shorthand-font-set.html</link>
-				<guid isPermaLink="true">/css-shorthand-font-set.html</guid>
 			</item>
 		
 	</channel>

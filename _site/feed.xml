@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-02-26T12:56:48+09:00</updated><id>/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">node.js로 http request 보내기</title><link href="/http-request.html" rel="alternate" type="text/html" title="node.js로 http request 보내기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/http-request</id><content type="html" xml:base="/http-request.html">&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-02-26T18:30:48+09:00</updated><id>/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">node.js로 http request 보내기</title><link href="/http-request.html" rel="alternate" type="text/html" title="node.js로 http request 보내기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/http-request</id><content type="html" xml:base="/http-request.html">&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
 &lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
@@ -79,7 +79,44 @@
     &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
 
 &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="http" /><summary type="html">개요 node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다. request 생성하기 데이터 및 request 전송 response 처리 node.js 문서를 참고하며 작성했습니다.</summary></entry><entry><title type="html">ssh key 생성, port변경, 접속하기</title><link href="/using-ssh.html" rel="alternate" type="text/html" title="ssh key 생성, port변경, 접속하기" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T00:00:00+09:00</updated><id>/using-ssh</id><content type="html" xml:base="/using-ssh.html">&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="http" /><summary type="html">개요 node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다. request 생성하기 데이터 및 request 전송 response 처리 node.js 문서를 참고하며 작성했습니다.</summary></entry><entry><title type="html">css 가상요소: after , before 요소 위치지정하기</title><link href="/css-pseudo-element-positioning.html" rel="alternate" type="text/html" title="css 가상요소: after , before 요소 위치지정하기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/css-pseudo-element-positioning</id><content type="html" xml:base="/css-pseudo-element-positioning.html">&lt;p&gt;가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.&lt;/p&gt;
+
+&lt;p&gt;결론 부터 말하자면 아래와 같다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute&lt;/code&gt;여야 한다.&lt;/li&gt;
+  &lt;li&gt;after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.&lt;/li&gt;
+  &lt;li&gt;위치 지정시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;left&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate()&lt;/code&gt;는 같은 효과를 가진다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;이제 하나씩 설명하겠다.&lt;/p&gt;
+&lt;h1 id=&quot;1-대상-엘리먼트와-after-before-엘리먼트는-position-absolute여야-한다&quot;&gt;1. 대상 엘리먼트와 after, before 엘리먼트는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute;&lt;/code&gt;여야 한다.&lt;/h1&gt;
+&lt;p&gt;위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다.&lt;br /&gt;
+앞으로 사용할 코드이다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------html----------
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+----------css-----------
+#base { position: absolute;}
+#base::before, #base::after {position: absolute;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2-가상요소after-before는-대상엘리먼트를-기준으로-위치가-지정된다&quot;&gt;2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.&lt;/h1&gt;
+&lt;p&gt;즉 코드에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::after&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#parent&lt;/code&gt;가 아닌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;를 기준으로 위치가 지정된다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+-----------css-------
+#base { position: absolute;}
+#base::before {
+    position: absolute;
+    top: 20px;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;따라서 위처럼 스타일을 지정하면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;로 부터 20px 아래에 위치한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;3-가상요소after-before에서-top-left는-traslate와-같은-효과이다&quot;&gt;3. 가상요소(after, before)에서 top, left는 traslate와 같은 효과이다.&lt;/h1&gt;
+&lt;p&gt;즉 위에서 언급한 가상요소의 스타일 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top: 20px; left:30px&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate(20px, 30px);&lt;/code&gt;와 같다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><category term="html" /><summary type="html">가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다. 결론 부터 말하자면 아래와 같다. 위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 position: absolute여야 한다. after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다. 위치 지정시 top, left와 transform: translate()는 같은 효과를 가진다. 이제 하나씩 설명하겠다. 1. 대상 엘리먼트와 after, before 엘리먼트는 position: absolute;여야 한다. 위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다. 앞으로 사용할 코드이다. ----------html---------- &amp;lt;div id=&quot;parent&quot;&amp;gt; &amp;lt;div id=&quot;base&quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; ----------css----------- #base { position: absolute;} #base::before, #base::after {position: absolute;} 2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다. 즉 코드에서 #base::after와 #base::before요소는 #parent가 아닌 #base를 기준으로 위치가 지정된다. &amp;lt;div id=&quot;parent&quot;&amp;gt; &amp;lt;div id=&quot;base&quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; -----------css------- #base { position: absolute;} #base::before { position: absolute; top: 20px; } 따라서 위처럼 스타일을 지정하면 #base::before는 #base로 부터 20px 아래에 위치한다. 3. 가상요소(after, before)에서 top, left는 traslate와 같은 효과이다. 즉 위에서 언급한 가상요소의 스타일 top: 20px; left:30px는 transform: translate(20px, 30px);와 같다.</summary></entry><entry><title type="html">ssh key 생성, port변경, 접속하기</title><link href="/using-ssh.html" rel="alternate" type="text/html" title="ssh key 생성, port변경, 접속하기" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T00:00:00+09:00</updated><id>/using-ssh</id><content type="html" xml:base="/using-ssh.html">&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
 &lt;p&gt;ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.&lt;br /&gt;
 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
 
@@ -126,7 +163,30 @@ userid가 sshserver라고 가정하면 아래의 명령어를 유용하게 사�
 &lt;p&gt;확인해 보면 된다.&lt;br /&gt;
 추가로 ssh client에 여러개의 비공개키중 하나를 골라 사용하는 명령이 있다.(ssh 연결관계는 여러개가 될 수 있으므로)&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -i [비공개키 경로] ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="ssh" /><summary type="html">ssh 개요 ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다. 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</summary></entry><entry><title type="html">[GithubPage, Jekyll] tags 페이지 만들기</title><link href="/way-to-make-tags-page.html" rel="alternate" type="text/html" title="[GithubPage, Jekyll] tags 페이지 만들기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/way-to-make-tags-page</id><content type="html" xml:base="/way-to-make-tags-page.html">&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="ssh" /><summary type="html">ssh 개요 ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다. 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</summary></entry><entry><title type="html">[CSS display속성] block, inline, inline-block 알아보기</title><link href="/basic-html-display-block-inline-and-inlineblock.html" rel="alternate" type="text/html" title="[CSS display속성] block, inline, inline-block 알아보기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/basic-html-display-block-inline-and-inlineblock</id><content type="html" xml:base="/basic-html-display-block-inline-and-inlineblock.html">&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
+이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
+
+&lt;h2 id=&quot;block-element-특징&quot;&gt;Block element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 오지 못한다. 즉 하나의 가로줄을 block element가 차지한다.&lt;/li&gt;
+  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;inline-element-특징&quot;&gt;Inline element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
+  &lt;li&gt;해당 element가 포함한 내용에 따라 element의 크기가 결정된다. 즉 css 속성(width, height)은 영향을 주지 않는다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;inline-block-element-특징&quot;&gt;Inline-block element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
+  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.
+즉 화면 배치는 inline이지만 크기는 block인 것이다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위의 속성들은 모두 css를 통해 직접적으로 element에 적용이 가능하다.&lt;br /&gt;
+&lt;a href=&quot;https://codepen.io/rst0070/pen/XWNdJWB&quot;&gt;예시&lt;/a&gt;를 통해 확인할 수 있다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">HTML element는 크게 Block element와 Inline element로 나뉜다. 이 둘의 특징과 inline-block요소에 대해 알아보자.</summary></entry><entry><title type="html">[GithubPage, Jekyll] tags 페이지 만들기</title><link href="/way-to-make-tags-page.html" rel="alternate" type="text/html" title="[GithubPage, Jekyll] tags 페이지 만들기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/way-to-make-tags-page</id><content type="html" xml:base="/way-to-make-tags-page.html">&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
 liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
 나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
 
@@ -150,72 +210,7 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 
 &lt;h2 id=&quot;3-구현&quot;&gt;3. 구현&lt;/h2&gt;
 &lt;p&gt;위의 변수와 for 문을 사용해서 간단히 구현 할 수 있다.
-&lt;script src=&quot;https://gist.github.com/rst0070/0ab68fc340cfe08f8150a6e6e149a688.js&quot;&gt;&lt;/script&gt;&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="jekyll" /><summary type="html">github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다. liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.</summary></entry><entry><title type="html">[CSS display속성] block, inline, inline-block 알아보기</title><link href="/basic-html-display-block-inline-and-inlineblock.html" rel="alternate" type="text/html" title="[CSS display속성] block, inline, inline-block 알아보기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/basic-html-display-block-inline-and-inlineblock</id><content type="html" xml:base="/basic-html-display-block-inline-and-inlineblock.html">&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
-이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
-
-&lt;h2 id=&quot;block-element-특징&quot;&gt;Block element 특징&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 오지 못한다. 즉 하나의 가로줄을 block element가 차지한다.&lt;/li&gt;
-  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;inline-element-특징&quot;&gt;Inline element 특징&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
-  &lt;li&gt;해당 element가 포함한 내용에 따라 element의 크기가 결정된다. 즉 css 속성(width, height)은 영향을 주지 않는다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;inline-block-element-특징&quot;&gt;Inline-block element 특징&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
-  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.
-즉 화면 배치는 inline이지만 크기는 block인 것이다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;위의 속성들은 모두 css를 통해 직접적으로 element에 적용이 가능하다.&lt;br /&gt;
-&lt;a href=&quot;https://codepen.io/rst0070/pen/XWNdJWB&quot;&gt;예시&lt;/a&gt;를 통해 확인할 수 있다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">HTML element는 크게 Block element와 Inline element로 나뉜다. 이 둘의 특징과 inline-block요소에 대해 알아보자.</summary></entry><entry><title type="html">백준 1157번 단어공부</title><link href="/algorithm/1157.html" rel="alternate" type="text/html" title="백준 1157번 단어공부" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/1157</id><content type="html" xml:base="/algorithm/1157.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
- 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
-이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
-&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
-&lt;p&gt;제한시간: 2초&lt;br /&gt;
-입력 문자열 길이: 1,000,000이하&lt;br /&gt;
-가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
-
-&lt;h2 id=&quot;풀이과정&quot;&gt;풀이과정&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.&lt;/li&gt;
-  &lt;li&gt;대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)&lt;/li&gt;
-  &lt;li&gt;따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;코드&quot;&gt;코드&lt;/h2&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;string&amp;gt;
-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    
-    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 문제 링크 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 이때 대문자와 소문자는 구분하지 않고 개수를 센다. 조건 제한시간: 2초 입력 문자열 길이: 1,000,000이하 가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</summary></entry><entry><title type="html">algospot WILDCARD : 동적계획법</title><link href="/algorithm/WILDCARD-DynamicProgramming.html" rel="alternate" type="text/html" title="algospot WILDCARD : 동적계획법" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/WILDCARD-DynamicProgramming</id><content type="html" xml:base="/algorithm/WILDCARD-DynamicProgramming.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;script src=&quot;https://gist.github.com/rst0070/0ab68fc340cfe08f8150a6e6e149a688.js&quot;&gt;&lt;/script&gt;&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="jekyll" /><summary type="html">github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다. liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.</summary></entry><entry><title type="html">algospot WILDCARD : 동적계획법</title><link href="/algorithm/WILDCARD-DynamicProgramming.html" rel="alternate" type="text/html" title="algospot WILDCARD : 동적계획법" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/WILDCARD-DynamicProgramming</id><content type="html" xml:base="/algorithm/WILDCARD-DynamicProgramming.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
@@ -281,7 +276,49 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 링크 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다. 어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</summary></entry><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>/html/html-move-to-specified-element</id><content type="html" xml:base="/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 링크 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다. 어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</summary></entry><entry><title type="html">백준 1157번 단어공부</title><link href="/algorithm/1157.html" rel="alternate" type="text/html" title="백준 1157번 단어공부" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/1157</id><content type="html" xml:base="/algorithm/1157.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
+&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
+&lt;p&gt;제한시간: 2초&lt;br /&gt;
+입력 문자열 길이: 1,000,000이하&lt;br /&gt;
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;풀이과정&quot;&gt;풀이과정&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.&lt;/li&gt;
+  &lt;li&gt;대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)&lt;/li&gt;
+  &lt;li&gt;따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;코드&quot;&gt;코드&lt;/h2&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 문제 링크 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 이때 대문자와 소문자는 구분하지 않고 개수를 센다. 조건 제한시간: 2초 입력 문자열 길이: 1,000,000이하 가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</summary></entry><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>/html/html-move-to-specified-element</id><content type="html" xml:base="/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
 
 &lt;h3 id=&quot;1-해당-element의-id-혹은-name이-필요하다&quot;&gt;1. 해당 Element의 id 혹은 name이 필요하다.&lt;/h3&gt;
 &lt;p&gt;특정 element에 링크를 연결하기 위해선 id나 name을 사용해야 합니다.&lt;br /&gt;
@@ -515,51 +552,4 @@ Below code will print ‘Hello’.&lt;/p&gt;
     Nand(a = nota, b = notb, out = o1); //  ~(~a*~b)
     Nand(a = o1, b = o1, out = out);    //  ~(~(~a*~b))
 }
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>/css-position-relative-absolute-fixed</id><content type="html" xml:base="/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
-있습니다.&lt;br /&gt;
-이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
-&lt;p&gt;static은 모든 요소에 기본적으로 설정된 값입니다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;relative&quot;&gt;relative&lt;/h2&gt;
-&lt;p&gt;relative 속성은 두가지 특징이 있습니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 static일때 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 자신의 static일때 위치를 기준으로 움직인다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 예시의 경우 &lt;em&gt;.example&lt;/em&gt;은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 
-아래로 5px, 왼쪽으로 4px 이동합니다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;absolute&quot;&gt;absolute&lt;/h2&gt;
-&lt;p&gt;절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다.&lt;/li&gt;
-  &lt;li&gt;절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;fixed&quot;&gt;fixed&lt;/h2&gt;
-&lt;p&gt;고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
-  &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. 이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry></feed>

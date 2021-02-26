@@ -59,7 +59,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Home" />
 <script type="application/ld+json">
-{"headline":"Home","@type":"WebSite","author":{"@type":"Person","name":"Wonbin Kim"},"url":"/","name":"Rst","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"Wonbin Kim"},"headline":"Home","@type":"WebSite","url":"/","name":"Rst","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -140,6 +140,35 @@ callback은 해당 request에 대한 서버... <a href="/http-request.html">Read
   
   
     1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/css-pseudo-element-positioning.html">css 가상요소: after , before 요소 위치지정하기</a>
+  </h1>
+  
+  <p>
+    가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.
+
+결론 부터 말하자면 아래와 같다.
+
+  위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 position: absolute여야 한다.
+  after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.
+  위치 지정시 top, left와 transform: translate()는 같은 효과를 가진다.
+
+
+이제 하나씩 설명하겠다.
+1. 대상 엘리먼트와 after, before 엘리먼트는 position: absol... <a href="/css-pseudo-element-positioning.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 26 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    less than 1 minute read
   
 
 
@@ -233,45 +262,6 @@ Inline element 특징
   왼쪽이나 오른쪽에 다른 element가 올 수 있다.
   해당 element가 포함한 내용에 따라 element의 크기가 결정된다.... <a href="/basic-html-display-block-inline-and-inlineblock.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    less than 1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/algorithm/1157.html">백준 1157번 단어공부</a>
-  </h1>
-  
-  <p>
-    문제
-문제 링크
- 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
-이때 대문자와 소문자는 구분하지 않고 개수를 센다.
-조건
-제한시간: 2초
-입력 문자열 길이: 1,000,000이하
-가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.
-
-풀이과정
-
-  2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.
-  대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)
-  따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.
-
-
-코드
-
-#include &lt;iostream&gt;
-#include &lt;string&gt;
-using... <a href="/algorithm/1157.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
     less than 1 minute read
