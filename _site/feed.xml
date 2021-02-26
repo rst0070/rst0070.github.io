@@ -1,8 +1,291 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-08-17T17:05:07+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="http://localhost:4000/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>http://localhost:4000/html/html-move-to-specified-element</id><content type="html" xml:base="http://localhost:4000/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-02-26T12:56:48+09:00</updated><id>/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">node.js로 http request 보내기</title><link href="/http-request.html" rel="alternate" type="text/html" title="node.js로 http request 보내기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/http-request</id><content type="html" xml:base="/http-request.html">&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
+&lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepB&quot;&gt;데이터 및 request 전송&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepC&quot;&gt;response 처리&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-clientrequest-생성&quot;&gt;&lt;a name=&quot;stepA&quot;&gt;1. ClientRequest 생성&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(url[,options][,callback])&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(options[,callback])&lt;/code&gt;함수의 반환값을 통해 생성할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;option&lt;/code&gt;파라미터는 헤더, request방식등을 담고 있는 객체이며&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 해당 request에 대한 서버의 응답(response 이벤트 호출시)시 호출되는 함수입니다.&lt;/p&gt;
+
+&lt;p&gt;post요청 예시&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{...}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;2-데이터를-붙여-전송하기&quot;&gt;&lt;a name=&quot;stepB&quot;&gt;2. 데이터를 붙여 전송하기&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end([data[,encoding]][,callback])&lt;/code&gt;를 통해 전송가능합니다.&lt;/p&gt;
+
+&lt;p&gt;파라미터인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data&lt;/code&gt;는 문자열이고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 전송이 끝났을때 호출되는 함수 입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end()&lt;/code&gt;에 문자열화 된 data를 넣어 실행 시키면 테이터를 붙여 전송하게 됩니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;3-response-받기&quot;&gt;&lt;a name=&quot;stepC&quot;&gt;3. response 받기&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;stepA&quot;&gt;앞에서&lt;/a&gt;설명했듯이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request()&lt;/code&gt;의 마지막 파라미터를 통해 response 이벤트 발생시 객체를 얻을 수 있습니다.&lt;br /&gt;
+이때 객체는 `http.IncomingMessage’클래스의 인스턴스입니다.&lt;br /&gt;
+자세한 내용은 &lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html#http_class_http_incomingmessage&quot;&gt;api 참조&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;이 객체를 통해서 서버로부터 받은 데이터를 확인할 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mydata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="http" /><summary type="html">개요 node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다. request 생성하기 데이터 및 request 전송 response 처리 node.js 문서를 참고하며 작성했습니다.</summary></entry><entry><title type="html">ssh key 생성, port변경, 접속하기</title><link href="/using-ssh.html" rel="alternate" type="text/html" title="ssh key 생성, port변경, 접속하기" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T00:00:00+09:00</updated><id>/using-ssh</id><content type="html" xml:base="/using-ssh.html">&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
+&lt;p&gt;ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.&lt;br /&gt;
+공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
+
+&lt;h2 id=&quot;서버설정-및-실행-방법리눅스-기준&quot;&gt;서버설정 및 실행 방법(리눅스 기준)&lt;/h2&gt;
+&lt;p&gt;서버에는 openssh-server를 설치해주면 된다.
+설치 후 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service ssh start&lt;/code&gt; 명령을 통해 서버를 실행 시키면 된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;클라이언트-설정-및-접속-방법&quot;&gt;클라이언트 설정 및 접속 방법&lt;/h2&gt;
+&lt;p&gt;설치해야할 프로그램은 openssh-client이다.&lt;br /&gt;
+설치 후 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh 유저아이디@서버주소&lt;/code&gt; 명령을 통해 접속한다.
+(이때 ssh의 기본 포트인 22번으로 접속하게 된다.)&lt;/p&gt;
+
+&lt;p&gt;접속을 해보면 패스워드를 물을 것이다. 이를 입력하면 접속하게 되는데 패스워드 입력없이 키를 이용한 방법은 아래에 작성해 놓았다.&lt;/p&gt;
+
+&lt;h2 id=&quot;ssh-서버의-포트를-바꾸는-방법&quot;&gt;ssh 서버의 포트를 바꾸는 방법&lt;/h2&gt;
+&lt;p&gt;서버에 있는 설정파일을 수정해야한다.&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/ssh/sshd_config&lt;/code&gt;파일을 수정한다.&lt;br /&gt;
+파일의 내용을 보다보면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#Port 22&lt;/code&gt;라는 행이 있을것이다.&lt;br /&gt;
+예를 들어 128번 포트로 변경하고 싶다면 이 행의 밑에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Port 128&lt;/code&gt;을 행 추가 해주자.&lt;br /&gt;
+클라이언트에서 접속할 때는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh -p 128 유저아이디@서버주소&lt;/code&gt;방식으로 접속하면 된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;key를-사용한-접속-개요&quot;&gt;key를 사용한 접속 개요&lt;/h2&gt;
+&lt;p&gt;공개키와 비공개키를 이용해 ssh접속을 만들어 낼 수 있다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;클라이언트에서 공개키와 비공개키 생성&lt;/li&gt;
+  &lt;li&gt;서버의 키 목록에 클라이언트의 공개키 추가&lt;/li&gt;
+  &lt;li&gt;클라이언트에서 서버로 접속&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;1-key-생성하기-클라이언트에서리눅스-기준&quot;&gt;1. Key 생성하기: 클라이언트에서(리눅스 기준)&lt;/h3&gt;
+&lt;p&gt;클라이언트에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;을 실행하면 /home/userid/.ssh/ 폴더에 id_rsa와 id_rsa.pub 가 생긴다. 이때 전자가 비공개키, 후자가 공개키이다. 
+아래의 명령을 통해 공개키를 서버로 복사하자.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#server의 유저와 주소를 sshserver라고 가정함.
+scp /home/userid/.ssh/id_rsa.pub sshserver@sshserver:/home/sshserver
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;2-서버의-키-목록에-공개키-추가&quot;&gt;2. 서버의 키 목록에 공개키 추가&lt;/h3&gt;
+&lt;p&gt;옮겨받은 공개키의 내용을 서버의 /home/userid/.ssh/authorized_keys 파일에 추가하면 된다.&lt;br /&gt;
+userid가 sshserver라고 가정하면 아래의 명령어를 유용하게 사용할 수 있다.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat /home/sshserver/id_rsa.pub &amp;gt;&amp;gt; /home/sshserver/.ssh/authorized_keys
+# &amp;gt;&amp;gt;을 사용해 cat 명령어의 출력을 다른곳으로 내보낸다.(파일에 추가시킴)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;3-접속&quot;&gt;3. 접속:&lt;/h3&gt;
+&lt;p&gt;확인해 보면 된다.&lt;br /&gt;
+추가로 ssh client에 여러개의 비공개키중 하나를 골라 사용하는 명령이 있다.(ssh 연결관계는 여러개가 될 수 있으므로)&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -i [비공개키 경로] ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="ssh" /><summary type="html">ssh 개요 ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다. 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</summary></entry><entry><title type="html">[GithubPage, Jekyll] tags 페이지 만들기</title><link href="/way-to-make-tags-page.html" rel="alternate" type="text/html" title="[GithubPage, Jekyll] tags 페이지 만들기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/way-to-make-tags-page</id><content type="html" xml:base="/way-to-make-tags-page.html">&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
+liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
+나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;0-전체적인-방법&quot;&gt;0. 전체적인 방법&lt;/h2&gt;
+&lt;p&gt;나는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;layouts&lt;/code&gt;폴더에 tag.html 파일을 만들었다. 
+이 파일을 layout으로 하는 markdown파일은 tag 페이지의 기능을 하게 된다.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-tag-페이지-구조&quot;&gt;1. tag 페이지 구조&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;상단: 블로그에 존재하는 모든 태그들을 나열한다.&lt;/li&gt;
+  &lt;li&gt;중단: 각 태그별로 해당 태그가 걸린 게시물을 나열한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;2-구현-방법&quot;&gt;2. 구현 방법&lt;/h2&gt;
+&lt;p&gt;구현에 중심적으로 사용할 변수는 두가지 이다.
+| 변수 | 의미 |
+| — | — |
+| &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;site.tags.TAG&lt;/code&gt; | 사이트에 존재하는 모든 태그를 포함하는 리스트이다. |
+| &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;site.tags.TAG.last&lt;/code&gt; | 해당 태그를 가지는 모든 포스트를 참조하는 리스트이다. |
+이외에도 링크나 포스팅된 날짜를 표시하기 위해 부가적인 변수를 사용할 것 이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;3-구현&quot;&gt;3. 구현&lt;/h2&gt;
+&lt;p&gt;위의 변수와 for 문을 사용해서 간단히 구현 할 수 있다.
+&lt;script src=&quot;https://gist.github.com/rst0070/0ab68fc340cfe08f8150a6e6e149a688.js&quot;&gt;&lt;/script&gt;&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="jekyll" /><summary type="html">github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다. liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.</summary></entry><entry><title type="html">[CSS display속성] block, inline, inline-block 알아보기</title><link href="/basic-html-display-block-inline-and-inlineblock.html" rel="alternate" type="text/html" title="[CSS display속성] block, inline, inline-block 알아보기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/basic-html-display-block-inline-and-inlineblock</id><content type="html" xml:base="/basic-html-display-block-inline-and-inlineblock.html">&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
+이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
+
+&lt;h2 id=&quot;block-element-특징&quot;&gt;Block element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 오지 못한다. 즉 하나의 가로줄을 block element가 차지한다.&lt;/li&gt;
+  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;inline-element-특징&quot;&gt;Inline element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
+  &lt;li&gt;해당 element가 포함한 내용에 따라 element의 크기가 결정된다. 즉 css 속성(width, height)은 영향을 주지 않는다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;inline-block-element-특징&quot;&gt;Inline-block element 특징&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;왼쪽이나 오른쪽에 다른 element가 올 수 있다.&lt;/li&gt;
+  &lt;li&gt;css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.
+즉 화면 배치는 inline이지만 크기는 block인 것이다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;위의 속성들은 모두 css를 통해 직접적으로 element에 적용이 가능하다.&lt;br /&gt;
+&lt;a href=&quot;https://codepen.io/rst0070/pen/XWNdJWB&quot;&gt;예시&lt;/a&gt;를 통해 확인할 수 있다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">HTML element는 크게 Block element와 Inline element로 나뉜다. 이 둘의 특징과 inline-block요소에 대해 알아보자.</summary></entry><entry><title type="html">백준 1157번 단어공부</title><link href="/algorithm/1157.html" rel="alternate" type="text/html" title="백준 1157번 단어공부" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/1157</id><content type="html" xml:base="/algorithm/1157.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
+&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
+&lt;p&gt;제한시간: 2초&lt;br /&gt;
+입력 문자열 길이: 1,000,000이하&lt;br /&gt;
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;풀이과정&quot;&gt;풀이과정&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.&lt;/li&gt;
+  &lt;li&gt;대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)&lt;/li&gt;
+  &lt;li&gt;따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;코드&quot;&gt;코드&lt;/h2&gt;
+
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 문제 링크 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 이때 대문자와 소문자는 구분하지 않고 개수를 센다. 조건 제한시간: 2초 입력 문자열 길이: 1,000,000이하 가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</summary></entry><entry><title type="html">algospot WILDCARD : 동적계획법</title><link href="/algorithm/WILDCARD-DynamicProgramming.html" rel="alternate" type="text/html" title="algospot WILDCARD : 동적계획법" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/WILDCARD-DynamicProgramming</id><content type="html" xml:base="/algorithm/WILDCARD-DynamicProgramming.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
+링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
+와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
+어려운점은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt;와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;풀이-과정&quot;&gt;풀이 과정&lt;/h2&gt;
+&lt;p&gt;일단 완전 탐색으로 생각해보자.
+와일드카드 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;w&lt;/code&gt;와 파일 이름 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;s&lt;/code&gt;가 주어질때 s가 w와 맞는지 확인해보는 함수를 만들어본다.&lt;/p&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//마지막까지 다른것이 없을&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;*&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;코드&quot;&gt;코드&lt;/h2&gt;
+&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+#include &amp;lt;vector&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;101&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;101&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;memo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//i: wildCard에 대한 포인터, j: 주어진 문자열에 대한 포인터&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;memo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;*&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        
+        &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;cin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;push_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 링크 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다. 어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</summary></entry><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>/html/html-move-to-specified-element</id><content type="html" xml:base="/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
 
 &lt;h3 id=&quot;1-해당-element의-id-혹은-name이-필요하다&quot;&gt;1. 해당 Element의 id 혹은 name이 필요하다.&lt;/h3&gt;
 &lt;p&gt;특정 element에 링크를 연결하기 위해선 id나 name을 사용해야 합니다.&lt;br /&gt;
-링크에서는 &lt;code class=&quot;highlighter-rouge&quot;&gt;#id&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;#name&lt;/code&gt;과 같은 방법으로 접근합니다.&lt;/p&gt;
+링크에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#id&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#name&lt;/code&gt;과 같은 방법으로 접근합니다.&lt;/p&gt;
 
 &lt;h3 id=&quot;2-1의-element를-가리키는-링크를-사용한다&quot;&gt;2. 1의 Element를 가리키는 링크를 사용한다.&lt;/h3&gt;
 &lt;p&gt;id나 name을 사용하여 특정 element를 가리키는 링크를 만들 수 있습니다.&lt;/p&gt;
@@ -32,14 +315,12 @@
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
 
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">HTML 문서의 특정 element로 이동하는 방법입니다.</summary></entry><entry><title type="html">Kotlin Basic Syntax</title><link href="http://localhost:4000/kotlin/kotlin-syntax-basic.html" rel="alternate" type="text/html" title="Kotlin Basic Syntax" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-basic</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-basic.html">&lt;ul&gt;
-  &lt;li&gt;Default Parameter Valuese&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Valuese</summary></entry><entry><title type="html">Kotlin Syntax about Functions</title><link href="http://localhost:4000/kotlin/kotlin-syntax-functions.html" rel="alternate" type="text/html" title="Kotlin Syntax about Functions" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-functions</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-functions.html">&lt;ul&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="html" /><summary type="html">HTML 문서의 특정 element로 이동하는 방법입니다.</summary></entry><entry><title type="html">Kotlin Syntax about Functions</title><link href="/kotlin/kotlin-syntax-functions.html" rel="alternate" type="text/html" title="Kotlin Syntax about Functions" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>/kotlin/kotlin-syntax-functions</id><content type="html" xml:base="/kotlin/kotlin-syntax-functions.html">&lt;ul&gt;
   &lt;li&gt;Default Parameter Values&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;vararg-parameters&quot;&gt;Vararg Parameters&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vararg&lt;/code&gt;is keyword used to define a parameter. This keyword means the parameter is numberically variable.&lt;br /&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vararg&lt;/code&gt;is keyword used to define a parameter. This keyword means the parameter is numberically variable.&lt;br /&gt;
 Thus the parameter can be used as an array, even as an empty array.&lt;/p&gt;
 &lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printTexts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;vararg&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEacch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&amp;gt;&lt;/span&gt;
@@ -54,7 +335,7 @@ Thus the parameter can be used as an array, even as an empty array.&lt;/p&gt;
     &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If do not pass any parameter to &lt;code class=&quot;highlighter-rouge&quot;&gt;printText()&lt;/code&gt;, the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;texts&lt;/code&gt; would be an empty array.
+&lt;p&gt;If do not pass any parameter to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printText()&lt;/code&gt;, the parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texts&lt;/code&gt; would be an empty array.
 Reference: &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax&quot;&gt;spread operation&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;named-argument&quot;&gt;Named argument&lt;/h2&gt;
@@ -75,7 +356,7 @@ Below code will print ‘Hello’.&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
     &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">Kotlin syntax: Class</title><link href="http://localhost:4000/kotlin/kotlin-syntax-class.html" rel="alternate" type="text/html" title="Kotlin syntax: Class" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>http://localhost:4000/kotlin/kotlin-syntax-class</id><content type="html" xml:base="http://localhost:4000/kotlin/kotlin-syntax-class.html"></content><author><name>Wonbin Kim</name></author><summary type="html"></summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="http://localhost:4000/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>http://localhost:4000/hdl-and-or-not-gate</id><content type="html" xml:base="http://localhost:4000/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="Kotlin" /><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>/hdl-and-or-not-gate</id><content type="html" xml:base="/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4&quot;&gt;Hardware Description Language&lt;/a&gt;의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.&lt;br /&gt;
 기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
@@ -101,14 +382,14 @@ Below code will print ‘Hello’.&lt;/p&gt;
   And(a = x, b = y, out = o1);
   Not(in = o1, out = ret)
 
-  /* 다른칩에 접근할때는 '칩이름(핀이름 = 현재핀에서사용하는핀)'식으로
+  /* 다른칩에 접근할때는 &apos;칩이름(핀이름 = 현재핀에서사용하는핀)&apos;식으로
    * 접근한다.
    * input pin에 접근하는 pin은 값을 전달,
    * output pin에 접근하는 pin은 값을 받아온다.
    * ex. Nand(x = a, y = b, ret = out);
    *
    * 이때 out에 해당하는 핀에 internal pin을 연결할 수 있다.
-   * 예를들어 위의 'o1'이 internal pin인데 여러 칩들을 연결할때
+   * 예를들어 위의 &apos;o1&apos;이 internal pin인데 여러 칩들을 연결할때
    * output의 이름을 붙여주는 역할을 한다.
    */
 }
@@ -224,7 +505,7 @@ Below code will print ‘Hello’.&lt;/p&gt;
 &lt;/table&gt;
 
 &lt;p&gt;이를 Nand gate만으로 만들기 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EB%93%9C_%EB%AA%A8%EB%A5%B4%EA%B0%84%EC%9D%98_%EB%B2%95%EC%B9%99&quot;&gt;드모르간의 법칙&lt;/a&gt;을 사용할 수 있습니다.&lt;br /&gt;
-즉 &lt;code class=&quot;highlighter-rouge&quot;&gt;a + b = ~a * ~b&lt;/code&gt;(+: or, *: and)&lt;/p&gt;
+즉 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a + b = ~a * ~b&lt;/code&gt;(+: or, *: and)&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Or{
     IN a, b;
     OUT out;
@@ -234,8 +515,10 @@ Below code will print ‘Hello’.&lt;/p&gt;
     Nand(a = nota, b = notb, out = o1); //  ~(~a*~b)
     Nand(a = o1, b = o1, out = out);    //  ~(~(~a*~b))
 }
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="http://localhost:4000/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-position-relative-absolute-fixed</id><content type="html" xml:base="http://localhost:4000/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
-있습니다.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry><entry><title type="html">CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title><link href="/css-position-relative-absolute-fixed.html" rel="alternate" type="text/html" title="CSS position: 기본위치, 상대위치, 절대위치, 고정위치" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>/css-position-relative-absolute-fixed</id><content type="html" xml:base="/css-position-relative-absolute-fixed.html">&lt;p&gt;css의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
+있습니다.&lt;br /&gt;
+이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.&lt;/p&gt;
+
 &lt;hr /&gt;
 &lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
 &lt;p&gt;static은 모든 요소에 기본적으로 설정된 값입니다.&lt;/p&gt;
@@ -244,8 +527,8 @@ Below code will print ‘Hello’.&lt;/p&gt;
 &lt;h2 id=&quot;relative&quot;&gt;relative&lt;/h2&gt;
 &lt;p&gt;relative 속성은 두가지 특징이 있습니다.&lt;/p&gt;
 &lt;ol&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다.&lt;/li&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 static일때 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
+  &lt;li&gt;relative 속성을 가진 요소가 자신의 static일때 위치를 기준으로 움직인다.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
@@ -279,308 +562,4 @@ Below code will print ‘Hello’.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
   &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. static static은 모든 요소에 기본적으로 설정된 값입니다. relative relative 속성은 두가지 특징이 있습니다. relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다. relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다. 예시 .example { position: relative; top: 5px; right: 4px; } 위의 예시의 경우 .example은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 아래로 5px, 왼쪽으로 4px 이동합니다. absolute 절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다. static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다. 절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다. 예시 .example { position: absolute; top: 5px; right: 5px; } fixed 고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다. 고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다. 웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.</summary></entry><entry><title type="html">CSS font 속성들과 속기형 작성법</title><link href="http://localhost:4000/css-shorthand-font-set.html" rel="alternate" type="text/html" title="CSS font 속성들과 속기형 작성법" /><published>2020-03-25T00:00:00+09:00</published><updated>2020-03-25T00:00:00+09:00</updated><id>http://localhost:4000/css-shorthand-font-set</id><content type="html" xml:base="http://localhost:4000/css-shorthand-font-set.html">&lt;p&gt;CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
-속기형 작성법에 대해 정리하려 한다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;css에서-글자-스타일을-지정하는-속성들&quot;&gt;CSS에서 글자 스타일을 지정하는 속성들&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;글꼴: font-family&lt;/li&gt;
-  &lt;li&gt;크기: font-size&lt;/li&gt;
-  &lt;li&gt;행간: line-height&lt;/li&gt;
-  &lt;li&gt;기울기: font-style&lt;/li&gt;
-  &lt;li&gt;두께: font-weight&lt;/li&gt;
-  &lt;li&gt;음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font-family&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;font-size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;line-height&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;font-style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;font-weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;font-variant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;예시 처럼 각 속성들을 따로 지정할 수도 있지만, 속기형으로 빠르게 지정할 수 도 있다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;font-속기형-작성법&quot;&gt;font 속기형 작성법&lt;/h2&gt;
-&lt;p&gt;font 속기형 작성법에는 필수 지정 요소들이 존재하며, 옵션 요소들의 경우 작성하는
-방법이 존재한다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;필수요소: &lt;em&gt;font-size&lt;/em&gt; 와 &lt;em&gt;font-family&lt;/em&gt;는 필수로 지정해야한다.
-    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;옵션요소: &lt;em&gt;line-height&lt;/em&gt;를 지정할 때는 &lt;em&gt;font-size&lt;/em&gt;뒤에 슬래시(/)를
-붙이고 그 뒷부분에 작성한다.
-    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;옵션요소: &lt;em&gt;font-weight&lt;/em&gt;, &lt;em&gt;font-style&lt;/em&gt;, &lt;em&gt;font-variant&lt;/em&gt;등은 &lt;em&gt;font-size&lt;/em&gt;
-앞부분에 작성한다.
-    &lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;bold&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;italic&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;small-caps&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;10px&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;.5&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;Times New Roman&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는 속기형 작성법에 대해 정리하려 한다. CSS에서 글자 스타일을 지정하는 속성들 글꼴: font-family 크기: font-size 행간: line-height 기울기: font-style 두께: font-weight 음절 앞 글자 대문자: font-variant(영문 글꼴에만 적용)</summary></entry><entry><title type="html">[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title><link href="http://localhost:4000/err-node-oracle-bit-dif.html" rel="alternate" type="text/html" title="[Error] DPI-1047 : node.js 와 oracle client의 호환문제" /><published>2020-02-29T00:00:00+09:00</published><updated>2020-02-29T00:00:00+09:00</updated><id>http://localhost:4000/err-node-oracle-bit-dif</id><content type="html" xml:base="http://localhost:4000/err-node-oracle-bit-dif.html">&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
-&lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했습니다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
-&quot;D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
-See https://oracle.github.io/odpi/doc/installation.html#windows for help
-Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html
-You must have 64-bit Oracle client libraries in your PATH environment variable.
-If you do not have Oracle Database on this computer, then install the Instant Client 
-Basic or Basic Light package from
-http://www.oracle.com/technetwork/topics/winx64soft-089540.html
-A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
-version must be available.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 메세지를 읽어보면 64bit Oracle client libraries를사용하라고 합니다.&lt;br /&gt;
-저는 64bit node.js와 32bit Oracle DB를 사용하고 있었는데 둘의 호환에 문제가 생긴것입니다.&lt;/p&gt;
-
-&lt;p&gt;해결방법은 간단합니다. 
-&lt;em&gt;64bit Oracle Instant Client 를 다운받아 32bit client library보다 우선적으로 환경 변수 설정을 한다.&lt;/em&gt; 
-즉 node.js의 bit에 맞는 클라이언트 툴을 사용하도록 설정해주면 됩니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;교훈&quot;&gt;교훈?&lt;/h2&gt;
-&lt;p&gt;정말 사소한 문제지만 Oracle의 bit수를 염두해 두지 않아 당황했었습니다.&lt;br /&gt;
-오류는 정말 예상치 못한곳에서 발생할 수 있다는 걸 직접 체험했습니다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="err" /><category term="oracle" /><category term="node.js" /><summary type="html">배경 node.js에서 oracledb모듈을 사용하는데 아래와 같은 오류가 발생했습니다. Error: DPI-1047: Cannot locate a 64-bit Oracle Client library: &quot;D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. See https://oracle.github.io/odpi/doc/installation.html#windows for help Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html You must have 64-bit Oracle client libraries in your PATH environment variable. If you do not have Oracle Database on this computer, then install the Instant Client Basic or Basic Light package from http://www.oracle.com/technetwork/topics/winx64soft-089540.html A Microsoft Visual Studio Redistributable suitable for your Oracle client library version must be available. 위의 메세지를 읽어보면 64bit Oracle client libraries를사용하라고 합니다. 저는 64bit node.js와 32bit Oracle DB를 사용하고 있었는데 둘의 호환에 문제가 생긴것입니다.</summary></entry><entry><title type="html">[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</title><link href="http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html" rel="alternate" type="text/html" title="[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기" /><published>2020-02-27T00:00:00+09:00</published><updated>2020-02-27T00:00:00+09:00</updated><id>http://localhost:4000/node_js/nodejs-oracledb-how-to-connect</id><content type="html" xml:base="http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html">&lt;hr /&gt;
-&lt;h2 id=&quot;1-oracledb-모듈-불러오기-oracledb-객체-생성&quot;&gt;1. &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class&quot;&gt;Oracledb 모듈 불러오기: Oracledb 객체 생성&lt;/a&gt;&lt;/h2&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 oracledb 모듈을 불러오면 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;라는 변수에는 
-oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
-oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.&lt;/p&gt;
-
-&lt;h3 id=&quot;11-oracledb-객체는-무엇을-하는가&quot;&gt;1.1 oracledb 객체는 무엇을 하는가?&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 객체와 &lt;em&gt;Connection&lt;/em&gt; 객체를 생성할 기반의 역할을 하고 
-DB관련 작업시 사용할 많은 &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-31-oracledb-constants&quot;&gt;상수들을 갖고있다.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 과 &lt;em&gt;Connection&lt;/em&gt; 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;2-pool-생성하기&quot;&gt;2. Pool 생성하기&lt;/h2&gt;
-
-&lt;h3 id=&quot;21-pool의-개념&quot;&gt;2.1 Pool의 개념&lt;/h3&gt;
-&lt;p&gt;문서에 따르면 각각의 Pool 객체는 &lt;em&gt;&lt;a href=&quot;https://docs.oracle.com/en/database/oracle/oracle-database/19/lnoci/session-and-connection-pooling.html#GUID-F9662FFB-EAEF-495C-96FC-49C6D1D9625C&quot;&gt;Oracle Call Interface Session Pool&lt;/a&gt;&lt;/em&gt; 라고 한다.&lt;br /&gt;
-이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다.&lt;br /&gt;
-이런 특성의 장점은 다음과 같다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다.&lt;/li&gt;
-  &lt;li&gt;새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 
-유지하고 있다.)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;22-생성하기-oracledbcreatepool&quot;&gt;2.2 생성하기: &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#createpool&quot;&gt;oracledb.createPool()&lt;/a&gt;&lt;/h3&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createPool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;poolAttrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Pool&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 oracledb 객체에 속한 함수를 통해 콜백방법으로 생성할 수 있다.&lt;/p&gt;
-
-&lt;h4 id=&quot;221-parameters-object-poolattrs&quot;&gt;2.2.1 Parameters: Object poolAttrs&lt;/h4&gt;
-&lt;p&gt;Pool을 생성하는데 필요한 세부사항들을 key:value(javascript 객체)
-로 정의한 객체이다.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-3311-createpool-parameters-and-attributes&quot;&gt;문서&lt;/a&gt;를 보면 여러가지 속성들을 찾을수 있다. 
-이 글에서는 중요한 속성들만 언급하려한다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;속성 이름&lt;/th&gt;
-      &lt;th&gt;Type&lt;/th&gt;
-      &lt;th&gt;설명&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;connectString&lt;/td&gt;
-      &lt;td&gt;String&lt;/td&gt;
-      &lt;td&gt;tnsnames.ora에 등록된 서비스 이름이 &lt;em&gt;MYDB&lt;/em&gt;이고 리스너가 &lt;em&gt;localhost:1521&lt;/em&gt;에 위치해 있다면 값은 &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;localhost:1521/MYDB&quot;&lt;/code&gt;가 될 것이다.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;user&lt;/td&gt;
-      &lt;td&gt;String&lt;/td&gt;
-      &lt;td&gt;사용하려는 Oracle 계정의 이름이다.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;password&lt;/td&gt;
-      &lt;td&gt;String&lt;/td&gt;
-      &lt;td&gt;위 user의 패스워드&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;poolAlias&lt;/td&gt;
-      &lt;td&gt;String&lt;/td&gt;
-      &lt;td&gt;생성되는 &lt;em&gt;Pool&lt;/em&gt;은 &lt;em&gt;Connection Pool Cache&lt;/em&gt;에 등록되는데 이때 해당 &lt;em&gt;Pool&lt;/em&gt;을 구별하는 식별자의 역할을 하는것이 &lt;em&gt;poolAlias&lt;/em&gt;이다. &lt;em&gt;oracledb.getPool()&lt;/em&gt;등의 함수에 파라미터로 전달하여 해당 &lt;em&gt;Pool&lt;/em&gt;을 얻을수 있다.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;이것들 외에도 Pool에서 관리할 Conection의 개수를 제한하거나, 
-관리되는 Connection들에 같은 속성을 부여할 것 인지 설정하는등 
-여러가지를 설정할 수 있다.&lt;/p&gt;
-
-&lt;h4 id=&quot;222-callback-function&quot;&gt;2.2.2 Callback function&lt;/h4&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Pool&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Parameter&lt;/th&gt;
-      &lt;th&gt;설명&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Error error&lt;/td&gt;
-      &lt;td&gt;createPool()이 성공한다면 NULL값이지만 실패한다면 &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#errorobj&quot;&gt;오류 메세지&lt;/a&gt;를 포함한다.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#poolclass&quot;&gt;Pool&lt;/a&gt; pool&lt;/td&gt;
-      &lt;td&gt;새로 생성된 connection Pool이다. Pool 생성을 실패했다면 NULL 값을 가진다.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;3-connection-만들기-oracledbgetconnection&quot;&gt;3. Connection 만들기: oracledb.getConnection()&lt;/h2&gt;
-&lt;p&gt;getConnection() 합수는 여러 종류가 있어서 Pool 없이 연결을 만들수도 있다. 
-하지만 Pool을 사용하는 것이 Oracle의 권장사항이어서 Pool을 사용하는 콜백방법에 
-대해서만 알아보려한다. 다른 방법들은 &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-332-oracledbgetconnection&quot;&gt;이곳&lt;/a&gt;에 있다.&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getConnection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;poolAlias&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Connection&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 oracledb객체의 메소드로 Connection을 얻을 수 있다.&lt;/p&gt;
-
-&lt;p&gt;poolAlias는 위에서 언급한 ‘pool을 식별하는 문자열’이다. poolAlias를 파라미터로 전달하지 
-않으면 가장 최근에 Pool cache에 올라간 Pool을 사용한다.&lt;/p&gt;
-
-&lt;p&gt;콜백함수의 error 파라미터는 
-connection 생성에 성공하면 NULL이고, 실패하면 Error 객체가 된다.&lt;br /&gt;
-생성에 실패하면 Connection 객체는 NULL값으로 들어온다.&lt;/p&gt;
-
-&lt;!-- ## 4. SQL 실행하기: connection.execute()생성된 connection객체에서 execute()함수를 통해 쿼리를 실행할 수 있다.  --&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="oracle" /><summary type="html">1. Oracledb 모듈 불러오기: Oracledb 객체 생성 const oracledb = require(&quot;oracledb&quot;); 위와 같이 oracledb 모듈을 불러오면 oracledb라는 변수에는 oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다. 1.1 oracledb 객체는 무엇을 하는가? Pool 객체와 Connection 객체를 생성할 기반의 역할을 하고 DB관련 작업시 사용할 많은 상수들을 갖고있다. Pool 과 Connection 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다. 2. Pool 생성하기 2.1 Pool의 개념 문서에 따르면 각각의 Pool 객체는 Oracle Call Interface Session Pool 라고 한다. 이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다. 이런 특성의 장점은 다음과 같다. 여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다. 새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 유지하고 있다.)</summary></entry><entry><title type="html">[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title><link href="http://localhost:4000/oracle/oracle-create-table.html" rel="alternate" type="text/html" title="[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)" /><published>2020-02-20T00:00:00+09:00</published><updated>2020-02-20T00:00:00+09:00</updated><id>http://localhost:4000/oracle/oracle-create-table</id><content type="html" xml:base="http://localhost:4000/oracle/oracle-create-table.html">&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
-그 방법을 정리하려 포스팅을 하게 되었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;테이블-만들기-기본적인-형태&quot;&gt;테이블 만들기: 기본적인 형태&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;create table [스키마.]&amp;lt;테이블 이름&amp;gt; (
-&amp;lt;열 이름&amp;gt; &amp;lt;데이터 타입&amp;gt; [default &amp;lt;표현식&amp;gt;] [&amp;lt;제약조건&amp;gt;]
-[,&amp;lt;열 이름&amp;gt; &amp;lt;데이터 타입&amp;gt; [default &amp;lt;표현식&amp;gt;] [&amp;lt;제약조건&amp;gt;]]
-[,...]
-);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;[]: 선택사항&lt;br /&gt;
-&amp;lt;&amp;gt;: 필수사항&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;em&gt;스키마&lt;/em&gt;: 만들어질 테이블이 속하는 스키마&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;테이블 이름&lt;/em&gt;: 만들어질 테이블의 이름&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;열 이름&lt;/em&gt;: 테이블의 열 이름&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;데이터 타입&lt;/em&gt;: 해당하는 열의 데이터 타입&lt;/li&gt;
-  &lt;li&gt;*default &lt;표현식&gt;*: insert 구문에서 열의 값이 지정되지 않는 경우 
-디폴트 값을 지정한다. &lt;표현식&gt;에는 정적값이나 sql함수를 지정할 수 있다.&lt;/표현식&gt;&lt;/표현식&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;제약조건&lt;/em&gt;: 각 열의 데이터가 갖춰야할 제약조건을 정의할 수 있다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;테이블-만들기-select-구문-이용&quot;&gt;테이블 만들기: select 구문 이용&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;create table &amp;lt;table name&amp;gt; as select...&lt;/code&gt;형태의 구문으로 
-select를 사용해 table을 생성할 수 있다.&lt;br /&gt;
-&lt;strong&gt;예시&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;create table another_dept
-as select * from scott.dept;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;제약조건이란&quot;&gt;제약조건이란?&lt;/h2&gt;
-&lt;p&gt;Oracle은 데이터베이스의 데이터가 의도한 대로 저장되고 
-데이터베이스의 다른 부분과 결함없이 작동하도록 제약조건을 제공한다.&lt;/p&gt;
-
-&lt;p&gt;이때 제약조건을 적용하는 방법을 두가지로 분류할 수 있다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;선언적 방법&lt;/strong&gt;: 
-테이블의 선언(생성 및 변경)과 함께 규칙을 저장한다. 
-테이블간의 관계에 대한 규칙, 테이블 열에 들어가야할 데이터의 규칙등을 지정한다. 
-테이블에 저장되는 모든 행에 적용된다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;절차적 방법&lt;/strong&gt;: 
-작업과정중에는 데이터에 제약조건을 추가해야하는 상황이 발생하며 선언적 
-방법만으로는 이를 충족하기 어렵다. 따라서 절차적 방법으로 
-데이터에 제약조건을 추가하는데 이를 &lt;em&gt;사용자 정의 무결성&lt;/em&gt; 이라고 한다.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;이 글에서는 Oracle의 &lt;strong&gt;선언적 무결성 제약조건&lt;/strong&gt; 추가방법을 알아보려한다.&lt;br /&gt;
-Table을 새로 생성할때는 &lt;code class=&quot;highlighter-rouge&quot;&gt;create table&lt;/code&gt; 구문에서 제약조건을 추가 할 수 있다(앞에서 살펴봤다).&lt;br /&gt;
-이미 존재하는 Table에 제약조건을 추가할 때는 아래와 같이 &lt;code class=&quot;highlighter-rouge&quot;&gt;alter table add&lt;/code&gt;를 사용한다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;alter table [스키마.]&amp;lt;Table이름&amp;gt;
-add [constraint &amp;lt;제약조건의 이름&amp;gt;]
-&amp;lt;제약조건 정의&amp;gt;
-/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;제약조건-추가하기-1-기본키-추가&quot;&gt;제약조건 추가하기: 1. 기본키 추가&lt;/h2&gt;
-&lt;p&gt;기본키는 Table에서 각각의 행을 구분짓는 키의 역할을 한다. 
-따라서 NULL이 될 수 없고 행을 구분 지을수 있도록 유일한 것 이어야 한다.&lt;br /&gt;
-기본키는 하나의 열이나 여러개 열의 모음으로 정의할 수 있다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Table 생성시 기본키 정의&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;this_is_test&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;primary&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 sql을 실행한 결과는 아래와 같은데 NO 항목이 기본키(Primary Key)로 
-정의된 것을 확인할 수 있다.&lt;br /&gt;
-&lt;img src=&quot;/assets/img/2020-02-20-oracle-create-table/pk1.png&quot; alt=&quot;pk&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;이미 생성된 Table에 기본키 제약조건 적용&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;this_is_test&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;constraint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ct_name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;primary&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;제약조건-추가하기-2-외부키-추가&quot;&gt;제약조건 추가하기: 2. 외부키 추가&lt;/h2&gt;
-&lt;p&gt;외부키는 다른 Table과 연결되는 기능을 한다.&lt;br /&gt;
-이때 테이블간에 부모-자식 관계가 발생한다. 제약조건이 적용되는 테이블은 
-자식이고 그것이 아닌쪽이 부모이다.&lt;/p&gt;
-
-&lt;p&gt;외부키를 적용할때 &lt;code class=&quot;highlighter-rouge&quot;&gt;references&lt;/code&gt;라는 키워드로 부모 테이블과 연결 시킨다.&lt;/p&gt;
-
-&lt;p&gt;이미 존재하는 테이블에는 다음과 같이 사용한다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
-alter table [스키마.]&amp;lt;Table이름&amp;gt;
-add [constraint &amp;lt;제약조건의 이름&amp;gt;]
-foreign key (&amp;lt;외부키에 해당되는 한 열 또는 여러 열&amp;gt;)
-references &amp;lt;부모테이블 이름&amp;gt; (&amp;lt;외부키와 연결되는 한 열 또는 여러 열&amp;gt;)
-/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;테이블 생성시 외부키 정의방법은 &lt;code class=&quot;highlighter-rouge&quot;&gt;references&lt;/code&gt;키워드만 사용한다.&lt;br /&gt;
-&lt;strong&gt;테이블 생성 예시&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;child&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;references&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;phone&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;varchar2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;제약조건-추가하기-3-유일조건-추가&quot;&gt;제약조건 추가하기: 3. 유일조건 추가&lt;/h2&gt;
-&lt;p&gt;유일조건은 지정하는 열들이 NULL값이 아닐때 
-테이블내에서 행마다 유일하도록 하는 제약조건이다.&lt;br /&gt;
-곧 행을 구분할 수 있는 수단이 될 수 있다.&lt;/p&gt;
-
-&lt;p&gt;다음의 방법으로 사용하면 된다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;unique(&amp;lt;열1&amp;gt;[,&amp;lt;열2&amp;gt;][,...])
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;제약조건-추가하기-4-check조건-추가&quot;&gt;제약조건 추가하기: 4. CHECK조건 추가&lt;/h2&gt;
-&lt;p&gt;이 조건은 테이블 내의 모든 행에 적용되는 조건이다.&lt;br /&gt;
-대상이 되는 행이 check 조건을 만족해야한다.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;예시&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;alter&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;people_who_is_male&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;constraint&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;check_gender&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;check&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'MALE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 예시에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;gender&lt;/code&gt;는 &lt;code class=&quot;highlighter-rouge&quot;&gt;people_who_is_male&lt;/code&gt;테이블의 
-열이다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="oracle" /><category term="sql" /><summary type="html">Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 그 방법을 정리하려 포스팅을 하게 되었다. 테이블 만들기: 기본적인 형태</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">css의 position속성에는 static, relative, absolute, fixed가 있습니다. 이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.</summary></entry></feed>

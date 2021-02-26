@@ -1,4 +1,4 @@
-I"�<p>CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
+I"E<p>CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
 속기형 작성법에 대해 정리하려 한다.</p>
 <hr />
 <h2 id="css에서-글자-스타일을-지정하는-속성들">CSS에서 글자 스타일을 지정하는 속성들</h2>
@@ -13,8 +13,8 @@
 
 <p><em>예시</em></p>
 <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font-family</span><span class="o">:</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
-<span class="nt">font-size</span><span class="o">:</span> <span class="nt">10px</span><span class="o">;</span>
-<span class="nt">line-height</span><span class="o">:</span> <span class="nt">1</span><span class="nc">.5</span><span class="o">;</span>
+<span class="nt">font-size</span><span class="o">:</span> <span class="err">10</span><span class="nt">px</span><span class="o">;</span>
+<span class="nt">line-height</span><span class="o">:</span> <span class="err">1</span><span class="o">.</span><span class="err">5</span><span class="o">;</span>
 <span class="nt">font-style</span><span class="o">:</span> <span class="nt">italic</span><span class="o">;</span>
 <span class="nt">font-weight</span><span class="o">:</span> <span class="nt">bold</span><span class="o">;</span>
 <span class="nt">font-variant</span><span class="o">:</span> <span class="nt">small-caps</span><span class="o">;</span>
@@ -28,17 +28,17 @@
 
 <ul>
   <li>필수요소: <em>font-size</em> 와 <em>font-family</em>는 필수로 지정해야한다.
-    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="nt">10px</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
+    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="err">10</span><span class="nt">px</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
 </code></pre></div>    </div>
   </li>
   <li>옵션요소: <em>line-height</em>를 지정할 때는 <em>font-size</em>뒤에 슬래시(/)를
 붙이고 그 뒷부분에 작성한다.
-    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="nt">10px</span><span class="o">/</span><span class="nt">1</span><span class="nc">.5</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
+    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="err">10</span><span class="nt">px</span><span class="o">/</span><span class="err">1</span><span class="o">.</span><span class="err">5</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
 </code></pre></div>    </div>
   </li>
   <li>옵션요소: <em>font-weight</em>, <em>font-style</em>, <em>font-variant</em>등은 <em>font-size</em>
 앞부분에 작성한다.
-    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="nt">bold</span> <span class="nt">italic</span> <span class="nt">small-caps</span> <span class="nt">10px</span><span class="o">/</span><span class="nt">1</span><span class="nc">.5</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
+    <div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">font</span><span class="o">:</span> <span class="nt">bold</span> <span class="nt">italic</span> <span class="nt">small-caps</span> <span class="err">10</span><span class="nt">px</span><span class="o">/</span><span class="err">1</span><span class="o">.</span><span class="err">5</span> <span class="s1">"Times New Roman"</span><span class="o">;</span>
 </code></pre></div>    </div>
   </li>
 </ul>

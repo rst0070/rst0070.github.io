@@ -1,9 +1,9 @@
-I"+!<p>Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
+I""<p>Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
 그 방법을 정리하려 포스팅을 하게 되었다.</p>
 
 <h2 id="테이블-만들기-기본적인-형태">테이블 만들기: 기본적인 형태</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table [스키마.]&lt;테이블 이름&gt; (
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table [스키마.]&lt;테이블 이름&gt; (
 &lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]
 [,&lt;열 이름&gt; &lt;데이터 타입&gt; [default &lt;표현식&gt;] [&lt;제약조건&gt;]]
 [,...]
@@ -23,10 +23,10 @@
 </ul>
 
 <h2 id="테이블-만들기-select-구문-이용">테이블 만들기: select 구문 이용</h2>
-<p><code class="highlighter-rouge">create table &lt;table name&gt; as select...</code>형태의 구문으로 
+<p><code class="language-plaintext highlighter-rouge">create table &lt;table name&gt; as select...</code>형태의 구문으로 
 select를 사용해 table을 생성할 수 있다.<br />
 <strong>예시</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table another_dept
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create table another_dept
 as select * from scott.dept;
 </code></pre></div></div>
 
@@ -52,9 +52,9 @@ as select * from scott.dept;
 </ul>
 
 <p>이 글에서는 Oracle의 <strong>선언적 무결성 제약조건</strong> 추가방법을 알아보려한다.<br />
-Table을 새로 생성할때는 <code class="highlighter-rouge">create table</code> 구문에서 제약조건을 추가 할 수 있다(앞에서 살펴봤다).<br />
-이미 존재하는 Table에 제약조건을 추가할 때는 아래와 같이 <code class="highlighter-rouge">alter table add</code>를 사용한다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alter table [스키마.]&lt;Table이름&gt;
+Table을 새로 생성할때는 <code class="language-plaintext highlighter-rouge">create table</code> 구문에서 제약조건을 추가 할 수 있다(앞에서 살펴봤다).<br />
+이미 존재하는 Table에 제약조건을 추가할 때는 아래와 같이 <code class="language-plaintext highlighter-rouge">alter table add</code>를 사용한다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alter table [스키마.]&lt;Table이름&gt;
 add [constraint &lt;제약조건의 이름&gt;]
 &lt;제약조건 정의&gt;
 /
@@ -85,10 +85,10 @@ add [constraint &lt;제약조건의 이름&gt;]
 이때 테이블간에 부모-자식 관계가 발생한다. 제약조건이 적용되는 테이블은 
 자식이고 그것이 아닌쪽이 부모이다.</p>
 
-<p>외부키를 적용할때 <code class="highlighter-rouge">references</code>라는 키워드로 부모 테이블과 연결 시킨다.</p>
+<p>외부키를 적용할때 <code class="language-plaintext highlighter-rouge">references</code>라는 키워드로 부모 테이블과 연결 시킨다.</p>
 
 <p>이미 존재하는 테이블에는 다음과 같이 사용한다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
 alter table [스키마.]&lt;Table이름&gt;
 add [constraint &lt;제약조건의 이름&gt;]
 foreign key (&lt;외부키에 해당되는 한 열 또는 여러 열&gt;)
@@ -96,7 +96,7 @@ references &lt;부모테이블 이름&gt; (&lt;외부키와 연결되는 한 열
 /
 </code></pre></div></div>
 
-<p>테이블 생성시 외부키 정의방법은 <code class="highlighter-rouge">references</code>키워드만 사용한다.<br />
+<p>테이블 생성시 외부키 정의방법은 <code class="language-plaintext highlighter-rouge">references</code>키워드만 사용한다.<br />
 <strong>테이블 생성 예시</strong></p>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">table</span> <span class="n">child</span> <span class="p">(</span>
 <span class="k">no</span> <span class="n">varchar2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">references</span> <span class="n">parent</span> <span class="p">(</span><span class="k">no</span><span class="p">),</span>
@@ -110,7 +110,7 @@ references &lt;부모테이블 이름&gt; (&lt;외부키와 연결되는 한 열
 곧 행을 구분할 수 있는 수단이 될 수 있다.</p>
 
 <p>다음의 방법으로 사용하면 된다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unique(&lt;열1&gt;[,&lt;열2&gt;][,...])
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>unique(&lt;열1&gt;[,&lt;열2&gt;][,...])
 </code></pre></div></div>
 
 <h2 id="제약조건-추가하기-4-check조건-추가">제약조건 추가하기: 4. CHECK조건 추가</h2>
@@ -122,6 +122,6 @@ references &lt;부모테이블 이름&gt; (&lt;외부키와 연결되는 한 열
 <span class="k">add</span> <span class="k">constraint</span> <span class="n">check_gender</span>
 <span class="k">check</span><span class="p">(</span><span class="n">gender</span> <span class="k">in</span> <span class="p">(</span><span class="s1">'MALE'</span><span class="p">));</span>
 </code></pre></div></div>
-<p>위의 예시에서 <code class="highlighter-rouge">gender</code>는 <code class="highlighter-rouge">people_who_is_male</code>테이블의 
+<p>위의 예시에서 <code class="language-plaintext highlighter-rouge">gender</code>는 <code class="language-plaintext highlighter-rouge">people_who_is_male</code>테이블의 
 열이다.</p>
 :ET

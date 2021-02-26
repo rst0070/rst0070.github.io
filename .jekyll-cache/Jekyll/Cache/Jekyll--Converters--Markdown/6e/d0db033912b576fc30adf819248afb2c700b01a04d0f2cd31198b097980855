@@ -1,0 +1,84 @@
+I"�$<h2 id="개요">개요</h2>
+<p>node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.</p>
+<ol>
+  <li><a href="#stepA">request 생성하기</a></li>
+  <li><a href="#stepB">데이터 및 request 전송</a></li>
+  <li><a href="#stepC">response 처리</a></li>
+</ol>
+
+<p><a href="https://nodejs.org/dist/latest-v14.x/docs/api/http.html">node.js 문서</a>를 참고하며 작성했습니다.</p>
+
+<h2 id="1-clientrequest-생성"><a name="stepA">1. ClientRequest 생성</a></h2>
+<p><code class="language-plaintext highlighter-rouge">http.request(url[,options][,callback])</code>과 <code class="language-plaintext highlighter-rouge">http.request(options[,callback])</code>함수의 반환값을 통해 생성할 수 있습니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">option</code>파라미터는 헤더, request방식등을 담고 있는 객체이며<br />
+<code class="language-plaintext highlighter-rouge">callback</code>은 해당 request에 대한 서버의 응답(response 이벤트 호출시)시 호출되는 함수입니다.</p>
+
+<p>post요청 예시</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{...}</span>
+<span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/x-www-form-urlencoded;charset=utf-8</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Content-Length</span><span class="dl">'</span><span class="p">:</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">byteLength</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">req</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">"</span><span class="s2">https://example.com</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="p">()</span><span class="o">=&gt;</span><span class="p">{});</span>
+</code></pre></div></div>
+<h2 id="2-데이터를-붙여-전송하기"><a name="stepB">2. 데이터를 붙여 전송하기</a></h2>
+<p><code class="language-plaintext highlighter-rouge">ClientRequest.end([data[,encoding]][,callback])</code>를 통해 전송가능합니다.</p>
+
+<p>파라미터인 <code class="language-plaintext highlighter-rouge">data</code>는 문자열이고 <code class="language-plaintext highlighter-rouge">callback</code>은 전송이 끝났을때 호출되는 함수 입니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ClientRequest.end()</code>에 문자열화 된 data를 넣어 실행 시키면 테이터를 붙여 전송하게 됩니다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+    <span class="na">data</span><span class="p">:</span> <span class="dl">"</span><span class="s2">hello</span><span class="dl">"</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/x-www-form-urlencoded;charset=utf-8</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Content-Length</span><span class="dl">'</span><span class="p">:</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">byteLength</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">req</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">"</span><span class="s2">https://example.com</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">{});</span>
+
+<span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="3-response-받기"><a name="stepC">3. response 받기</a></h2>
+<p><a href="stepA">앞에서</a>설명했듯이 <code class="language-plaintext highlighter-rouge">http.request()</code>의 마지막 파라미터를 통해 response 이벤트 발생시 객체를 얻을 수 있다.<br />
+이때 객체는 `http.IncomingMessage’클래스의 인스턴스이다.<br />
+자세한 내용은 <a href="https://nodejs.org/dist/latest-v14.x/docs/api/http.html#http_class_http_incomingmessage">api 참조</a></p>
+
+<p>이 객체를 통해서 서버로부터 받은 데이터를 확인할 수 있다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">http</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+    <span class="na">data</span><span class="p">:</span> <span class="dl">"</span><span class="s2">hello</span><span class="dl">"</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/x-www-form-urlencoded;charset=utf-8</span><span class="dl">'</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">Content-Length</span><span class="dl">'</span><span class="p">:</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">byteLength</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">req</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">"</span><span class="s2">https://example.com</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span>
+    <span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">{</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">mydata</span><span class="p">);</span>
+    <span class="p">});</span>
+
+<span class="nx">req</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+:ET

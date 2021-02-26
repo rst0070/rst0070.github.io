@@ -1,0 +1,4 @@
+I":<h2 id="ssh-개요">ssh 개요</h2>
+<p>ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.<br />
+공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</p>
+:ET

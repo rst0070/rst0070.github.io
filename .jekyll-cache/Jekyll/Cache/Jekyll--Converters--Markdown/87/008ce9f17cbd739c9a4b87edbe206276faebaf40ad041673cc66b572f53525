@@ -1,8 +1,8 @@
-I"�<hr />
+I"�<hr />
 <h2 id="1-oracledb-모듈-불러오기-oracledb-객체-생성">1. <a href="https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class">Oracledb 모듈 불러오기: Oracledb 객체 생성</a></h2>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">oracledb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">oracledb</span><span class="dl">"</span><span class="p">);</span>
 </code></pre></div></div>
-<p>위와 같이 oracledb 모듈을 불러오면 <code class="highlighter-rouge">oracledb</code>라는 변수에는 
+<p>위와 같이 oracledb 모듈을 불러오면 <code class="language-plaintext highlighter-rouge">oracledb</code>라는 변수에는 
 oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
 oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.</p>
 

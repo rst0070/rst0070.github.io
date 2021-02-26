@@ -1,6 +1,6 @@
-I"�<h2 id="배경">배경</h2>
-<p>node.js에서 <code class="highlighter-rouge">oracledb</code>모듈을 사용하는데 아래와 같은 오류가 발생했습니다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
+I"�<h2 id="배경">배경</h2>
+<p>node.js에서 <code class="language-plaintext highlighter-rouge">oracledb</code>모듈을 사용하는데 아래와 같은 오류가 발생했습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
 "D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture". 
 See https://oracle.github.io/odpi/doc/installation.html#windows for help
 Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html

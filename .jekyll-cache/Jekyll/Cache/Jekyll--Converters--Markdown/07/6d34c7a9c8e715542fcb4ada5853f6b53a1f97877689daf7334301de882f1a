@@ -1,0 +1,45 @@
+I"�<h2 id="문제">문제</h2>
+<p><a href="https://www.acmicpc.net/problem/1157">문제 링크</a><br />
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.</p>
+<h2 id="조건">조건</h2>
+<p>제한시간: 2초<br />
+입력 문자열 길이: 1,000,000이하<br />
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</p>
+
+<h2 id="풀이과정">풀이과정</h2>
+<ul>
+  <li>2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.</li>
+  <li>대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)</li>
+  <li>따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.</li>
+</ul>
+
+<h2 id="코드">코드</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">count</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">str</span><span class="p">;</span>
+    
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">){</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mi">65</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">)</span> <span class="n">c</span><span class="o">-=</span><span class="mi">32</span><span class="p">;</span>
+        <span class="n">count</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">26</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">max</span> <span class="o">==</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="sc">'?'</span><span class="o">-</span><span class="mi">65</span><span class="p">);</span> <span class="k">continue</span><span class="p">;}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">max</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">]){</span> <span class="n">max</span> <span class="o">=</span> <span class="n">count</span><span class="p">[</span><span class="n">i</span><span class="p">];</span> <span class="n">c</span> <span class="o">=</span> <span class="n">i</span><span class="p">;}</span>
+    <span class="p">}</span>
+    
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">c</span><span class="o">+</span><span class="mi">65</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+:ET

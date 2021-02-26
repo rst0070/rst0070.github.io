@@ -7,6 +7,102 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>node.js로 http request 보내기</title>
+				
+				
+					<description>&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
+&lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepB&quot;&gt;데이터 및 request 전송&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepC&quot;&gt;response 처리&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0900</pubDate>
+				<link>/http-request.html</link>
+				<guid isPermaLink="true">/http-request.html</guid>
+			</item>
+		
+			<item>
+				<title>ssh key 생성, port변경, 접속하기</title>
+				
+				
+					<description>&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
+&lt;p&gt;ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.&lt;br /&gt;
+공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 19 Feb 2021 00:00:00 +0900</pubDate>
+				<link>/using-ssh.html</link>
+				<guid isPermaLink="true">/using-ssh.html</guid>
+			</item>
+		
+			<item>
+				<title>[GithubPage, Jekyll] tags 페이지 만들기</title>
+				
+				
+					<description>&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
+liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
+나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 06 Feb 2021 00:00:00 +0900</pubDate>
+				<link>/way-to-make-tags-page.html</link>
+				<guid isPermaLink="true">/way-to-make-tags-page.html</guid>
+			</item>
+		
+			<item>
+				<title>[CSS display속성] block, inline, inline-block 알아보기</title>
+				
+				
+					<description>&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
+이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 06 Feb 2021 00:00:00 +0900</pubDate>
+				<link>/basic-html-display-block-inline-and-inlineblock.html</link>
+				<guid isPermaLink="true">/basic-html-display-block-inline-and-inlineblock.html</guid>
+			</item>
+		
+			<item>
+				<title>백준 1157번 단어공부</title>
+				
+				
+					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
+&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
+&lt;p&gt;제한시간: 2초&lt;br /&gt;
+입력 문자열 길이: 1,000,000이하&lt;br /&gt;
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sun, 06 Dec 2020 00:00:00 +0900</pubDate>
+				<link>/algorithm/1157.html</link>
+				<guid isPermaLink="true">/algorithm/1157.html</guid>
+			</item>
+		
+			<item>
+				<title>algospot WILDCARD : 동적계획법</title>
+				
+				
+					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
+링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
+와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
+어려운점은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt;와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sun, 06 Dec 2020 00:00:00 +0900</pubDate>
+				<link>/algorithm/WILDCARD-DynamicProgramming.html</link>
+				<guid isPermaLink="true">/algorithm/WILDCARD-DynamicProgramming.html</guid>
+			</item>
+		
+			<item>
 				<title>HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title>
 				
 				
@@ -14,8 +110,8 @@
 </description>
 				
 				<pubDate>Mon, 17 Aug 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/html/html-move-to-specified-element.html</link>
-				<guid isPermaLink="true">http://localhost:4000/html/html-move-to-specified-element.html</guid>
+				<link>/html/html-move-to-specified-element.html</link>
+				<guid isPermaLink="true">/html/html-move-to-specified-element.html</guid>
 			</item>
 		
 			<item>
@@ -28,34 +124,8 @@
 </description>
 				
 				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-functions.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-functions.html</guid>
-			</item>
-		
-			<item>
-				<title>Kotlin syntax: Class</title>
-				
-				
-					<description>
-</description>
-				
-				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-class.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-class.html</guid>
-			</item>
-		
-			<item>
-				<title>Kotlin Basic Syntax</title>
-				
-				
-					<description>&lt;ul&gt;
-  &lt;li&gt;Default Parameter Valuese&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-basic.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-basic.html</guid>
+				<link>/kotlin/kotlin-syntax-functions.html</link>
+				<guid isPermaLink="true">/kotlin/kotlin-syntax-functions.html</guid>
 			</item>
 		
 			<item>
@@ -66,8 +136,8 @@
 </description>
 				
 				<pubDate>Tue, 14 Apr 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/hdl-and-or-not-gate.html</link>
-				<guid isPermaLink="true">http://localhost:4000/hdl-and-or-not-gate.html</guid>
+				<link>/hdl-and-or-not-gate.html</link>
+				<guid isPermaLink="true">/hdl-and-or-not-gate.html</guid>
 			</item>
 		
 			<item>
@@ -89,142 +159,8 @@
 </description>
 				
 				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/css-shorthand-font-set.html</link>
-				<guid isPermaLink="true">http://localhost:4000/css-shorthand-font-set.html</guid>
-			</item>
-		
-			<item>
-				<title>CSS position: 기본위치, 상대위치, 절대위치, 고정위치</title>
-				
-				
-					<description>&lt;p&gt;css의 &lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;속성에는 &lt;em&gt;static&lt;/em&gt;, &lt;em&gt;relative&lt;/em&gt;, &lt;em&gt;absolute&lt;/em&gt;, &lt;em&gt;fixed&lt;/em&gt;가 
-있습니다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;static&quot;&gt;static&lt;/h2&gt;
-&lt;p&gt;static은 모든 요소에 기본적으로 설정된 값입니다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;relative&quot;&gt;relative&lt;/h2&gt;
-&lt;p&gt;relative 속성은 두가지 특징이 있습니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 원래 있던 공간을 다른 요소가 침범하지 못한다.&lt;/li&gt;
-  &lt;li&gt;relative 속성을 가진 요소가 자신의 원래 위치를 기준으로 움직인다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;relative&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;4px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 예시의 경우 &lt;em&gt;.example&lt;/em&gt;은 원래자신의 위치중 오른쪽 위 꼭짓점을 기준으로 
-아래로 5px, 왼쪽으로 4px 이동합니다.&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h2 id=&quot;absolute&quot;&gt;absolute&lt;/h2&gt;
-&lt;p&gt;절대위치로 설정된 절대요소는 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;static 위치설정이 아닌 부모요소중 가장 가까운 부모를 기준으로 위치를 설정한다.&lt;/li&gt;
-  &lt;li&gt;절대요소 자신이 원래 위치해 있던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;예시&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-css highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nc&quot;&gt;.example&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;absolute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;top&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5px&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;fixed&quot;&gt;fixed&lt;/h2&gt;
-&lt;p&gt;고정위치로 설정된 고정요소들은 다음과 같은 속성을 갖게 됩니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;고정요소 자신이 원래 위치하던 공간에 다른 요소가 침범할 수 있다.&lt;/li&gt;
-  &lt;li&gt;웹브라우저 화변을 기준으로 위치를 이동하며, 스크롤해도 고정되어있다.&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-				
-				<pubDate>Wed, 25 Mar 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/css-position-relative-absolute-fixed.html</link>
-				<guid isPermaLink="true">http://localhost:4000/css-position-relative-absolute-fixed.html</guid>
-			</item>
-		
-			<item>
-				<title>[Error] DPI-1047 : node.js 와 oracle client의 호환문제</title>
-				
-				
-					<description>&lt;h2 id=&quot;배경&quot;&gt;배경&lt;/h2&gt;
-&lt;p&gt;node.js에서 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;모듈을 사용하는데 아래와 같은 오류가 발생했습니다.&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Error: DPI-1047: Cannot locate a 64-bit Oracle Client library:
-&quot;D:\app\****\product\11.2.0\dbhome_1\bin\oci.dll is not the correct architecture&quot;. 
-See https://oracle.github.io/odpi/doc/installation.html#windows for help
-Node-oracledb installation instructions: https://oracle.github.io/node-oracledb/INSTALL.html
-You must have 64-bit Oracle client libraries in your PATH environment variable.
-If you do not have Oracle Database on this computer, then install the Instant Client 
-Basic or Basic Light package from
-http://www.oracle.com/technetwork/topics/winx64soft-089540.html
-A Microsoft Visual Studio Redistributable suitable for your Oracle client library 
-version must be available.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위의 메세지를 읽어보면 64bit Oracle client libraries를사용하라고 합니다.&lt;br /&gt;
-저는 64bit node.js와 32bit Oracle DB를 사용하고 있었는데 둘의 호환에 문제가 생긴것입니다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sat, 29 Feb 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/err-node-oracle-bit-dif.html</link>
-				<guid isPermaLink="true">http://localhost:4000/err-node-oracle-bit-dif.html</guid>
-			</item>
-		
-			<item>
-				<title>[Node.js] oracledb 모듈을 이용해 ORACLE 사용하기</title>
-				
-				
-					<description>&lt;hr /&gt;
-&lt;h2 id=&quot;1-oracledb-모듈-불러오기-oracledb-객체-생성&quot;&gt;1. &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-3-oracledb-class&quot;&gt;Oracledb 모듈 불러오기: Oracledb 객체 생성&lt;/a&gt;&lt;/h2&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;oracledb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;oracledb&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;위와 같이 oracledb 모듈을 불러오면 &lt;code class=&quot;highlighter-rouge&quot;&gt;oracledb&lt;/code&gt;라는 변수에는 
-oracledb 객체의 포인터가 저장된다. 즉 하나의 프로세스에서 여러개의 변수로 
-oracledb 모듈을 불러와도 모두 같은 객체를 참조하는것이다.&lt;/p&gt;
-
-&lt;h3 id=&quot;11-oracledb-객체는-무엇을-하는가&quot;&gt;1.1 oracledb 객체는 무엇을 하는가?&lt;/h3&gt;
-&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 객체와 &lt;em&gt;Connection&lt;/em&gt; 객체를 생성할 기반의 역할을 하고 
-DB관련 작업시 사용할 많은 &lt;a href=&quot;https://oracle.github.io/node-oracledb/doc/api.html#-31-oracledb-constants&quot;&gt;상수들을 갖고있다.&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Pool&lt;/em&gt; 과 &lt;em&gt;Connection&lt;/em&gt; 객체는 DB와의 통신을 생성하고 관리하는 역할을 한다.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;h2 id=&quot;2-pool-생성하기&quot;&gt;2. Pool 생성하기&lt;/h2&gt;
-
-&lt;h3 id=&quot;21-pool의-개념&quot;&gt;2.1 Pool의 개념&lt;/h3&gt;
-&lt;p&gt;문서에 따르면 각각의 Pool 객체는 &lt;em&gt;&lt;a href=&quot;https://docs.oracle.com/en/database/oracle/oracle-database/19/lnoci/session-and-connection-pooling.html#GUID-F9662FFB-EAEF-495C-96FC-49C6D1D9625C&quot;&gt;Oracle Call Interface Session Pool&lt;/a&gt;&lt;/em&gt; 라고 한다.&lt;br /&gt;
-이 Pool객체는 DB에 연결하기 위한 속성들을 저장하고 있으며 연결을 유지시켜 놓고 관리한다.&lt;br /&gt;
-이런 특성의 장점은 다음과 같다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;여러개의 연결이 발생할때 중복 사용되는 데이터를 Pool이 처리해 준다.&lt;/li&gt;
-  &lt;li&gt;새로운 연결을 만들때의 대기시간이나 자원낭비가 없다.(Pool객체가 DB와의 연결을 
-유지하고 있다.)&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Thu, 27 Feb 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html</link>
-				<guid isPermaLink="true">http://localhost:4000/node_js/nodejs-oracledb-how-to-connect.html</guid>
-			</item>
-		
-			<item>
-				<title>[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)</title>
-				
-				
-					<description>&lt;p&gt;Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
-그 방법을 정리하려 포스팅을 하게 되었다.&lt;/p&gt;
-
-&lt;h2 id=&quot;테이블-만들기-기본적인-형태&quot;&gt;테이블 만들기: 기본적인 형태&lt;/h2&gt;
-</description>
-				
-				<pubDate>Thu, 20 Feb 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/oracle/oracle-create-table.html</link>
-				<guid isPermaLink="true">http://localhost:4000/oracle/oracle-create-table.html</guid>
+				<link>/css-shorthand-font-set.html</link>
+				<guid isPermaLink="true">/css-shorthand-font-set.html</guid>
 			</item>
 		
 	</channel>

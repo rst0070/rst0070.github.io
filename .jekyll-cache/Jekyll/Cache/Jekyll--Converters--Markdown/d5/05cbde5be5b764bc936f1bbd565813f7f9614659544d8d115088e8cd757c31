@@ -1,4 +1,4 @@
-I"[<h2 id="hdl-기본">HDL 기본</h2>
+I"n<h2 id="hdl-기본">HDL 기본</h2>
 
 <p><a href="https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4">Hardware Description Language</a>의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.<br />
 기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
@@ -147,7 +147,7 @@
 </table>
 
 <p>이를 Nand gate만으로 만들기 위해 <a href="https://ko.wikipedia.org/wiki/%EB%93%9C_%EB%AA%A8%EB%A5%B4%EA%B0%84%EC%9D%98_%EB%B2%95%EC%B9%99">드모르간의 법칙</a>을 사용할 수 있습니다.<br />
-즉 <code class="highlighter-rouge">a + b = ~a * ~b</code>(+: or, *: and)</p>
+즉 <code class="language-plaintext highlighter-rouge">a + b = ~a * ~b</code>(+: or, *: and)</p>
 <pre><code class="language-hdl">CHIP Or{
     IN a, b;
     OUT out;

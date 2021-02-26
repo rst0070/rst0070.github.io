@@ -1,4 +1,4 @@
-I"�<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+I"�<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <h2 id="배경">배경</h2>
 <p>javascript는 한 문장씩 순차적으로 실행되는 언어이다.
@@ -35,7 +35,7 @@ javascript를 사용하는 여러순간에 발생할 수 있다.
 
 <h2 id="사용방법">사용방법</h2>
 <p>애니메이션 효과의 경우 다음과 같은 형식으로 사용할 수 있다.<br />
-<code class="highlighter-rouge">$(selector).effect(speed, callback)</code></p>
+<code class="language-plaintext highlighter-rouge">$(selector).effect(speed, callback)</code></p>
 <ul>
   <li>effect는 slideUp, hide와 같은 효과 함수들을 가리킨다.</li>
   <li>callback은 함수이다. 효과가 다 끝나고 함수가 실행된다.<br />
@@ -74,7 +74,7 @@ javascript를 사용하는 여러순간에 발생할 수 있다.
 
 <h2 id="마치며-새롭게-알게된점">마치며, 새롭게 알게된점</h2>
 <p>javascript의 callback함수를 ‘애니메이션 효과’에 관련된 부분의 공부를 하면서 ‘순차적 실행’에 관련해서만 이해했었다. 하지만 조금더 깊게 공부를 해보니 
-<code class="highlighter-rouge">$(selector).click(function(){...})</code> 과 같은 jquery 구문도 callback을 
+<code class="language-plaintext highlighter-rouge">$(selector).click(function(){...})</code> 과 같은 jquery 구문도 callback을 
 이용한다는 사실을 알게되었다.</p>
 
 <p>자바스크립트에서는 함수가 객체로 사용된다.
