@@ -7,8 +7,9 @@ title: "css 가상요소: after , before 요소 위치지정하기"
   
 결론 부터 말하자면 아래와 같다.
 1. 위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 `position: absolute`여야 한다.
-2. after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.
-3. 위치 지정시 `top`, `left`와 `transform: translate()`는 같은 효과를 가진다.  
+2. after, before 가상요소는 `content`속성이 지정되어야한다.
+3. after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.
+4. 위치 지정시 `top`, `left`와 `transform: translate()`는 같은 효과를 가진다.  
   
 이제 하나씩 설명하겠다.  
 # 1. 대상 엘리먼트와 after, before 엘리먼트는 `position: absolute;`여야 한다. 
@@ -24,7 +25,10 @@ title: "css 가상요소: after , before 요소 위치지정하기"
 #base::before, #base::after {position: absolute;}
 ```
  
-# 2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.
+# 2. after, before 가상요소는 `content`속성이 지정되어야한다.
+1번과 마찬가지로 전제조건이다. 즉 after와 before에`content:""` 라도 명시해줘야한다.  
+
+# 3. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.
 즉 코드에서 `#base::after`와 `#base::before`요소는 `#parent`가 아닌 `#base`를 기준으로 위치가 지정된다.
 ```html
 <div id="parent">
