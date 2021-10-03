@@ -1,0 +1,65 @@
+I"E<h3 id="목차">목차</h3>
+<ol>
+  <li>Enum의 의미</li>
+  <li>Enum 선언 및 사용 방법</li>
+  <li>Enum의 실체</li>
+  <li>Enum 구현해보기</li>
+</ol>
+
+<h2 id="1-enum의-의미">1. Enum의 의미</h2>
+<p>Enum은 열거형 이라는 의미이며 일반적으로 관련된 상수를 묶어주는 역할을 한다.<br />
+Java의 열거형은 위 특징에 추가되는 ‘타입 체크’기능이있으므로 
+크게 아래 두가지의 역할을 한다고 할 수 있다.</p>
+
+<ol>
+  <li>비슷한 상수들을 타입으로 묶는 기능</li>
+  <li>묶인 타입별로 구분하는 기능.</li>
+</ol>
+
+<h2 id="2-enum선언하기-사용하기">2. Enum선언하기, 사용하기</h2>
+
+<h3 id="21-타입구분-기능">2.1 타입구분 기능.</h3>
+<p>enum은 값이 같더라도 타입이 다르면 다른 상수로 인식한다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="nc">Type1</span> <span class="o">{</span> <span class="no">V1</span><span class="o">,</span> <span class="o">...}</span>
+<span class="kd">enum</span> <span class="nc">Type2</span> <span class="o">{</span> <span class="no">V1</span><span class="o">,</span> <span class="o">...}</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Type1</span><span class="o">.</span><span class="na">V1</span> <span class="o">==</span> <span class="nc">Type2</span><span class="o">.</span><span class="na">V1</span><span class="o">);</span><span class="c1">// =&gt; false</span>
+</code></pre></div></div>
+<p>이는 각 enum( V1, …인것들 )이 타입이 인스턴스화 된 객체이기 때문이다.<br />
+이는 3.enum의 실체에서 기술하려한다.</p>
+
+<h3 id="22-각-enum에-생성자-부여하기">2.2 각 enum에 생성자 부여하기</h3>
+<p>각 enum이 값을 가지게 할 수 있는데 이때는 생성자가 필요하다.<br />
+이때 생성자는 자동적으로 private만 가능하게 되어 외부에서 사용할 수 없다.<br />
+생성자 뿐만아니라 다른 메소드, 변수등도 내부적으로 선언할 수 있어 각 enum이 지니게 할 수 있다.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="nc">Type</span><span class="o">{</span>
+    <span class="no">V1</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="no">V2</span><span class="o">(</span><span class="mi">10</span><span class="o">),</span> <span class="no">V3</span><span class="o">(</span><span class="mi">20</span><span class="o">);</span>
+
+    <span class="nc">Type</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">){</span>
+        <span class="o">...</span>
+    <span class="o">}</span>
+    <span class="o">...</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="3-enum의-실체">3. Enum의 실체</h2>
+<p>2.2등을 보면 enum의 정체가 무엇이길래 생성자등을 가질 수 있는지 의문이 생길 것 이다.<br />
+enum에 대한 사실을 나열해보면</p>
+<ol>
+  <li>모든 enum은 java.lang.Enum을 상속받는다.</li>
+  <li><code class="language-plaintext highlighter-rouge">enum Type{..}</code>으로 선언할때 Type은 Enum을 상속받는 하나의 클래스이다.</li>
+  <li>enum의 원소들은 그것의 타입클래스 내부에 선언되어있는 static final 변수들로 참조되는 객체들이다.</li>
+</ol>
+
+<p>예시로 보자</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="nc">Type</span><span class="o">{</span> <span class="no">V1</span><span class="o">,</span> <span class="no">V2</span><span class="o">}</span>
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">V1</code>, <code class="language-plaintext highlighter-rouge">V2'은 </code>Type`의 인스턴스이다.</li>
+  <li><code class="language-plaintext highlighter-rouge">Type</code>은 enum을 상속받은 클래스이다.</li>
+  <li><code class="language-plaintext highlighter-rouge">Type</code>은 <code class="language-plaintext highlighter-rouge">static final Type</code>맴버들을 가지고 있으며 이는 V1과 V2를 참조한다.</li>
+</ul>
+
+<p>위의 특징들을 통해 java enum은 임의로 값을 지정할 수 있으며 타입체크가 가능한 것 이다.</p>
+
+<h2 id="4-enum구현하기">4. Enum구현하기.</h2>
+:ET

@@ -7,6 +7,24 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>[Java] Enum 이해하기</title>
+				
+				
+					<description>&lt;h3 id=&quot;목차&quot;&gt;목차&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;Enum의 의미&lt;/li&gt;
+  &lt;li&gt;Enum 선언 및 사용 방법&lt;/li&gt;
+  &lt;li&gt;Enum의 실체&lt;/li&gt;
+  &lt;li&gt;Enum 구현해보기&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+				
+				<pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
+				<link>/java-enums.html</link>
+				<guid isPermaLink="true">/java-enums.html</guid>
+			</item>
+		
+			<item>
 				<title>[Java] Iterator 사용하기</title>
 				
 				
@@ -160,22 +178,6 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 				<pubDate>Sun, 06 Dec 2020 00:00:00 +0000</pubDate>
 				<link>/algorithm/1157.html</link>
 				<guid isPermaLink="true">/algorithm/1157.html</guid>
-			</item>
-		
-			<item>
-				<title>algospot WILDCARD : 동적계획법</title>
-				
-				
-					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
-링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
-와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
-어려운점은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt;와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sun, 06 Dec 2020 00:00:00 +0000</pubDate>
-				<link>/algorithm/WILDCARD-DynamicProgramming.html</link>
-				<guid isPermaLink="true">/algorithm/WILDCARD-DynamicProgramming.html</guid>
 			</item>
 		
 	</channel>
