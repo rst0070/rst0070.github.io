@@ -1,89 +1,142 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-02-26T18:30:48+09:00</updated><id>/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">node.js로 http request 보내기</title><link href="/http-request.html" rel="alternate" type="text/html" title="node.js로 http request 보내기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/http-request</id><content type="html" xml:base="/http-request.html">&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
-&lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#stepB&quot;&gt;데이터 및 request 전송&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#stepC&quot;&gt;response 처리&lt;/a&gt;&lt;/li&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.0">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-10-03T14:29:24+00:00</updated><id>/feed.xml</id><title type="html">Rst</title><subtitle></subtitle><author><name>Wonbin Kim</name></author><entry><title type="html">[Java] Iterator 사용하기</title><link href="/java-Iterator.html" rel="alternate" type="text/html" title="[Java] Iterator 사용하기" /><published>2021-10-03T00:00:00+00:00</published><updated>2021-10-03T00:00:00+00:00</updated><id>/java-Iterator</id><content type="html" xml:base="/java-Iterator.html">&lt;ol&gt;
+  &lt;li&gt;Iterator의 의미&lt;/li&gt;
+  &lt;li&gt;Iterator 사용법&lt;/li&gt;
+  &lt;li&gt;Iterator 만들어보기&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
+&lt;h2 id=&quot;iterator의-의미&quot;&gt;Iterator의 의미&lt;/h2&gt;
+&lt;p&gt;java.util.Iterator는 자료구조의 요소에 접근하는 일관적 방법을 제공하기 위해 만들어진 인터페이스이다.&lt;br /&gt;
+따라서 Collection을 상속하는 모든 자료구조들은 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iterator()&lt;/code&gt;함수를 통해 해당 객체에 대한 Iterator를 반환하도록 작성되어있다.&lt;/p&gt;
 
-&lt;h2 id=&quot;1-clientrequest-생성&quot;&gt;&lt;a name=&quot;stepA&quot;&gt;1. ClientRequest 생성&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(url[,options][,callback])&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(options[,callback])&lt;/code&gt;함수의 반환값을 통해 생성할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;이때 Map은 Key와 Value가 따로 있기 때문에 각각에 대한 Collection을 구한 뒤 Iterator를 구해야한다.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;option&lt;/code&gt;파라미터는 헤더, request방식등을 담고 있는 객체이며&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 해당 request에 대한 서버의 응답(response 이벤트 호출시)시 호출되는 함수입니다.&lt;/p&gt;
+&lt;h1 id=&quot;iterator-사용법&quot;&gt;Iterator 사용법&lt;/h1&gt;
+&lt;p&gt;Iterator는 3가지 함수를 제공한다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;boolean hasNext(): Collection에 더 읽을 원소가 있는지 확인&lt;/li&gt;
+  &lt;li&gt;E next(): 다음원소를 읽어 반환&lt;/li&gt;
+  &lt;li&gt;remove(): next()로 참조한 원소를 삭제.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;post요청 예시&lt;/p&gt;
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{...}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;h1 id=&quot;iterator-만들어보기&quot;&gt;Iterator 만들어보기&lt;/h1&gt;
+&lt;p&gt;Collection.iterator()을 구현해 보았다.&lt;br /&gt;
+익명클래스를 이용하여 Iterator객체를 만든다음 각 함수를 구현해주면 된다.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/rst0070/9d00771a185e69703a25f318d0babad6.js&quot;&gt;&lt;/script&gt;</content><author><name>Wonbin Kim</name></author><category term="java" /><summary type="html">Iterator의 의미 Iterator 사용법 Iterator 만들어보기</summary></entry><entry><title type="html">컨테이너 배포란? : 애플리케이션 배포의 역사</title><link href="/what-is-container-deployment.html" rel="alternate" type="text/html" title="컨테이너 배포란? : 애플리케이션 배포의 역사" /><published>2021-04-03T00:00:00+00:00</published><updated>2021-04-03T00:00:00+00:00</updated><id>/what-is-container-deployment</id><content type="html" xml:base="/what-is-container-deployment.html">&lt;p&gt;컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg&quot; alt=&quot;history&quot; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;전통적 배포
+  하나의 서버위에서 여러 애플리케이션을 실행하게되면 서버 자원을 각 애플리케이션에 어떻게 분배할지 문제가 발생한다(자원이 부족한 애플리케이션이 생긴다).&lt;br /&gt;
+  이런 문제를 피하기위해 하나의 서버에 하나의 애플리케이션이 동작하도록 배포하는게 전통적 배포이다.&lt;/li&gt;
+  &lt;li&gt;가상화 배포
+  전통적 배포의 문제점은 자원낭비가 심하다는것이다.&lt;br /&gt;
+  이를 해결하기 위해 가상화 배포는 Hypervisor와 Virtual Machine을 이용해 하나의 서버위에 여러 애플리케이션이 실행될 수 있게 된다.
+    &lt;ul&gt;
+      &lt;li&gt;하이퍼바이저와 가상머신의 동작
+ 가상머신은 하나의 머신으로서 운영체재를 포함한다. 이 가상머신들을 물리적인 서버에서 동작시키는것이 하이퍼바이저이다.&lt;br /&gt;
+ 하이퍼바이저는 각 가상머신에게 서버의 리소스를 분배하고 가상머신들을 격리하는 역할을 한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;컨테이너 배포
+  컨테이너 배포는 가상화 배포에서 격리의 강도를 줄여 각 애플리케이션이 os를 공유한다고 생각하면 된다. 
+  하나의 서버위에 여러 컨테이너를 실행시키기 위해 VM과 마찬가지로 각 컨테이너에 대한 자원 할당이 정해져 있다. 
+  이식성이 좋아 여러 환경에 대해 배포가 쉽고 VM에 비해 이미지 생성이 쉽다.&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="container" /><summary type="html">컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.</summary></entry><entry><title type="html">[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법</title><link href="/hoisting-and-scope.html" rel="alternate" type="text/html" title="[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법" /><published>2021-03-26T00:00:00+00:00</published><updated>2021-03-26T00:00:00+00:00</updated><id>/hoisting-and-scope</id><content type="html" xml:base="/hoisting-and-scope.html">&lt;p&gt;이 글에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Hoisting&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;변수의 유효범위&lt;/code&gt;를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.&lt;/p&gt;
+
+&lt;h1 id=&quot;1-자바스크립트-함수단위-변수유효범위&quot;&gt;1. 자바스크립트: 함수단위 변수유효범위&lt;/h1&gt;
+&lt;p&gt;변수의 유효범위란 어떤 변수가 유효한 범위를 의미함을 생각하면서 아래의 코드들을 보자.&lt;/p&gt;
+
+&lt;p&gt;먼저 c로 작성된 다음의 코드를 보자.&lt;/p&gt;
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h2 id=&quot;2-데이터를-붙여-전송하기&quot;&gt;&lt;a name=&quot;stepB&quot;&gt;2. 데이터를 붙여 전송하기&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end([data[,encoding]][,callback])&lt;/code&gt;를 통해 전송가능합니다.&lt;/p&gt;
+&lt;p&gt;이 코드는 블록안에있는 변수를 참조하니 당연히 작동되지 않는다.&lt;/p&gt;
 
-&lt;p&gt;파라미터인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data&lt;/code&gt;는 문자열이고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 전송이 끝났을때 호출되는 함수 입니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end()&lt;/code&gt;에 문자열화 된 data를 넣어 실행 시키면 테이터를 붙여 전송하게 됩니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;p&gt;하지만 아래의 javascript 코드는 정상적으로 작동한다.&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;3-response-받기&quot;&gt;&lt;a name=&quot;stepC&quot;&gt;3. response 받기&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;stepA&quot;&gt;앞에서&lt;/a&gt;설명했듯이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request()&lt;/code&gt;의 마지막 파라미터를 통해 response 이벤트 발생시 객체를 얻을 수 있습니다.&lt;br /&gt;
-이때 객체는 `http.IncomingMessage’클래스의 인스턴스입니다.&lt;br /&gt;
-자세한 내용은 &lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html#http_class_http_incomingmessage&quot;&gt;api 참조&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;왜 이런 차이가 발생할까?&lt;br /&gt;
+앞서 언급했듯 변수의 유효범위의 차이에 답이 있다.
+C언어는 블록단위 유효범위를 사용한다. 즉 중괄호’{}’로 감싸져 있는것으로 변수의 유효범위가 달라진다는것이다.&lt;/p&gt;
 
-&lt;p&gt;이 객체를 통해서 서버로부터 받은 데이터를 확인할 수 있습니다.&lt;/p&gt;
+&lt;p&gt;하지만 javascript는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;함수 유효범위&lt;/code&gt;를 사용한다. 즉 블록이 기준이 아니라 함수로 구분한다는 것이다.&lt;br /&gt;
+따라서 함수내부에서 중첩함수안에 있는 변수만 접근하지 못한다는 것이다.&lt;/p&gt;
 
-&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;h1 id=&quot;2-javascript는-변수를-hoisting한다&quot;&gt;2. javascript는 변수를 Hoisting한다.&lt;/h1&gt;
+&lt;p&gt;Hoisting은 끌어올린다는 의미이다. 즉 변수를 끌어올린다는 것. 
+아까 예시를 조금 변형해보면..&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-       &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mydata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;위 코드는 오류가 발생할 것 같지만 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;undefined&lt;/code&gt;를 출력한다.&lt;br /&gt;
+즉 변수 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;number&lt;/code&gt;가 10으로 정의되기전에 이미 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;number&lt;/code&gt;는 존재하던 것이다.&lt;/p&gt;
 
-&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="http" /><summary type="html">개요 node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다. request 생성하기 데이터 및 request 전송 response 처리 node.js 문서를 참고하며 작성했습니다.</summary></entry><entry><title type="html">css 가상요소: after , before 요소 위치지정하기</title><link href="/css-pseudo-element-positioning.html" rel="alternate" type="text/html" title="css 가상요소: after , before 요소 위치지정하기" /><published>2021-02-26T00:00:00+09:00</published><updated>2021-02-26T00:00:00+09:00</updated><id>/css-pseudo-element-positioning</id><content type="html" xml:base="/css-pseudo-element-positioning.html">&lt;p&gt;가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.&lt;/p&gt;
+&lt;p&gt;위 예시에서 확인할 수 있는것은 javascript가 변수의 선언을 함수의 상단 혹은 코드의 상단으로 hoisting한다는 것이다.
+따라서 위의 코드는 다음과 같다.&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;hoisting이라는 특징을 코드에 반영하는 방법중 하나는 변수의 선언을 코드의 상단에 작성하는것이다.&lt;br /&gt;
+이를 통해 프로그램의 동작을 명확히 할 수 있다.&lt;/p&gt;
+
+&lt;h1 id=&quot;3-변수-해석하기-유효범위-체인을-찾는다&quot;&gt;3. 변수 해석하기: 유효범위 체인을 찾는다.&lt;/h1&gt;
+&lt;p&gt;변수의 값을 가져오고 수정하는등의 코드를 실행할때 어떻게 해당 변수를 찾는것 일까? 이 과정이 바로 변수해석(variable resolution)이다.&lt;/p&gt;
+
+&lt;p&gt;어떤 코드에 대해 변수유효범위를 나타내는 객체가 존재한다. 
+이 객체들은 자신의 프로퍼티로 해당 변수들(유효범위에 있는 변수들)을 가지고 있는다.&lt;/p&gt;
+
+&lt;p&gt;예를들어 전역객체는 전역변수들을 프로퍼티로 가지고 있으며, 함수의 지역변수나 매개변수를 프로퍼티로 가지는 객체도 존재한다.&lt;/p&gt;
+
+&lt;p&gt;위의 객체들을 포함한 리스트를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;유효범위 체인&lt;/code&gt;이라고 부르며, 
+변수해석과정은 이 리스트에서 원하는 변수를 찾는것 이다.&lt;/p&gt;
+
+&lt;p&gt;함수의 경우 함수가 정의될때 유효범위체인이 최초로 저장되는데 이때는 전역객체 및 상위 함수의 유효범위 체인이 저장된다. 
+이후 함수가 실행될때는 지역변수 및 매개변수에 대한 유효범위 객체가 추가되어 저장된다.&lt;/p&gt;
+
+&lt;p&gt;이를 응용하여 3가지 경우에 대해 유효범위 체인이 어떻게 생성되는지 생각해 볼 수 있다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;전역코드: 전역객체만이 유효범위 체인에 포함된다.&lt;/li&gt;
+  &lt;li&gt;일반적 함수내부: 전역객체, 지역변수 및 매개변수를 가지는 객체&lt;/li&gt;
+  &lt;li&gt;중첩된함수: 상위함수의 유효범위체인 및 자신의 지역변수 및 매개변수를 가지는 객체.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;4-정리&quot;&gt;4. 정리&lt;/h1&gt;
+&lt;p&gt;javascript에서는…&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;변수의 유효범위가 함수 단위로 나뉘게 된다.&lt;/li&gt;
+  &lt;li&gt;변수의 선언은 맨위로 끌어올려진다.&lt;/li&gt;
+  &lt;li&gt;변수는 유효범위체인을 통해 찾아진다.&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Wonbin Kim</name></author><category term="javascript" /><summary type="html">이 글에서는 Hoisting과 변수의 유효범위를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.</summary></entry><entry><title type="html">css 가상요소: after , before 요소 위치지정하기</title><link href="/css-pseudo-element-positioning.html" rel="alternate" type="text/html" title="css 가상요소: after , before 요소 위치지정하기" /><published>2021-02-26T00:00:00+00:00</published><updated>2021-02-26T00:00:00+00:00</updated><id>/css-pseudo-element-positioning</id><content type="html" xml:base="/css-pseudo-element-positioning.html">&lt;p&gt;가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.&lt;/p&gt;
 
 &lt;p&gt;결론 부터 말하자면 아래와 같다.&lt;/p&gt;
 &lt;ol&gt;
   &lt;li&gt;위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute&lt;/code&gt;여야 한다.&lt;/li&gt;
+  &lt;li&gt;after, before 가상요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content&lt;/code&gt;속성이 지정되어야한다.&lt;/li&gt;
   &lt;li&gt;after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.&lt;/li&gt;
   &lt;li&gt;위치 지정시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;left&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate()&lt;/code&gt;는 같은 효과를 가진다.&lt;/li&gt;
 &lt;/ol&gt;
@@ -101,7 +154,10 @@
 #base::before, #base::after {position: absolute;}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h1 id=&quot;2-가상요소after-before는-대상엘리먼트를-기준으로-위치가-지정된다&quot;&gt;2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.&lt;/h1&gt;
+&lt;h1 id=&quot;2-after-before-가상요소는-content속성이-지정되어야한다&quot;&gt;2. after, before 가상요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content&lt;/code&gt;속성이 지정되어야한다.&lt;/h1&gt;
+&lt;p&gt;1번과 마찬가지로 전제조건이다. 즉 after와 before에&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content:&quot;&quot;&lt;/code&gt; 라도 명시해줘야한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;3-가상요소after-before는-대상엘리먼트를-기준으로-위치가-지정된다&quot;&gt;3. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다.&lt;/h1&gt;
 &lt;p&gt;즉 코드에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::after&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#parent&lt;/code&gt;가 아닌 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;를 기준으로 위치가 지정된다.&lt;/p&gt;
 &lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
@@ -116,7 +172,88 @@
 &lt;p&gt;따라서 위처럼 스타일을 지정하면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base::before&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#base&lt;/code&gt;로 부터 20px 아래에 위치한다.&lt;/p&gt;
 
 &lt;h1 id=&quot;3-가상요소after-before에서-top-left는-traslate와-같은-효과이다&quot;&gt;3. 가상요소(after, before)에서 top, left는 traslate와 같은 효과이다.&lt;/h1&gt;
-&lt;p&gt;즉 위에서 언급한 가상요소의 스타일 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top: 20px; left:30px&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate(20px, 30px);&lt;/code&gt;와 같다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><category term="html" /><summary type="html">가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다. 결론 부터 말하자면 아래와 같다. 위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 position: absolute여야 한다. after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다. 위치 지정시 top, left와 transform: translate()는 같은 효과를 가진다. 이제 하나씩 설명하겠다. 1. 대상 엘리먼트와 after, before 엘리먼트는 position: absolute;여야 한다. 위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다. 앞으로 사용할 코드이다. ----------html---------- &amp;lt;div id=&quot;parent&quot;&amp;gt; &amp;lt;div id=&quot;base&quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; ----------css----------- #base { position: absolute;} #base::before, #base::after {position: absolute;} 2. 가상요소(after, before)는 대상엘리먼트를 기준으로 위치가 지정된다. 즉 코드에서 #base::after와 #base::before요소는 #parent가 아닌 #base를 기준으로 위치가 지정된다. &amp;lt;div id=&quot;parent&quot;&amp;gt; &amp;lt;div id=&quot;base&quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; -----------css------- #base { position: absolute;} #base::before { position: absolute; top: 20px; } 따라서 위처럼 스타일을 지정하면 #base::before는 #base로 부터 20px 아래에 위치한다. 3. 가상요소(after, before)에서 top, left는 traslate와 같은 효과이다. 즉 위에서 언급한 가상요소의 스타일 top: 20px; left:30px는 transform: translate(20px, 30px);와 같다.</summary></entry><entry><title type="html">ssh key 생성, port변경, 접속하기</title><link href="/using-ssh.html" rel="alternate" type="text/html" title="ssh key 생성, port변경, 접속하기" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T00:00:00+09:00</updated><id>/using-ssh</id><content type="html" xml:base="/using-ssh.html">&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
+&lt;p&gt;즉 위에서 언급한 가상요소의 스타일 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top: 20px; left:30px&lt;/code&gt;는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate(20px, 30px);&lt;/code&gt;와 같다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><category term="html" /><summary type="html">가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다. 결론 부터 말하자면 아래와 같다. 위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 position: absolute여야 한다. after, before 가상요소는 content속성이 지정되어야한다. after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다. 위치 지정시 top, left와 transform: translate()는 같은 효과를 가진다. 이제 하나씩 설명하겠다. 1. 대상 엘리먼트와 after, before 엘리먼트는 position: absolute;여야 한다. 위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다. 앞으로 사용할 코드이다. ----------html---------- &amp;lt;div id=&quot;parent&quot;&amp;gt; &amp;lt;div id=&quot;base&quot;&amp;gt;&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; ----------css----------- #base { position: absolute;} #base::before, #base::after {position: absolute;} 2. after, before 가상요소는 content속성이 지정되어야한다. 1번과 마찬가지로 전제조건이다. 즉 after와 before에content:&quot;&quot; 라도 명시해줘야한다.</summary></entry><entry><title type="html">node.js로 http request 보내기</title><link href="/http-request.html" rel="alternate" type="text/html" title="node.js로 http request 보내기" /><published>2021-02-26T00:00:00+00:00</published><updated>2021-02-26T00:00:00+00:00</updated><id>/http-request</id><content type="html" xml:base="/http-request.html">&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
+&lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepB&quot;&gt;데이터 및 request 전송&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepC&quot;&gt;response 처리&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-clientrequest-생성&quot;&gt;&lt;a name=&quot;stepA&quot;&gt;1. ClientRequest 생성&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(url[,options][,callback])&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request(options[,callback])&lt;/code&gt;함수의 반환값을 통해 생성할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;option&lt;/code&gt;파라미터는 헤더, request방식등을 담고 있는 객체이며&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 해당 request에 대한 서버의 응답(response 이벤트 호출시)시 호출되는 함수입니다.&lt;/p&gt;
+
+&lt;p&gt;post요청 예시&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{...}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;2-데이터를-붙여-전송하기&quot;&gt;&lt;a name=&quot;stepB&quot;&gt;2. 데이터를 붙여 전송하기&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end([data[,encoding]][,callback])&lt;/code&gt;를 통해 전송가능합니다.&lt;/p&gt;
+
+&lt;p&gt;파라미터인 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data&lt;/code&gt;는 문자열이고 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;callback&lt;/code&gt;은 전송이 끝났을때 호출되는 함수 입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ClientRequest.end()&lt;/code&gt;에 문자열화 된 data를 넣어 실행 시키면 테이터를 붙여 전송하게 됩니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;3-response-받기&quot;&gt;&lt;a name=&quot;stepC&quot;&gt;3. response 받기&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;stepA&quot;&gt;앞에서&lt;/a&gt;설명했듯이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.request()&lt;/code&gt;의 마지막 파라미터를 통해 response 이벤트 발생시 객체를 얻을 수 있습니다.&lt;br /&gt;
+이때 객체는 `http.IncomingMessage’클래스의 인스턴스입니다.&lt;br /&gt;
+자세한 내용은 &lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html#http_class_http_incomingmessage&quot;&gt;api 참조&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;이 객체를 통해서 서버로부터 받은 데이터를 확인할 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;application/x-www-form-urlencoded;charset=utf-8&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Content-Length&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;byteLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;https://example.com&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mydata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="node.js" /><category term="http" /><summary type="html">개요 node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다. request 생성하기 데이터 및 request 전송 response 처리 node.js 문서를 참고하며 작성했습니다.</summary></entry><entry><title type="html">ssh key 생성, port변경, 접속하기</title><link href="/using-ssh.html" rel="alternate" type="text/html" title="ssh key 생성, port변경, 접속하기" /><published>2021-02-19T00:00:00+00:00</published><updated>2021-02-19T00:00:00+00:00</updated><id>/using-ssh</id><content type="html" xml:base="/using-ssh.html">&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
 &lt;p&gt;ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.&lt;br /&gt;
 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
 
@@ -163,7 +300,7 @@ userid가 sshserver라고 가정하면 아래의 명령어를 유용하게 사�
 &lt;p&gt;확인해 보면 된다.&lt;br /&gt;
 추가로 ssh client에 여러개의 비공개키중 하나를 골라 사용하는 명령이 있다.(ssh 연결관계는 여러개가 될 수 있으므로)&lt;/p&gt;
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -i [비공개키 경로] ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="ssh" /><summary type="html">ssh 개요 ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다. 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</summary></entry><entry><title type="html">[CSS display속성] block, inline, inline-block 알아보기</title><link href="/basic-html-display-block-inline-and-inlineblock.html" rel="alternate" type="text/html" title="[CSS display속성] block, inline, inline-block 알아보기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/basic-html-display-block-inline-and-inlineblock</id><content type="html" xml:base="/basic-html-display-block-inline-and-inlineblock.html">&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="ssh" /><summary type="html">ssh 개요 ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다. 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.</summary></entry><entry><title type="html">[CSS display속성] block, inline, inline-block 알아보기</title><link href="/basic-html-display-block-inline-and-inlineblock.html" rel="alternate" type="text/html" title="[CSS display속성] block, inline, inline-block 알아보기" /><published>2021-02-06T00:00:00+00:00</published><updated>2021-02-06T00:00:00+00:00</updated><id>/basic-html-display-block-inline-and-inlineblock</id><content type="html" xml:base="/basic-html-display-block-inline-and-inlineblock.html">&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
 이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
 
 &lt;h2 id=&quot;block-element-특징&quot;&gt;Block element 특징&lt;/h2&gt;
@@ -186,7 +323,7 @@ userid가 sshserver라고 가정하면 아래의 명령어를 유용하게 사�
 &lt;/ol&gt;
 
 &lt;p&gt;위의 속성들은 모두 css를 통해 직접적으로 element에 적용이 가능하다.&lt;br /&gt;
-&lt;a href=&quot;https://codepen.io/rst0070/pen/XWNdJWB&quot;&gt;예시&lt;/a&gt;를 통해 확인할 수 있다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">HTML element는 크게 Block element와 Inline element로 나뉜다. 이 둘의 특징과 inline-block요소에 대해 알아보자.</summary></entry><entry><title type="html">[GithubPage, Jekyll] tags 페이지 만들기</title><link href="/way-to-make-tags-page.html" rel="alternate" type="text/html" title="[GithubPage, Jekyll] tags 페이지 만들기" /><published>2021-02-06T00:00:00+09:00</published><updated>2021-02-06T00:00:00+09:00</updated><id>/way-to-make-tags-page</id><content type="html" xml:base="/way-to-make-tags-page.html">&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
+&lt;a href=&quot;https://codepen.io/rst0070/pen/XWNdJWB&quot;&gt;예시&lt;/a&gt;를 통해 확인할 수 있다.&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="css" /><summary type="html">HTML element는 크게 Block element와 Inline element로 나뉜다. 이 둘의 특징과 inline-block요소에 대해 알아보자.</summary></entry><entry><title type="html">[GithubPage, Jekyll] tags 페이지 만들기</title><link href="/way-to-make-tags-page.html" rel="alternate" type="text/html" title="[GithubPage, Jekyll] tags 페이지 만들기" /><published>2021-02-06T00:00:00+00:00</published><updated>2021-02-06T00:00:00+00:00</updated><id>/way-to-make-tags-page</id><content type="html" xml:base="/way-to-make-tags-page.html">&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
 liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
 나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
 
@@ -210,7 +347,7 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 
 &lt;h2 id=&quot;3-구현&quot;&gt;3. 구현&lt;/h2&gt;
 &lt;p&gt;위의 변수와 for 문을 사용해서 간단히 구현 할 수 있다.
-&lt;script src=&quot;https://gist.github.com/rst0070/0ab68fc340cfe08f8150a6e6e149a688.js&quot;&gt;&lt;/script&gt;&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="jekyll" /><summary type="html">github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다. liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.</summary></entry><entry><title type="html">algospot WILDCARD : 동적계획법</title><link href="/algorithm/WILDCARD-DynamicProgramming.html" rel="alternate" type="text/html" title="algospot WILDCARD : 동적계획법" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/WILDCARD-DynamicProgramming</id><content type="html" xml:base="/algorithm/WILDCARD-DynamicProgramming.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;script src=&quot;https://gist.github.com/rst0070/0ab68fc340cfe08f8150a6e6e149a688.js&quot;&gt;&lt;/script&gt;&lt;/p&gt;</content><author><name>Wonbin Kim</name></author><category term="jekyll" /><summary type="html">github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다. liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.</summary></entry><entry><title type="html">algospot WILDCARD : 동적계획법</title><link href="/algorithm/WILDCARD-DynamicProgramming.html" rel="alternate" type="text/html" title="algospot WILDCARD : 동적계획법" /><published>2020-12-06T00:00:00+00:00</published><updated>2020-12-06T00:00:00+00:00</updated><id>/algorithm/WILDCARD-DynamicProgramming</id><content type="html" xml:base="/algorithm/WILDCARD-DynamicProgramming.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
@@ -223,8 +360,8 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
     &lt;span class=&quot;c1&quot;&gt;//마지막까지 다른것이 없을&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;*&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;sc&quot;&gt;'?'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'*'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isMatched&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -250,9 +387,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'?'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;*&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wildCard&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'*'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;solve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
     
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
@@ -276,7 +413,7 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 링크 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다. 어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</summary></entry><entry><title type="html">백준 1157번 단어공부</title><link href="/algorithm/1157.html" rel="alternate" type="text/html" title="백준 1157번 단어공부" /><published>2020-12-06T00:00:00+09:00</published><updated>2020-12-06T00:00:00+09:00</updated><id>/algorithm/1157</id><content type="html" xml:base="/algorithm/1157.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 링크 링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다. 어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</summary></entry><entry><title type="html">백준 1157번 단어공부</title><link href="/algorithm/1157.html" rel="alternate" type="text/html" title="백준 1157번 단어공부" /><published>2020-12-06T00:00:00+00:00</published><updated>2020-12-06T00:00:00+00:00</updated><id>/algorithm/1157</id><content type="html" xml:base="/algorithm/1157.html">&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
  알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
 이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
@@ -312,244 +449,10 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
     &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;&apos;?&apos;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;'?'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]){&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;}&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
     
     &lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 문제 링크 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 이때 대문자와 소문자는 구분하지 않고 개수를 센다. 조건 제한시간: 2초 입력 문자열 길이: 1,000,000이하 가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</summary></entry><entry><title type="html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title><link href="/html/html-move-to-specified-element.html" rel="alternate" type="text/html" title="HTML 위치 이동: 페이지 내의 특정 위치로 이동하기" /><published>2020-08-17T00:00:00+09:00</published><updated>2020-08-17T00:00:00+09:00</updated><id>/html/html-move-to-specified-element</id><content type="html" xml:base="/html/html-move-to-specified-element.html">&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;1-해당-element의-id-혹은-name이-필요하다&quot;&gt;1. 해당 Element의 id 혹은 name이 필요하다.&lt;/h3&gt;
-&lt;p&gt;특정 element에 링크를 연결하기 위해선 id나 name을 사용해야 합니다.&lt;br /&gt;
-링크에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#id&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#name&lt;/code&gt;과 같은 방법으로 접근합니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;2-1의-element를-가리키는-링크를-사용한다&quot;&gt;2. 1의 Element를 가리키는 링크를 사용한다.&lt;/h3&gt;
-&lt;p&gt;id나 name을 사용하여 특정 element를 가리키는 링크를 만들 수 있습니다.&lt;/p&gt;
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#link&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link to link&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;link&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link to pp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pp&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;hi&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;현재 페이지가 아닌 외부페이지에 접근할때도 위의 방식을 사용할 수 있습니다.  즉, url뒤에 붙여 사용가능.&lt;/p&gt;
-
-&lt;h3 id=&quot;기타-name이나-id가-중복된-경우에는&quot;&gt;기타: name이나 id가 중복된 경우에는?&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;같은 name을 가진 element가 여러개인 경우&lt;br /&gt;
-상대적으로 문서의 위쪽에 있는 element가 연결된다.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;name과 id가 같은 경우&lt;br /&gt;
-아래와 같은 상황에선 a tag가 p element를 연결한다.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;link&lt;span class=&quot;nt&quot;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;element&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="html" /><summary type="html">HTML 문서의 특정 element로 이동하는 방법입니다.</summary></entry><entry><title type="html">Kotlin Syntax about Functions</title><link href="/kotlin/kotlin-syntax-functions.html" rel="alternate" type="text/html" title="Kotlin Syntax about Functions" /><published>2020-07-22T00:00:00+09:00</published><updated>2020-07-22T00:00:00+09:00</updated><id>/kotlin/kotlin-syntax-functions</id><content type="html" xml:base="/kotlin/kotlin-syntax-functions.html">&lt;ul&gt;
-  &lt;li&gt;Default Parameter Values&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;vararg-parameters&quot;&gt;Vararg Parameters&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vararg&lt;/code&gt;is keyword used to define a parameter. This keyword means the parameter is numberically variable.&lt;br /&gt;
-Thus the parameter can be used as an array, even as an empty array.&lt;/p&gt;
-&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printTexts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;vararg&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;texts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEacch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$item&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;printTexts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;arrayOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;c&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;//using spread operation&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;If do not pass any parameter to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;printText()&lt;/code&gt;, the parameter &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;texts&lt;/code&gt; would be an empty array.
-Reference: &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax&quot;&gt;spread operation&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;named-argument&quot;&gt;Named argument&lt;/h2&gt;
-&lt;p&gt;Calling a function, each argument can be named like ket-value pair.&lt;br /&gt;
-This can reduce errors in complex codes.&lt;/p&gt;
-&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sendMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to $to , $ms, from $from&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;sendMessage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;rst&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;home&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;message&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;default-parameter-values&quot;&gt;Default Parameter Values&lt;/h2&gt;
-&lt;p&gt;Parameters of a function can have default values at defining the function.&lt;br /&gt;
-Below code will print ‘Hello’.&lt;/p&gt;
-&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;$text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fun&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;printText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="Kotlin" /><summary type="html">Default Parameter Values</summary></entry><entry><title type="html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</title><link href="/hdl-and-or-not-gate.html" rel="alternate" type="text/html" title="HDL기본, nand gate를 사용해 and, or, not gate 만들기" /><published>2020-04-14T00:00:00+09:00</published><updated>2020-04-14T00:00:00+09:00</updated><id>/hdl-and-or-not-gate</id><content type="html" xml:base="/hdl-and-or-not-gate.html">&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://ko.wikipedia.org/wiki/%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EA%B8%B0%EC%88%A0_%EC%96%B8%EC%96%B4&quot;&gt;Hardware Description Language&lt;/a&gt;의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.&lt;br /&gt;
-기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
-형식의 데이터가 이동하게 됩니다.&lt;br /&gt;
- 이때 내부적인 연산은 다른 칩들에 intput을 넣고 output을 받는 과정으로 이루어집니다.
-즉 input과 output만을 이용하여 설계해야합니다.&lt;/p&gt;
-
-&lt;p&gt;예시로 아래의 Nand 칩을 설계해 보겠습니다.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Nand{
-  //IN에서는 input pin들을 정의
-  IN x, y;
-  //OUT에서는 output pin을 정의
-  OUT ret;
-
-  /* 이때 배열의 형태로 pin들을 정의할 수 있다.
-   * 위의 x, y 대신 x[2]로 하여 x[0]와 x[1]으로 각 pin원소를 접근할 수 있다.
-   * output pin도 마찬가지로 정의가능
-   */
-
-  //PARTS에서는 처리할 내용을 작성한다.
-  PARTS:
-  And(a = x, b = y, out = o1);
-  Not(in = o1, out = ret)
-
-  /* 다른칩에 접근할때는 &apos;칩이름(핀이름 = 현재핀에서사용하는핀)&apos;식으로
-   * 접근한다.
-   * input pin에 접근하는 pin은 값을 전달,
-   * output pin에 접근하는 pin은 값을 받아온다.
-   * ex. Nand(x = a, y = b, ret = out);
-   *
-   * 이때 out에 해당하는 핀에 internal pin을 연결할 수 있다.
-   * 예를들어 위의 &apos;o1&apos;이 internal pin인데 여러 칩들을 연결할때
-   * output의 이름을 붙여주는 역할을 한다.
-   */
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;not-gate&quot;&gt;Not gate&lt;/h2&gt;
-&lt;p&gt;not gate는 input을 반전 시켜 output으로 출력합니다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;not(a)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Not{
-    IN in;
-    OUT out;
-
-    PARTS:
-    Nand(a = in, b = in, out = out);
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;and-gate&quot;&gt;And gate&lt;/h2&gt;
-&lt;p&gt;and gate는 두 input이 모두 1 일때만 1을 출력합니다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;b&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;and(a, b)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP And{
-    IN a, b;
-    OUT out;
-    PARTS:
-    Nand(a = a, b = b, out = notAnd);
-    Nand(a = notAnd, b = notAnd, out = out);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&quot;or-gate&quot;&gt;Or gate&lt;/h2&gt;
-&lt;p&gt;or gate는 입력 a, b중 하나라도 1이면 1을 출력합니다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;a&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;b&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;or(a, b)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;이를 Nand gate만으로 만들기 위해 &lt;a href=&quot;https://ko.wikipedia.org/wiki/%EB%93%9C_%EB%AA%A8%EB%A5%B4%EA%B0%84%EC%9D%98_%EB%B2%95%EC%B9%99&quot;&gt;드모르간의 법칙&lt;/a&gt;을 사용할 수 있습니다.&lt;br /&gt;
-즉 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a + b = ~a * ~b&lt;/code&gt;(+: or, *: and)&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-hdl&quot;&gt;CHIP Or{
-    IN a, b;
-    OUT out;
-    PARTS:
-    Nand(a = a, b = b, out = nota); //  ~a
-    Nand(a = b, b = b, out = notb); //  ~b
-    Nand(a = nota, b = notb, out = o1); //  ~(~a*~b)
-    Nand(a = o1, b = o1, out = out);    //  ~(~(~a*~b))
-}
-&lt;/code&gt;&lt;/pre&gt;</content><author><name>Wonbin Kim</name></author><category term="logicgate" /><category term="hdl" /><summary type="html">HDL 기본</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Wonbin Kim</name></author><category term="algorithm" /><summary type="html">문제 문제 링크 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 이때 대문자와 소문자는 구분하지 않고 개수를 센다. 조건 제한시간: 2초 입력 문자열 길이: 1,000,000이하 가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.</summary></entry></feed>
