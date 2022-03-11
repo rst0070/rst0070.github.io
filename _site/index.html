@@ -11,16 +11,15 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
-
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/syntax.css">
   <link rel="stylesheet" href="/assets/css/tag.css">
   <!-- Use Atom -->
-  <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Rst" />
+  <link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Rst" />
   <!-- Use RSS-2.0 -->
   <!--<link href="/rss-feed.xml" type="application/rss+xml" rel="alternate" title="Rst | "/>
   //-->
-
+  
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans">
@@ -48,18 +47,18 @@
 
 
   <!-- Use Jekyll SEO plugin -->
-  <!-- Begin Jekyll SEO tag v2.6.1 -->
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Home | Rst</title>
-<meta name="generator" content="Jekyll v4.0.0" />
+<meta name="generator" content="Jekyll v4.2.0" />
 <meta property="og:title" content="Home" />
 <meta name="author" content="Wonbin Kim" />
 <meta property="og:locale" content="en_US" />
-<link rel="canonical" href="http://localhost:4000/" />
-<meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Rst" />
-<link rel="next" href="http://localhost:4000/page2" />
+<link rel="next" href="/page2" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Home" />
 <script type="application/ld+json">
-{"@type":"WebSite","url":"http://localhost:4000/","headline":"Home","name":"Rst","author":{"@type":"Person","name":"Wonbin Kim"},"@context":"https://schema.org"}</script>
+{"url":"/","headline":"Home","@type":"WebSite","name":"Rst","author":{"@type":"Person","name":"Wonbin Kim"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -82,11 +81,7 @@
     
       <a href="/menu/writing.html">Writing</a>
     
-      <a href="/menu/tag.html">Tag</a>
-    
-      <a href="/menu/category.html">Category</a>
-    
-      <a href="/menu/contact.html">Contact</a>
+      <a href="/menu/tag.html">Tags</a>
     
   </nav>
   <nav class="social-icons">
@@ -98,7 +93,7 @@
 
   
   
-    <a href="kwb0711@gmail.com" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+    <a href="mailto:kwb0711@gmail.com" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a>
   
 
   
@@ -117,6 +112,7 @@
       
 <div class="posts">
   <h1>
+<<<<<<< HEAD
     <a href="/1725.html">[백준 1725번 JAVA] 히스토그램 풀이</a>
   </h1>
   
@@ -139,6 +135,38 @@
 
 이러한 분류를 하면 왼쪽의 직사각형, 오른쪽의 직사각형, 가운데에 걸친 직사각형 ... <a href="/1725.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 11 Mar 2022 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+=======
+    <a href="/java-enums.html">[Java] Enum 이해하기</a>
+  </h1>
+  
+  <p>
+    목차
+
+  Enum의 의미
+  Enum 선언 및 사용 방법
+  Enum의 실체
+  Enum 구현해보기
+
+
+1. Enum의 의미
+Enum은 열거형 이라는 의미이며 일반적으로 관련된 상수를 묶어주는 역할을 한다.
+Java의 열거형은 위 특징에 추가되는 ‘타입 체크’기능이있으므로 
+크게 아래 두가지의 역할을 한다고 할 수 있다.
+
+
+  비슷한 상수들을 타입으로 묶는 기능
+  묶인 타입별로 구분하는 기능.
+
+
+2. Enum선언하기, 사용하기
+
+2.1 타입구분 기능.
+enum은 값이 같더라도 타입이 다르면 다른 상수로 인식한다.
+enum Type1 { V1, ...}
+enum Type2 { V1, ...}
+System.ou... <a href="/java-enums.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Oct 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     1 minute read
@@ -152,6 +180,7 @@
 
 <div class="posts">
   <h1>
+<<<<<<< HEAD
     <a href="/way-to-make-tags-page.html">[GithubPage, Jekyll] tags 페이지 만들기</a>
   </h1>
   
@@ -165,15 +194,39 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 이 파일을 layout으로 하는 markdown파일은 tag 페이지의 기능을 하게 된다.
 
 1. tag 페이지 구조
+=======
+    <a href="/java-Iterator.html">[Java] Iterator 사용하기</a>
+  </h1>
+  
+  <p>
+    
+  Iterator의 의미
+  Iterator 사용법
+  Iterator 만들어보기
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
 
   상단: 블로그에 존재하는 모든 태그들을 나열한다.
   중단: 각 태그별로 해당 태그가 걸린 게시물을 나열한다.
 
+<<<<<<< HEAD
 
 2. 구현 방법
 구현에 중심적으로 사용할 변수는 두가지 이다.
 | 변수 |... <a href="/way-to-make-tags-page.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+=======
+Iterator의 의미
+java.util.Iterator는 자료구조의 요소에 접근하는 일관적 방법을 제공하기 위해 만들어진 인터페이스이다.
+따라서 Collection을 상속하는 모든 자료구조들은 iterator()함수를 통해 해당 객체에 대한 Iterator를 반환하도록 작성되어있다.
+
+이때 Map은 Key와 Value가 따로 있기 때문에 각각에 대한 Collection을 구한 뒤 Iterator를 구해야한다.
+
+Iterator 사용법
+Iterator는 3가지 함수를 제공한다.
+
+  boolean hasNext(): Colle... <a href="/java-Iterator.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Oct 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     3 minute read
@@ -187,6 +240,7 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 
 <div class="posts">
   <h1>
+<<<<<<< HEAD
     <a href="/basic-html-display-block-inline-and-inlineblock.html">[CSS display속성] block, inline, inline-block 알아보기</a>
   </h1>
   
@@ -205,6 +259,25 @@ Inline element 특징
   왼쪽이나 오른쪽에 다른 element가 올 수 있다.
   해당 element가 포함한 내용에 따라 element의 크기가 결정된다.... <a href="/basic-html-display-block-inline-and-inlineblock.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+=======
+    <a href="/what-is-container-deployment.html">컨테이너 배포란? : 애플리케이션 배포의 역사</a>
+  </h1>
+  
+  <p>
+    컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.
+
+
+
+  전통적 배포
+  하나의 서버위에서 여러 애플리케이션을 실행하게되면 서버 자원을 각 애플리케이션에 어떻게 분배할지 문제가 발생한다(자원이 부족한 애플리케이션이 생긴다).
+  이런 문제를 피하기위해 하나의 서버에 하나의 애플리케이션이 동작하도록 배포하는게 전통적 배포이다.
+  가상화 배포
+  전통적 배포의 문제점은 자원낭비가 심하다는것이다.
+  이를 해결하기 위해 가상화 배포는 Hypervisor와 Virtual Machine을 이용해 하나의 서버위에 여러 애플리케이션이 실행될 수 있게 된다.
+    
+     ... <a href="/what-is-container-deployment.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Apr 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     less than 1 minute read
@@ -218,6 +291,7 @@ Inline element 특징
 
 <div class="posts">
   <h1>
+<<<<<<< HEAD
     <a href="/algorithm/1157.html">백준 1157번 단어공부</a>
   </h1>
   
@@ -244,9 +318,35 @@ Inline element 특징
 #include &lt;string&gt;
 using... <a href="/algorithm/1157.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+=======
+    <a href="/hoisting-and-scope.html">[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법</a>
+  </h1>
+  
+  <p>
+    이 글에서는 Hoisting과 변수의 유효범위를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.
+
+1. 자바스크립트: 함수단위 변수유효범위
+변수의 유효범위란 어떤 변수가 유효한 범위를 의미함을 생각하면서 아래의 코드들을 보자.
+
+먼저 c로 작성된 다음의 코드를 보자.
+int main(){
+    if(true){
+        int number = 10;
+    }
+    printf(number);
+}
+
+이 코드는 블록안에있는 변수를 참조하니 당연히 작동되지 않는다.
+
+하지만 아래의 javascript 코드는 정상적으로 작동한다.
+function main(){
+    if(true){
+     ... <a href="/hoisting-and-scope.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 26 Mar 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
-    less than 1 minute read
+    1 minute read
   
 
 
@@ -257,6 +357,7 @@ using... <a href="/algorithm/1157.html">Read more</a>
 
 <div class="posts">
   <h1>
+<<<<<<< HEAD
     <a href="/algorithm/WILDCARD-DynamicProgramming.html">algospot WILDCARD : 동적계획법</a>
   </h1>
   
@@ -276,6 +377,28 @@ bool isMatched(string w, string s){
 
    ... <a href="/algorithm/WILDCARD-DynamicProgramming.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+=======
+    <a href="/http-request.html">node.js로 http request 보내기</a>
+  </h1>
+  
+  <p>
+    개요
+node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.
+
+  request 생성하기
+  데이터 및 request 전송
+  response 처리
+
+
+node.js 문서를 참고하며 작성했습니다.
+
+1. ClientRequest 생성
+http.request(url[,options][,callback])과 http.request(options[,callback])함수의 반환값을 통해 생성할 수 있습니다.
+
+option파라미터는 헤더, request방식등을 담고 있는 객체이며
+callback은 해당 request에 대한 서버... <a href="/http-request.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 26 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     1 minute read
@@ -310,7 +433,7 @@ bool isMatched(string w, string s){
 
   
   
-    <a href="kwb0711@gmail.com" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a>
+    <a href="mailto:kwb0711@gmail.com" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a>
   
 
   

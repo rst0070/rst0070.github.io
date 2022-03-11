@@ -16,9 +16,9 @@
 /*
   Base
 */
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 body {
-  font-family: "PT Serif", Georgia, "Times New Roman", serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 18px;
   color: #515151;
   /*background-color: dimgrey;*/
@@ -49,8 +49,9 @@ h1 a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Quattrocento Sans", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   color: #333;
+  line-height: normal;
 }
 
 a {
@@ -107,7 +108,7 @@ hr {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   margin-bottom: 4rem;
-  font-family: "Quattrocento Sans", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .masthead a:hover {
@@ -159,7 +160,7 @@ hr {
   margin-top:3px;
   margin-bottom: 1rem;
   color: #9a9a9a;
-  font-family: 'Quattrocento Sans', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size:0.8rem;
 }
 
@@ -188,7 +189,7 @@ hr {
 
 .pagination {
   overflow: hidden;
-  font-family: 'Quattrocento Sans', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   text-align: center;
 }
 
@@ -277,7 +278,7 @@ hr {
 
 code,
 pre {
-  font-family: "Source Code Pro", monospace;
+  font-family: "Source Code Pro", monospace !important;
 }
 code {
   padding: .25em .5em;

@@ -9,14 +9,14 @@ google-ID: 'UA-156320954-1'
 menu:
 - {name: 'About', path: 'menu', url: 'about.html'}
 - {name: 'Writing', path: 'menu', url: 'writing.html'}
-- {name: 'Tag', path: 'menu', url: 'tag.html'}
-- {name: 'Category', path: 'menu', url: 'category.html'}
-- {name: 'Contact', path: 'menu', url: 'contact.html'}
+- {name: 'Tags', path: 'menu', url: 'tag.html'}
+#- {name: 'Category', path: 'menu', url: 'category.html'}
+#- {name: 'Contact', path: 'menu', url: 'contact.html'}
 
 # Available social icons are powered by Font Awesome, so you can use any icon that they offer
 social:
 - {icon: 'github', link: 'https://www.github.com/rst0070'}
-- {icon: 'envelope', link: 'kwb0711@gmail.com'}
+- {icon: 'envelope', link: 'mailto:kwb0711@gmail.com'}
 # - {icon: 'rss-square', link: '/feed.xml'}
 - {icon: 'rss-square', link: '/rss-feed.xml'}
 

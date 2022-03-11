@@ -7,6 +7,7 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+<<<<<<< HEAD
 				<title>[백준 1725번 JAVA] 히스토그램 풀이</title>
 				
 				
@@ -148,6 +149,179 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 				<pubDate>Tue, 14 Apr 2020 00:00:00 +0900</pubDate>
 				<link>http://localhost:4000/hdl-and-or-not-gate.html</link>
 				<guid isPermaLink="true">http://localhost:4000/hdl-and-or-not-gate.html</guid>
+=======
+				<title>[Java] Enum 이해하기</title>
+				
+				
+					<description>&lt;h3 id=&quot;목차&quot;&gt;목차&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;Enum의 의미&lt;/li&gt;
+  &lt;li&gt;Enum 선언 및 사용 방법&lt;/li&gt;
+  &lt;li&gt;Enum의 실체&lt;/li&gt;
+  &lt;li&gt;Enum 구현해보기&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+				
+				<pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
+				<link>/java-enums.html</link>
+				<guid isPermaLink="true">/java-enums.html</guid>
+			</item>
+		
+			<item>
+				<title>[Java] Iterator 사용하기</title>
+				
+				
+					<description>&lt;ol&gt;
+  &lt;li&gt;Iterator의 의미&lt;/li&gt;
+  &lt;li&gt;Iterator 사용법&lt;/li&gt;
+  &lt;li&gt;Iterator 만들어보기&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+				
+				<pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
+				<link>/java-Iterator.html</link>
+				<guid isPermaLink="true">/java-Iterator.html</guid>
+			</item>
+		
+			<item>
+				<title>컨테이너 배포란? : 애플리케이션 배포의 역사</title>
+				
+				
+					<description>&lt;p&gt;컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
+				<link>/what-is-container-deployment.html</link>
+				<guid isPermaLink="true">/what-is-container-deployment.html</guid>
+			</item>
+		
+			<item>
+				<title>[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법</title>
+				
+				
+					<description>&lt;p&gt;이 글에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Hoisting&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;변수의 유효범위&lt;/code&gt;를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 26 Mar 2021 00:00:00 +0000</pubDate>
+				<link>/hoisting-and-scope.html</link>
+				<guid isPermaLink="true">/hoisting-and-scope.html</guid>
+			</item>
+		
+			<item>
+				<title>node.js로 http request 보내기</title>
+				
+				
+					<description>&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
+&lt;p&gt;node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepA&quot;&gt;request 생성하기&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepB&quot;&gt;데이터 및 request 전송&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stepC&quot;&gt;response 처리&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+				<link>/http-request.html</link>
+				<guid isPermaLink="true">/http-request.html</guid>
+			</item>
+		
+			<item>
+				<title>css 가상요소: after , before 요소 위치지정하기</title>
+				
+				
+					<description>&lt;p&gt;가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.&lt;/p&gt;
+
+&lt;p&gt;결론 부터 말하자면 아래와 같다.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;위치를 지정하기 위해서는 대상 엘리먼트, after, before 모두의 스타일이 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute&lt;/code&gt;여야 한다.&lt;/li&gt;
+  &lt;li&gt;after, before 가상요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content&lt;/code&gt;속성이 지정되어야한다.&lt;/li&gt;
+  &lt;li&gt;after, before는 그 기준인 엘리먼트를 기준으로 위치가 지정된다.&lt;/li&gt;
+  &lt;li&gt;위치 지정시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;top&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;left&lt;/code&gt;와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transform: translate()&lt;/code&gt;는 같은 효과를 가진다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;이제 하나씩 설명하겠다.&lt;/p&gt;
+&lt;h1 id=&quot;1-대상-엘리먼트와-after-before-엘리먼트는-position-absolute여야-한다&quot;&gt;1. 대상 엘리먼트와 after, before 엘리먼트는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;position: absolute;&lt;/code&gt;여야 한다.&lt;/h1&gt;
+&lt;p&gt;위의 전제조건이 있어야 다음단계(위치지정)로 넘어갈 수 있다.&lt;br /&gt;
+앞으로 사용할 코드이다.&lt;/p&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;----------html----------
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;base&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+----------css-----------
+#base { position: absolute;}
+#base::before, #base::after {position: absolute;}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2-after-before-가상요소는-content속성이-지정되어야한다&quot;&gt;2. after, before 가상요소는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content&lt;/code&gt;속성이 지정되어야한다.&lt;/h1&gt;
+&lt;p&gt;1번과 마찬가지로 전제조건이다. 즉 after와 before에&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content:&quot;&quot;&lt;/code&gt; 라도 명시해줘야한다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
+				<link>/css-pseudo-element-positioning.html</link>
+				<guid isPermaLink="true">/css-pseudo-element-positioning.html</guid>
+			</item>
+		
+			<item>
+				<title>ssh key 생성, port변경, 접속하기</title>
+				
+				
+					<description>&lt;h2 id=&quot;ssh-개요&quot;&gt;ssh 개요&lt;/h2&gt;
+&lt;p&gt;ssh는 ssh-server와 ssh-client간의 통신을 통해 client에서 server로 원격접속을 통해 server의 시스템 조작을 가능하게 해주는 도구이다.&lt;br /&gt;
+공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 19 Feb 2021 00:00:00 +0000</pubDate>
+				<link>/using-ssh.html</link>
+				<guid isPermaLink="true">/using-ssh.html</guid>
+			</item>
+		
+			<item>
+				<title>[GithubPage, Jekyll] tags 페이지 만들기</title>
+				
+				
+					<description>&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
+liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
+나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 06 Feb 2021 00:00:00 +0000</pubDate>
+				<link>/way-to-make-tags-page.html</link>
+				<guid isPermaLink="true">/way-to-make-tags-page.html</guid>
+			</item>
+		
+			<item>
+				<title>[CSS display속성] block, inline, inline-block 알아보기</title>
+				
+				
+					<description>&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
+이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sat, 06 Feb 2021 00:00:00 +0000</pubDate>
+				<link>/basic-html-display-block-inline-and-inlineblock.html</link>
+				<guid isPermaLink="true">/basic-html-display-block-inline-and-inlineblock.html</guid>
+			</item>
+		
+			<item>
+				<title>백준 1157번 단어공부</title>
+				
+				
+					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
+&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
+&lt;p&gt;제한시간: 2초&lt;br /&gt;
+입력 문자열 길이: 1,000,000이하&lt;br /&gt;
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Sun, 06 Dec 2020 00:00:00 +0000</pubDate>
+				<link>/algorithm/1157.html</link>
+				<guid isPermaLink="true">/algorithm/1157.html</guid>
+>>>>>>> be624f58b1aa06fed6c329a970a0751843047235
 			</item>
 		
 	</channel>

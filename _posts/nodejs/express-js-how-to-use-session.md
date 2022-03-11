@@ -2,7 +2,7 @@
 layout: post
 categories: Node_js
 tags: [node.js, express.js]
-title: "Express 프레임워크에서 Session 사용하기"
+title: "express-session: Express 프레임워크에서 Session 사용하기"
 ---
 
 ## 개념
