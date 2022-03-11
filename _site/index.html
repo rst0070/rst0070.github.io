@@ -14,6 +14,7 @@
 
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="/assets/css/tag.css">
   <!-- Use Atom -->
   <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Rst" />
   <!-- Use RSS-2.0 -->
@@ -116,24 +117,94 @@
       
 <div class="posts">
   <h1>
-    <a href="/html/html-move-to-specified-element.html">HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</a>
+    <a href="/1725.html">[백준 1725번 JAVA] 히스토그램 풀이</a>
   </h1>
   
   <p>
-    HTML 문서의 특정 element로 이동하는 방법입니다.
+    문제 요구사항
+문제 링크 
+ 
+히스토그램에서 밑변과 평행한 가장 큰 직사각형을 그리는것이 문제다.
+이때 직사각형의 높이는 히스토그램의 높이보다 높을 수 없으므로 직사각형이 걸쳐있는 여러개의 막대중 가장 작은 막대의 높이와 같을 것 이다.
 
-1. 해당 Element의 id 혹은 name이 필요하다.
-특정 element에 링크를 연결하기 위해선 id나 name을 사용해야 합니다.
-링크에서는 #id, #name과 같은 방법으로 접근합니다.
+직사각형이 어떤 형태를 가져야하는지 알았으니 어떻게 가장 큰 직사각형을 판단할지 정해야한다.
 
-2. 1의 Element를 가리키는 링크를 사용한다.
-id나 name을 사용하여 특정 element를 가리키는 링크를 만들 수 있습니다.
-&lt;a href="#link"&gt;link to link&lt;/a&gt;
+직사각형 구하기
+직사각형을 분류하자면 아래의 3가지중 하나이다.
 
-&lt;a name="link" href="#pp"&gt;link to pp&lt;/a&gt;
+  전체 히스토그램의 가운데에 걸쳐있는 경우
+  히스토그램의 왼쪽 절반에 위치해 있는경우
+  히스토그램의 오른쪽 절반에 위치해 있는경우
 
-&lt;p id="pp"&gt;hi&lt;/... <a href="/html/html-move-to-specified-element.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 17 Aug 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+이러한 분류를 하면 왼쪽의 직사각형, 오른쪽의 직사각형, 가운데에 걸친 직사각형 ... <a href="/1725.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 11 Mar 2022 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/way-to-make-tags-page.html">[GithubPage, Jekyll] tags 페이지 만들기</a>
+  </h1>
+  
+  <p>
+    github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.
+liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
+나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.
+
+0. 전체적인 방법
+나는 layouts폴더에 tag.html 파일을 만들었다. 
+이 파일을 layout으로 하는 markdown파일은 tag 페이지의 기능을 하게 된다.
+
+1. tag 페이지 구조
+
+  상단: 블로그에 존재하는 모든 태그들을 나열한다.
+  중단: 각 태그별로 해당 태그가 걸린 게시물을 나열한다.
+
+
+2. 구현 방법
+구현에 중심적으로 사용할 변수는 두가지 이다.
+| 변수 |... <a href="/way-to-make-tags-page.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    3 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/basic-html-display-block-inline-and-inlineblock.html">[CSS display속성] block, inline, inline-block 알아보기</a>
+  </h1>
+  
+  <p>
+    HTML element는 크게 Block element와 Inline element로 나뉜다.
+이 둘의 특징과 inline-block요소에 대해 알아보자.
+
+Block element 특징
+
+  왼쪽이나 오른쪽에 다른 element가 오지 못한다. 즉 하나의 가로줄을 block element가 차지한다.
+  css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.
+
+
+Inline element 특징
+
+  왼쪽이나 오른쪽에 다른 element가 올 수 있다.
+  해당 element가 포함한 내용에 따라 element의 크기가 결정된다.... <a href="/basic-html-display-block-inline-and-inlineblock.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
     less than 1 minute read
@@ -147,25 +218,32 @@ id나 name을 사용하여 특정 element를 가리키는 링크를 만들 수 �
 
 <div class="posts">
   <h1>
-    <a href="/kotlin/kotlin-syntax-functions.html">Kotlin Syntax about Functions</a>
+    <a href="/algorithm/1157.html">백준 1157번 단어공부</a>
   </h1>
   
   <p>
-    
-  Default Parameter Values
+    문제
+문제 링크
+ 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
+이때 대문자와 소문자는 구분하지 않고 개수를 센다.
+조건
+제한시간: 2초
+입력 문자열 길이: 1,000,000이하
+가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.
+
+풀이과정
+
+  2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.
+  대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)
+  따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.
 
 
-Vararg Parameters
-varargis keyword used to define a parameter. This keyword means the parameter is numberically variable.
-Thus the parameter can be used as an array, even as an empty array.
-fun printTexts(vararg texts: String){
-    texts.forEacch{ item -&gt;
-        println("$item")
-    }
-}
-fun main(){
-    printText... <a href="/kotlin/kotlin-syntax-functions.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 22 Jul 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+코드
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using... <a href="/algorithm/1157.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
     less than 1 minute read
@@ -179,71 +257,28 @@ fun main(){
 
 <div class="posts">
   <h1>
-    <a href="/kotlin/kotlin-syntax-class.html">Kotlin syntax: Class</a>
+    <a href="/algorithm/WILDCARD-DynamicProgramming.html">algospot WILDCARD : 동적계획법</a>
   </h1>
   
   <p>
-    
- <a href="/kotlin/kotlin-syntax-class.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 22 Jul 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+    문제
+링크
+링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
+와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.
+어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.
+
+풀이 과정
+일단 완전 탐색으로 생각해보자.
+와일드카드 w와 파일 이름 s가 주어질때 s가 w와 맞는지 확인해보는 함수를 만들어본다.
+bool isMatched(string w, string s){
+    //마지막까지 다른것이 없을
+    if(w.length() == 0 &amp;&amp; s.length == 0) return 1;
+
+   ... <a href="/algorithm/WILDCARD-DynamicProgramming.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
   
   
-    less than 1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/kotlin/kotlin-syntax-basic.html">Kotlin Basic Syntax</a>
-  </h1>
-  
-  <p>
-    
-  Default Parameter Valuese
-
-
- <a href="/kotlin/kotlin-syntax-basic.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 22 Jul 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    less than 1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-    <a href="/hdl-and-or-not-gate.html">HDL기본, nand gate를 사용해 and, or, not gate 만들기</a>
-  </h1>
-  
-  <p>
-    HDL 기본
-
-Hardware Description Language의 줄임말인 HDL은 칩을 설계하고 테스트하기 위한 언어입니다.
-기본단위는 칩이며 이 칩들은 input pin과 output pin을 갖지며 내부적인 연산을 통해 input에서 output으로 boolean
-형식의 데이터가 이동하게 됩니다.
- 이때 내부적인 연산은 다른 칩들에 intput을 넣고 output을 받는 과정으로 이루어집니다.
-즉 input과 output만을 이용하여 설계해야합니다.
-
-예시로 아래의 Nand 칩을 설계해 보겠습니다.
-
-CHIP Nand{
-  //IN에서는 input pin들을 정의
-  IN x, y;
-  //OUT에서는 o... <a href="/hdl-and-or-not-gate.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 14 Apr 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-  
-  
-    2 minute read
+    1 minute read
   
 
 
