@@ -1,0 +1,4 @@
+I"E<p>css의 <code class="language-plaintext highlighter-rouge">position</code>속성에는 <em>static</em>, <em>relative</em>, <em>absolute</em>, <em>fixed</em>가 
+있습니다.<br />
+이 속성들의 특징과 css의 top, left속성을 이용한 위치이동시 어떤 방식으로 이동하는지 알아보겠습니다.</p>
+:ET

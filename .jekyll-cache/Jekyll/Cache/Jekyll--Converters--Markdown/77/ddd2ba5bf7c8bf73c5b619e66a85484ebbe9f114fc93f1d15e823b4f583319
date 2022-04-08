@@ -1,0 +1,62 @@
+I"<<h2 id="버전관리">버전관리</h2>
+<p>git은 버전관리를 제공하는 소프트웨어이며 ‘.git’폴더에서 변경사항을 관리한다.<br />
+아래의 용어들을 통해 git이 작동하는 방식을 알 수 있다.</p>
+<ul>
+  <li>repository: 버전이 저장되어있는곳(.git 폴더로 생각할 수 있다.)</li>
+  <li>working tree: 변경사항들이 버전으로 전환되기 전 단계</li>
+  <li>staging area: working tree에서 버전으로 저장할 파일들을 선택하여 올려놓는 공간.</li>
+</ul>
+
+<h2 id="버전관리-시작">버전관리 시작</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git init .
+</code></pre></div></div>
+<p>여기서 .은 현재 디렉토리를 가리킨다.
+이 명령을 수행하면 해당 디렉토리에 ‘.git’이라는 폴더가 생성된다.
+이 폴더안의 데이터를 이용해 git이 버전관리를 한다.</p>
+
+<h2 id="버전-생성">버전 생성</h2>
+
+<p>git은 버전관리를 했던 파일에 대해 추적을 한다.<br />
+즉 버전관리를 하지 않은 파일은 추적하지 않는다.<br />
+대상 파일을 staging area로 올리면 버전관리의 대상이 된다.<br />
+staging area로 올리기 위해선 <code class="language-plaintext highlighter-rouge">add</code> 명령을 이용하면 된다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add file.txt
+</code></pre></div></div>
+
+<p>이제 commit 명령을 하면 버전이 생성된다.
+곧 repository에 저장되는것이다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m "this is message"
+</code></pre></div></div>
+
+<p>확인하기위해선 <code class="language-plaintext highlighter-rouge">log</code>명령을 하면 된다. <a href="https://git-scm.com/docs/git-log">git 문서 참조</a></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git log
+</code></pre></div></div>
+
+<p>이제 git이 추적하는 파일을 수정하면 어떻게 될까?
+파일 수정후 status 명령을 하면</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git restore &lt;file&gt;..." to discard changes in working directory)
+        modified:   file.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+</code></pre></div></div>
+<p>‘changes not staged for commit’ 메세지를 보면 수정된 file.txt파일이 staging area에 올라가 있지 않다는 것을 알 수 있다.<br />
+즉 working tree에 변경사항이 있다는 것이며 <code class="language-plaintext highlighter-rouge">add</code> 명령으로 staging area에 추가하여 commit의 대상으로 지정할 수 있다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add file.txt
+</code></pre></div></div>
+<p>이후 commit 명령을 하면 변경사항이 repository에 저장되며
+git log 명령을 통해 확인할 수 있다.</p>
+
+<h2 id="편의를-위한-명령어들">편의를 위한 명령어들</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add .
+#현재폴더의 모든 파일을 staging area에 올린다.
+
+git commit -am "this is message"
+#-am은 add와 message기능을 사용한다는 의미
+</code></pre></div></div>
+:ET

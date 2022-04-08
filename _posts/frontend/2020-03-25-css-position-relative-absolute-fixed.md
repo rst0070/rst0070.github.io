@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: [css]
+categories: ["FrontEnd"]
 title: "CSS position: 기본위치, 상대위치, 절대위치, 고정위치"
+lastmod: 2022-04-09
 ---
 css의 `position`속성에는 *static*, *relative*, *absolute*, *fixed*가 
 있습니다.  

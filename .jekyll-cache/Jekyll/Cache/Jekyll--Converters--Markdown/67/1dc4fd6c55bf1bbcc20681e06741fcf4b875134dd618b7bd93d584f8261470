@@ -1,0 +1,42 @@
+I"�<h2 id="사용자-생성하기-create-user">사용자 생성하기: ‘create user’</h2>
+<p>oracle에서 사용자(스키마)를 생성하기 위해선 create user 
+명령을 사용한다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">user</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">name</span><span class="o">&gt;</span>
+<span class="n">identified</span> <span class="k">by</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">password</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="사용자에게-권한-부여하기">사용자에게 권한 부여하기</h2>
+<p>oracle에서 사용자에게 권한을 부여하기 위해선 <code class="language-plaintext highlighter-rouge">grant ... to ...</code>
+명령을 사용한다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">grant</span> <span class="o">&lt;</span><span class="err">권한</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="err">권한</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,...</span>
+<span class="k">to</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="사용자-관련-사항-수정하기-alter-user">사용자 관련 사항 수정하기: alter user</h2>
+<p>사용자 계정과 관련된 사항을 수정할때는 <code class="language-plaintext highlighter-rouge">alter user</code>로 시작하는 
+구문을 이용해 수정한다.</p>
+<h3 id="1-암호-변경하기">1. 암호 변경하기</h3>
+<p>사용자를 생성할때 사용한 암호 정의 구문을 이용한다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">identified</span> <span class="k">by</span> <span class="o">&lt;</span><span class="n">password</span><span class="o">&gt;</span>
+</code></pre></div></div>
+<h3 id="2-계정-잠금해제">2. 계정 잠금/해제</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">account</span> <span class="p">[</span><span class="k">lock</span><span class="o">|</span><span class="n">unlock</span><span class="p">]</span>
+</code></pre></div></div>
+<h3 id="3-테이블-스페이스-변경">3. 테이블 스페이스 변경</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">defualt</span> <span class="n">tablespace</span> <span class="o">&lt;</span><span class="k">space</span> <span class="n">name</span><span class="o">&gt;</span>
+<span class="k">temporary</span> <span class="n">tablespace</span> <span class="o">&lt;</span><span class="k">space</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+<h3 id="4-테이블-스페이스-할당량-변경">4. 테이블 스페이스 할당량 변경</h3>
+<p><code class="language-plaintext highlighter-rouge">quota &lt;할당량&gt; on &lt;tablespace 이름&gt;</code>을 이용하면 된다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">alter</span> <span class="k">user</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="n">quota</span> <span class="n">unlimited</span> <span class="k">on</span> <span class="n">users</span>
+<span class="n">quota</span> <span class="mi">10</span><span class="n">M</span> <span class="k">on</span> <span class="k">temp</span>
+<span class="p">...;</span>
+</code></pre></div></div>
+
+<h2 id="사용자-삭제하기">사용자 삭제하기</h2>
+<p><code class="language-plaintext highlighter-rouge">drop user</code> 명령을 사용한다.</p>
+:ET

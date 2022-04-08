@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: ['css', 'html']
+categories: ["FrontEnd"]
 title: "css 가상요소: after , before 요소 위치지정하기"
+lastmod: 2022-04-09
 ---
 가상선택자 after, before 엘리먼트가 사라지는 현상을 해결하고 그 방법을 작성한 글이다. after, before 엘리먼트의 위치지정 방법을 정리했다.  
   

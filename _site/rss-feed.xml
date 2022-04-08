@@ -7,8 +7,70 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-<<<<<<< HEAD
-				<title>[백준 1725번 JAVA] 히스토그램 풀이</title>
+				<title>[Jekyll, Github Page] 카테고리 페이지 만들기</title>
+				
+				
+					<description>&lt;p&gt;Github 블로그 포스팅을 정리하던중 카테고리 페이지의 필요성을 느꼈다.&lt;br /&gt;
+&lt;a href=&quot;https://jekyllrb.com/docs/variables/&quot;&gt;Jekyll Docs&lt;/a&gt;에 설명되어있는 변수들을 잘 이용하면 카테고리 페이지를 만들수 있다!&lt;br /&gt;
+아래의 순서로 만들어보았다.&lt;/p&gt;
+</description>
+				
+				<pubDate>Fri, 08 Apr 2022 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/jekyll/making-category-page.html</link>
+				<guid isPermaLink="true">http://localhost:4000/jekyll/making-category-page.html</guid>
+			</item>
+		
+			<item>
+				<title>[백준 2842번 집배원 한상덕] JAVA 풀이</title>
+				
+				
+					<description>&lt;h2 id=&quot;문제의-요구사항&quot;&gt;문제의 요구사항&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/2842&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
+P에서 출발해서 모든 K를 방문하고 P로 돌아오는 방법중 가장 적은 피로도로 움직이는 방법을 구하는 문제이다.&lt;br /&gt;
+이때 주의할점이 있다.
+    &lt;ol&gt;
+      &lt;li&gt;모든 K를 방문하는것만 구현하면 된다. 같은 길로 돌아가면 되기 때문&lt;/li&gt;
+      &lt;li&gt;부분 문제의 최적이 전체문제의 최적이 아니다.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;주의할 점 2번을 깨닫는게 좀 어려웠던것 같다.&lt;br /&gt;
+한상덕의 피로도는 전체 경로중에 가장 높은 고도와 가장 낮은 고도의 차이이며 이를 최소화하는것이 이 문제의 목표이다.&lt;/p&gt;
+
+&lt;p&gt;즉, DFS로 한상덕의 마을을 탐색한다고 했을때, 부분적인 경로에서 피로도를 최소화하는것으로는 문제해결이 불가능하다는 것 이다.&lt;/p&gt;
+
+&lt;p&gt;따라서 전체 경로에 대한 가장 낮은고도와 가장 높은 고도를 설정해 놓고, 
+이 고도사이에서 모든 집을 방문할 수 있는가를 확인하는것이 풀이방법이 될 것 이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;대략적인-방법&quot;&gt;대략적인 방법&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;1. 전체 경로의 고도 특정하기&lt;/strong&gt;&lt;br /&gt;
+입력을 통해 마을의 모든 부분의 고도를 확인할 수 있는데 이를 중복을 제거하고 오름차순으로 정렬한다.&lt;br /&gt;
+이 정렬된 고도값들에 두개의 포인터(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;left&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;right&lt;/code&gt; 등)를 사용하여 고도값을 조정한다.&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;고도값개수&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//left와 right이용해 최대, 최소 고도를 우체국에서 출발하는 dfs에 전달하기&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dfs결과방문한집개수&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;전체집개수&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;altitute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;altitute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;2. DFS 구현하기&lt;/strong&gt;&lt;br /&gt;
+DFS메서드의 인자는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;최대고도&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;최소고도&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;현재위치&lt;/code&gt;를 가지도록 했고, 
+리턴값은 해당 부분경로에서 방문한 집의 개수로 했다.
+```java
+int dfs(int low, int high, int h, int w){
+    //1. 기저조건(이미 방문했거나 지도의 범위를 벗어난경우 0리턴)&lt;/p&gt;
+</description>
+				
+				<pubDate>Sun, 13 Mar 2022 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/algorithm/boj/2842.html</link>
+				<guid isPermaLink="true">http://localhost:4000/algorithm/boj/2842.html</guid>
+			</item>
+		
+			<item>
+				<title>[백준 1725번 히스토그램] JAVA 풀이</title>
 				
 				
 					<description>&lt;h2 id=&quot;문제-요구사항&quot;&gt;문제 요구사항&lt;/h2&gt;
@@ -21,136 +83,12 @@
 </description>
 				
 				<pubDate>Fri, 11 Mar 2022 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/1725.html</link>
-				<guid isPermaLink="true">http://localhost:4000/1725.html</guid>
+				<link>http://localhost:4000/algorithm/boj/1725.html</link>
+				<guid isPermaLink="true">http://localhost:4000/algorithm/boj/1725.html</guid>
 			</item>
 		
 			<item>
-				<title>[GithubPage, Jekyll] tags 페이지 만들기</title>
-				
-				
-					<description>&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
-liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
-나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sat, 06 Feb 2021 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/way-to-make-tags-page.html</link>
-				<guid isPermaLink="true">http://localhost:4000/way-to-make-tags-page.html</guid>
-			</item>
-		
-			<item>
-				<title>[CSS display속성] block, inline, inline-block 알아보기</title>
-				
-				
-					<description>&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
-이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sat, 06 Feb 2021 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/basic-html-display-block-inline-and-inlineblock.html</link>
-				<guid isPermaLink="true">http://localhost:4000/basic-html-display-block-inline-and-inlineblock.html</guid>
-			</item>
-		
-			<item>
-				<title>백준 1157번 단어공부</title>
-				
-				
-					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
- 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
-이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
-&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
-&lt;p&gt;제한시간: 2초&lt;br /&gt;
-입력 문자열 길이: 1,000,000이하&lt;br /&gt;
-가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sun, 06 Dec 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/algorithm/1157.html</link>
-				<guid isPermaLink="true">http://localhost:4000/algorithm/1157.html</guid>
-			</item>
-		
-			<item>
-				<title>algospot WILDCARD : 동적계획법</title>
-				
-				
-					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;//https://algospot.com/judge/problem/read/WILDCARD&quot;&gt;링크&lt;/a&gt;&lt;br /&gt;
-링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
-와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.&lt;br /&gt;
-어려운점은 &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sun, 06 Dec 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/algorithm/WILDCARD-DynamicProgramming.html</link>
-				<guid isPermaLink="true">http://localhost:4000/algorithm/WILDCARD-DynamicProgramming.html</guid>
-			</item>
-		
-			<item>
-				<title>HTML 위치 이동: 페이지 내의 특정 위치로 이동하기</title>
-				
-				
-					<description>&lt;p&gt;HTML 문서의 특정 element로 이동하는 방법입니다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Mon, 17 Aug 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/html/html-move-to-specified-element.html</link>
-				<guid isPermaLink="true">http://localhost:4000/html/html-move-to-specified-element.html</guid>
-			</item>
-		
-			<item>
-				<title>Kotlin Syntax about Functions</title>
-				
-				
-					<description>&lt;ul&gt;
-  &lt;li&gt;Default Parameter Values&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-functions.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-functions.html</guid>
-			</item>
-		
-			<item>
-				<title>Kotlin syntax: Class</title>
-				
-				
-					<description>
-</description>
-				
-				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-class.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-class.html</guid>
-			</item>
-		
-			<item>
-				<title>Kotlin Basic Syntax</title>
-				
-				
-					<description>&lt;ul&gt;
-  &lt;li&gt;Default Parameter Valuese&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				
-				<pubDate>Wed, 22 Jul 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/kotlin/kotlin-syntax-basic.html</link>
-				<guid isPermaLink="true">http://localhost:4000/kotlin/kotlin-syntax-basic.html</guid>
-			</item>
-		
-			<item>
-				<title>HDL기본, nand gate를 사용해 and, or, not gate 만들기</title>
-				
-				
-					<description>&lt;h2 id=&quot;hdl-기본&quot;&gt;HDL 기본&lt;/h2&gt;
-</description>
-				
-				<pubDate>Tue, 14 Apr 2020 00:00:00 +0900</pubDate>
-				<link>http://localhost:4000/hdl-and-or-not-gate.html</link>
-				<guid isPermaLink="true">http://localhost:4000/hdl-and-or-not-gate.html</guid>
-=======
-				<title>[Java] Enum 이해하기</title>
+				<title>[Java] Enum, 열거형이란? 실체를 구현해보자</title>
 				
 				
 					<description>&lt;h3 id=&quot;목차&quot;&gt;목차&lt;/h3&gt;
@@ -162,13 +100,13 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 &lt;/ol&gt;
 </description>
 				
-				<pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
-				<link>/java-enums.html</link>
-				<guid isPermaLink="true">/java-enums.html</guid>
+				<pubDate>Sun, 03 Oct 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/java/java-enums.html</link>
+				<guid isPermaLink="true">http://localhost:4000/java/java-enums.html</guid>
 			</item>
 		
 			<item>
-				<title>[Java] Iterator 사용하기</title>
+				<title>[Java] Iterator 사용법, 구현</title>
 				
 				
 					<description>&lt;ol&gt;
@@ -178,9 +116,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 &lt;/ol&gt;
 </description>
 				
-				<pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
-				<link>/java-Iterator.html</link>
-				<guid isPermaLink="true">/java-Iterator.html</guid>
+				<pubDate>Sun, 03 Oct 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/java/java-Iterator.html</link>
+				<guid isPermaLink="true">http://localhost:4000/java/java-Iterator.html</guid>
 			</item>
 		
 			<item>
@@ -190,9 +128,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 					<description>&lt;p&gt;컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.&lt;/p&gt;
 </description>
 				
-				<pubDate>Sat, 03 Apr 2021 00:00:00 +0000</pubDate>
-				<link>/what-is-container-deployment.html</link>
-				<guid isPermaLink="true">/what-is-container-deployment.html</guid>
+				<pubDate>Sat, 03 Apr 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/etc/what-is-container-deployment.html</link>
+				<guid isPermaLink="true">http://localhost:4000/etc/what-is-container-deployment.html</guid>
 			</item>
 		
 			<item>
@@ -202,13 +140,13 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 					<description>&lt;p&gt;이 글에서는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Hoisting&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;변수의 유효범위&lt;/code&gt;를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.&lt;/p&gt;
 </description>
 				
-				<pubDate>Fri, 26 Mar 2021 00:00:00 +0000</pubDate>
-				<link>/hoisting-and-scope.html</link>
-				<guid isPermaLink="true">/hoisting-and-scope.html</guid>
+				<pubDate>Fri, 26 Mar 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/javascript/hoisting-and-scope.html</link>
+				<guid isPermaLink="true">http://localhost:4000/javascript/hoisting-and-scope.html</guid>
 			</item>
 		
 			<item>
-				<title>node.js로 http request 보내기</title>
+				<title>[Node.js] http request 보내기</title>
 				
 				
 					<description>&lt;h2 id=&quot;개요&quot;&gt;개요&lt;/h2&gt;
@@ -222,9 +160,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 &lt;p&gt;&lt;a href=&quot;https://nodejs.org/dist/latest-v14.x/docs/api/http.html&quot;&gt;node.js 문서&lt;/a&gt;를 참고하며 작성했습니다.&lt;/p&gt;
 </description>
 				
-				<pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
-				<link>/http-request.html</link>
-				<guid isPermaLink="true">/http-request.html</guid>
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/javascript/http-request.html</link>
+				<guid isPermaLink="true">http://localhost:4000/javascript/http-request.html</guid>
 			</item>
 		
 			<item>
@@ -258,9 +196,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 &lt;p&gt;1번과 마찬가지로 전제조건이다. 즉 after와 before에&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;content:&quot;&quot;&lt;/code&gt; 라도 명시해줘야한다.&lt;/p&gt;
 </description>
 				
-				<pubDate>Fri, 26 Feb 2021 00:00:00 +0000</pubDate>
-				<link>/css-pseudo-element-positioning.html</link>
-				<guid isPermaLink="true">/css-pseudo-element-positioning.html</guid>
+				<pubDate>Fri, 26 Feb 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/frontend/css-pseudo-element-positioning.html</link>
+				<guid isPermaLink="true">http://localhost:4000/frontend/css-pseudo-element-positioning.html</guid>
 			</item>
 		
 			<item>
@@ -272,56 +210,9 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
 공개키-비공기키 방식을 통해 간편하고 안전한 접속을 가능하게 해준다.&lt;/p&gt;
 </description>
 				
-				<pubDate>Fri, 19 Feb 2021 00:00:00 +0000</pubDate>
-				<link>/using-ssh.html</link>
-				<guid isPermaLink="true">/using-ssh.html</guid>
-			</item>
-		
-			<item>
-				<title>[GithubPage, Jekyll] tags 페이지 만들기</title>
-				
-				
-					<description>&lt;p&gt;github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.&lt;br /&gt;
-liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
-나는 &lt;a href=&quot;https://jekyllrb-ko.github.io/docs/variables/&quot;&gt;지킬 홈페이지&lt;/a&gt;에 정의된 변수들을 사용하여 페이지를 만들었다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sat, 06 Feb 2021 00:00:00 +0000</pubDate>
-				<link>/way-to-make-tags-page.html</link>
-				<guid isPermaLink="true">/way-to-make-tags-page.html</guid>
-			</item>
-		
-			<item>
-				<title>[CSS display속성] block, inline, inline-block 알아보기</title>
-				
-				
-					<description>&lt;p&gt;HTML element는 크게 Block element와 Inline element로 나뉜다.&lt;br /&gt;
-이 둘의 특징과 inline-block요소에 대해 알아보자.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sat, 06 Feb 2021 00:00:00 +0000</pubDate>
-				<link>/basic-html-display-block-inline-and-inlineblock.html</link>
-				<guid isPermaLink="true">/basic-html-display-block-inline-and-inlineblock.html</guid>
-			</item>
-		
-			<item>
-				<title>백준 1157번 단어공부</title>
-				
-				
-					<description>&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.acmicpc.net/problem/1157&quot;&gt;문제 링크&lt;/a&gt;&lt;br /&gt;
- 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
-이때 대문자와 소문자는 구분하지 않고 개수를 센다.&lt;/p&gt;
-&lt;h2 id=&quot;조건&quot;&gt;조건&lt;/h2&gt;
-&lt;p&gt;제한시간: 2초&lt;br /&gt;
-입력 문자열 길이: 1,000,000이하&lt;br /&gt;
-가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.&lt;/p&gt;
-</description>
-				
-				<pubDate>Sun, 06 Dec 2020 00:00:00 +0000</pubDate>
-				<link>/algorithm/1157.html</link>
-				<guid isPermaLink="true">/algorithm/1157.html</guid>
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
+				<pubDate>Fri, 19 Feb 2021 00:00:00 +0900</pubDate>
+				<link>http://localhost:4000/tools/using-ssh.html</link>
+				<guid isPermaLink="true">http://localhost:4000/tools/using-ssh.html</guid>
 			</item>
 		
 	</channel>

@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="/assets/css/syntax.css">
   <link rel="stylesheet" href="/assets/css/tag.css">
   <!-- Use Atom -->
-  <link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Rst" />
+  <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Rst" />
   <!-- Use RSS-2.0 -->
   <!--<link href="/rss-feed.xml" type="application/rss+xml" rel="alternate" title="Rst | "/>
   //-->
@@ -47,18 +47,21 @@
 
 
   <!-- Use Jekyll SEO plugin -->
-  <!-- Begin Jekyll SEO tag v2.7.1 -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Home | Rst</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.2.2" />
 <meta property="og:title" content="Home" />
 <meta name="author" content="Wonbin Kim" />
 <meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
 <meta property="og:site_name" content="Rst" />
-<link rel="next" href="/page2" />
+<meta property="og:type" content="website" />
+<link rel="next" href="http://localhost:4000/page2" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Home" />
 <script type="application/ld+json">
-{"url":"/","headline":"Home","@type":"WebSite","name":"Rst","author":{"@type":"Person","name":"Wonbin Kim"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Wonbin Kim"},"headline":"Home","name":"Rst","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -81,7 +84,7 @@
     
       <a href="/menu/writing.html">Writing</a>
     
-      <a href="/menu/tag.html">Tags</a>
+      <a href="/menu/category.html">Category</a>
     
   </nav>
   <nav class="social-icons">
@@ -112,8 +115,74 @@
       
 <div class="posts">
   <h1>
-<<<<<<< HEAD
-    <a href="/1725.html">[백준 1725번 JAVA] 히스토그램 풀이</a>
+    <a href="/jekyll/making-category-page.html">[Jekyll, Github Page] 카테고리 페이지 만들기</a>
+  </h1>
+  
+  <p>
+    Github 블로그 포스팅을 정리하던중 카테고리 페이지의 필요성을 느꼈다.
+Jekyll Docs에 설명되어있는 변수들을 잘 이용하면 카테고리 페이지를 만들수 있다!
+아래의 순서로 만들어보았다.
+
+
+  Post에서 카테고리를 지정, 보여주기
+  카테고리별 페이지 만들기
+  전체 카테고리 리스트를 보여주는 페이지 만들기
+
+
+코드의 이해를 돕기위해 상황을 가정해보자.
+git에 대한 포스팅을 작성하는데 이 포스팅을 카테고리로 분류하고 싶은상황이다.
+git은 개발도구이므로 Tools와 Git카테고리를 만들기로했으며 Tools카테고리 안에 Git카테고리가 포함되도록 만들어야한다.
+
+1. Post에서 카테고리 지정하기, 페이지... <a href="/jekyll/making-category-page.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 08 Apr 2022 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/algorithm/boj/2842.html">[백준 2842번 집배원 한상덕] JAVA 풀이</a>
+  </h1>
+  
+  <p>
+    문제의 요구사항
+
+  문제 링크
+P에서 출발해서 모든 K를 방문하고 P로 돌아오는 방법중 가장 적은 피로도로 움직이는 방법을 구하는 문제이다.
+이때 주의할점이 있다.
+    
+      모든 K를 방문하는것만 구현하면 된다. 같은 길로 돌아가면 되기 때문
+      부분 문제의 최적이 전체문제의 최적이 아니다.
+    
+  
+
+
+주의할 점 2번을 깨닫는게 좀 어려웠던것 같다.
+한상덕의 피로도는 전체 경로중에 가장 높은 고도와 가장 낮은 고도의 차이이며 이를 최소화하는것이 이 문제의 목표이다.
+
+즉, DFS로 한상덕의 마을을 탐색한다고 했을때, 부분적인 경로에서 피로도를 최소화하는것으로는 문제해결이 불가능하다는 것 ... <a href="/algorithm/boj/2842.html">Read more</a>
+    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 13 Mar 2022 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
+  
+  
+    2 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/algorithm/boj/1725.html">[백준 1725번 히스토그램] JAVA 풀이</a>
   </h1>
   
   <p>
@@ -133,10 +202,22 @@
   히스토그램의 오른쪽 절반에 위치해 있는경우
 
 
-이러한 분류를 하면 왼쪽의 직사각형, 오른쪽의 직사각형, 가운데에 걸친 직사각형 ... <a href="/1725.html">Read more</a>
+이러한 분류를 하면 왼쪽의 직사각형, 오른쪽의 직사각형, 가운데에 걸친 직사각형 ... <a href="/algorithm/boj/1725.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 11 Mar 2022 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-=======
-    <a href="/java-enums.html">[Java] Enum 이해하기</a>
+  
+  
+    1 minute read
+  
+
+
+
+</span>
+  </p>
+</div>
+
+<div class="posts">
+  <h1>
+    <a href="/java/java-enums.html">[Java] Enum, 열거형이란? 실체를 구현해보자</a>
   </h1>
   
   <p>
@@ -158,15 +239,13 @@ Java의 열거형은 위 특징에 추가되는 ‘타입 체크’기능이있�
   묶인 타입별로 구분하는 기능.
 
 
+이외에도 정의된 순서를 구하거나 이름을 구하는등 기능이 있지만 위 두가지 기능만 보겠다.
+
 2. Enum선언하기, 사용하기
 
 2.1 타입구분 기능.
-enum은 값이 같더라도 타입이 다르면 다른 상수로 인식한다.
-enum Type1 { V1, ...}
-enum Type2 { V1, ...}
-System.ou... <a href="/java-enums.html">Read more</a>
+enum은 아래와 같이 선언하고 사용하며, 값이 같더라도 타입이 다... <a href="/java/java-enums.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Oct 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     1 minute read
@@ -180,22 +259,7 @@ System.ou... <a href="/java-enums.html">Read more</a>
 
 <div class="posts">
   <h1>
-<<<<<<< HEAD
-    <a href="/way-to-make-tags-page.html">[GithubPage, Jekyll] tags 페이지 만들기</a>
-  </h1>
-  
-  <p>
-    github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.
-liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
-나는 지킬 홈페이지에 정의된 변수들을 사용하여 페이지를 만들었다.
-
-0. 전체적인 방법
-나는 layouts폴더에 tag.html 파일을 만들었다. 
-이 파일을 layout으로 하는 markdown파일은 tag 페이지의 기능을 하게 된다.
-
-1. tag 페이지 구조
-=======
-    <a href="/java-Iterator.html">[Java] Iterator 사용하기</a>
+    <a href="/java/java-Iterator.html">[Java] Iterator 사용법, 구현</a>
   </h1>
   
   <p>
@@ -203,18 +267,8 @@ liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가�
   Iterator의 의미
   Iterator 사용법
   Iterator 만들어보기
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
 
-  상단: 블로그에 존재하는 모든 태그들을 나열한다.
-  중단: 각 태그별로 해당 태그가 걸린 게시물을 나열한다.
 
-<<<<<<< HEAD
-
-2. 구현 방법
-구현에 중심적으로 사용할 변수는 두가지 이다.
-| 변수 |... <a href="/way-to-make-tags-page.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-=======
 Iterator의 의미
 java.util.Iterator는 자료구조의 요소에 접근하는 일관적 방법을 제공하기 위해 만들어진 인터페이스이다.
 따라서 Collection을 상속하는 모든 자료구조들은 iterator()함수를 통해 해당 객체에 대한 Iterator를 반환하도록 작성되어있다.
@@ -224,184 +278,11 @@ java.util.Iterator는 자료구조의 요소에 접근하는 일관적 방법을
 Iterator 사용법
 Iterator는 3가지 함수를 제공한다.
 
-  boolean hasNext(): Colle... <a href="/java-Iterator.html">Read more</a>
+  boolean hasNext(): Colle... <a href="/java/java-Iterator.html">Read more</a>
     <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Oct 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
-  
-  
-    3 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-<<<<<<< HEAD
-    <a href="/basic-html-display-block-inline-and-inlineblock.html">[CSS display속성] block, inline, inline-block 알아보기</a>
-  </h1>
-  
-  <p>
-    HTML element는 크게 Block element와 Inline element로 나뉜다.
-이 둘의 특징과 inline-block요소에 대해 알아보자.
-
-Block element 특징
-
-  왼쪽이나 오른쪽에 다른 element가 오지 못한다. 즉 하나의 가로줄을 block element가 차지한다.
-  css의 width, height 속성을 그대로 표현한다. 해당 element가 포함한 내용이 없거나, 작거나, 크거나 이는 변하지 않는다.
-
-
-Inline element 특징
-
-  왼쪽이나 오른쪽에 다른 element가 올 수 있다.
-  해당 element가 포함한 내용에 따라 element의 크기가 결정된다.... <a href="/basic-html-display-block-inline-and-inlineblock.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-=======
-    <a href="/what-is-container-deployment.html">컨테이너 배포란? : 애플리케이션 배포의 역사</a>
-  </h1>
-  
-  <p>
-    컨테이너 형태의 배포는 애플리케이션 배포 패러다임중 하나이다. 이를 이해하기위해 역사를 살펴보자.
-
-
-
-  전통적 배포
-  하나의 서버위에서 여러 애플리케이션을 실행하게되면 서버 자원을 각 애플리케이션에 어떻게 분배할지 문제가 발생한다(자원이 부족한 애플리케이션이 생긴다).
-  이런 문제를 피하기위해 하나의 서버에 하나의 애플리케이션이 동작하도록 배포하는게 전통적 배포이다.
-  가상화 배포
-  전통적 배포의 문제점은 자원낭비가 심하다는것이다.
-  이를 해결하기 위해 가상화 배포는 Hypervisor와 Virtual Machine을 이용해 하나의 서버위에 여러 애플리케이션이 실행될 수 있게 된다.
-    
-     ... <a href="/what-is-container-deployment.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 03 Apr 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
   
   
     less than 1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-<<<<<<< HEAD
-    <a href="/algorithm/1157.html">백준 1157번 단어공부</a>
-  </h1>
-  
-  <p>
-    문제
-문제 링크
- 알파벳 대,소문자로 이루어진 문자열을 입력받아 가장 많이 등장한 알파벳을 출력한다. 
-이때 대문자와 소문자는 구분하지 않고 개수를 센다.
-조건
-제한시간: 2초
-입력 문자열 길이: 1,000,000이하
-가장 많이 사용된 알파벳이 여러개일 경우 ‘?’를 출력한다.
-
-풀이과정
-
-  2초라는 제한시간 안에는 1,000,000개의 문자를 완전탐색해도 시간이 남는다.
-  대문자와 소문자는 아스키코드로 32 차이가 난다.(10진수로)
-  따라서 대문자와 소문자를 같게 취급하며 완전탐색을 할 수 있다.
-
-
-코드
-
-#include &lt;iostream&gt;
-#include &lt;string&gt;
-using... <a href="/algorithm/1157.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-=======
-    <a href="/hoisting-and-scope.html">[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법</a>
-  </h1>
-  
-  <p>
-    이 글에서는 Hoisting과 변수의 유효범위를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.
-
-1. 자바스크립트: 함수단위 변수유효범위
-변수의 유효범위란 어떤 변수가 유효한 범위를 의미함을 생각하면서 아래의 코드들을 보자.
-
-먼저 c로 작성된 다음의 코드를 보자.
-int main(){
-    if(true){
-        int number = 10;
-    }
-    printf(number);
-}
-
-이 코드는 블록안에있는 변수를 참조하니 당연히 작동되지 않는다.
-
-하지만 아래의 javascript 코드는 정상적으로 작동한다.
-function main(){
-    if(true){
-     ... <a href="/hoisting-and-scope.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 26 Mar 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
-  
-  
-    1 minute read
-  
-
-
-
-</span>
-  </p>
-</div>
-
-<div class="posts">
-  <h1>
-<<<<<<< HEAD
-    <a href="/algorithm/WILDCARD-DynamicProgramming.html">algospot WILDCARD : 동적계획법</a>
-  </h1>
-  
-  <p>
-    문제
-링크
-링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
-와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.
-어려운점은 *와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.
-
-풀이 과정
-일단 완전 탐색으로 생각해보자.
-와일드카드 w와 파일 이름 s가 주어질때 s가 w와 맞는지 확인해보는 함수를 만들어본다.
-bool isMatched(string w, string s){
-    //마지막까지 다른것이 없을
-    if(w.length() == 0 &amp;&amp; s.length == 0) return 1;
-
-   ... <a href="/algorithm/WILDCARD-DynamicProgramming.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 06 Dec 2020 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
-=======
-    <a href="/http-request.html">node.js로 http request 보내기</a>
-  </h1>
-  
-  <p>
-    개요
-node.js 에 기본 탑재되어있는 http 모듈을 이용해 http.ClientRequest 객체를 생성하고 데이터를 붙여 전송하는 방법을 다룹니다.
-
-  request 생성하기
-  데이터 및 request 전송
-  response 처리
-
-
-node.js 문서를 참고하며 작성했습니다.
-
-1. ClientRequest 생성
-http.request(url[,options][,callback])과 http.request(options[,callback])함수의 반환값을 통해 생성할 수 있습니다.
-
-option파라미터는 헤더, request방식등을 담고 있는 객체이며
-callback은 해당 request에 대한 서버... <a href="/http-request.html">Read more</a>
-    <span class="post-date"><i class="fa fa-calendar" aria-hidden="true"></i> 26 Feb 2021 - <i class="fa fa-clock-o" aria-hidden="true"></i> 
->>>>>>> be624f58b1aa06fed6c329a970a0751843047235
-  
-  
-    1 minute read
   
 
 

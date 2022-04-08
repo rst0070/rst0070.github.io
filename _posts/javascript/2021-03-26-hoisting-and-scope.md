@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: ['javascript']
+categories: ["Javascript"]
 title: '[Javascript] Hoisting과 변수의 유효범위 이해하기: 자바스크립트가 변수를 해석하는 방법'
+lastmod: 2022-04-09
 ---
 이 글에서는 `Hoisting`과 `변수의 유효범위`를 이해함으로써 자바스크립트가 어떻게 변수를 찾는지 알아볼 것이다.  
 

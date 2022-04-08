@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: [css]
+categories: ["FrontEnd"]
 title: "CSS font 속성들과 속기형 작성법"
+lastmod: 2022-04-09
 ---
 CSS에서 font의 특성을 지정하는 속성들과 이를 빠르게 작성할 수 있는
 속기형 작성법에 대해 정리하려 한다.  

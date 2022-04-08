@@ -1,0 +1,14 @@
+I"�<h2 id="사용자-생성하기-create-user">사용자 생성하기: ‘create user’</h2>
+<p>oracle에서 사용자(스키마)를 생성하기 위해선 create user 
+명령을 사용한다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">user</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">name</span><span class="o">&gt;</span>
+<span class="n">identified</span> <span class="k">by</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">password</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="사용자에게-권한-부여하기">사용자에게 권한 부여하기</h2>
+<p>oracle에서 사용자에게 권한을 부여하기 위해선 <code class="language-plaintext highlighter-rouge">grant ... to ...</code>
+명령을 사용한다.</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">grant</span> <span class="o">&lt;</span><span class="err">권한</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="err">권한</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,...</span>
+<span class="k">to</span> <span class="o">&lt;</span><span class="k">user</span> <span class="n">name</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+:ET

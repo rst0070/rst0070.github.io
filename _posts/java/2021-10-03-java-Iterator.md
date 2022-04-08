@@ -1,7 +1,9 @@
 ---
 layout: post
-title: "[Java] Iterator 사용하기"
-tags: [java]
+categories: ["Java"]
+title: "[Java] Iterator 사용법, 구현"
+description: "Java Iterator의 사용법과 이를 이해하기위해 직접 구현을 해보자"
+lastmod: 2022-04-09
 ---
 
 1. Iterator의 의미

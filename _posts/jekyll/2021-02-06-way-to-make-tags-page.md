@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: ['jekyll']
-title: "[GithubPage, Jekyll] tags 페이지 만들기"
+categories: ["Jekyll"]
+title: "[Jekyll] tags 페이지 만들기"
+lastmod: 2022-04-09
 ---
 github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.  
 liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 

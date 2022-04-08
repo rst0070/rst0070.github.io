@@ -1,8 +1,8 @@
 ---
 layout: post
-categories: Oracle
-tags: [oracle, sql]
+categories: ["Oracle"]
 title: "[Oracle] Table 생성과 제약조건 (선언적 무결성 제약조건 추가하기)"
+lastmod: 2022-04-09
 ---
 Oracle에서 Table을 생성하고 제약조건을 추가하는 방법을 공부했다. 
 그 방법을 정리하려 포스팅을 하게 되었다.  

@@ -1,7 +1,8 @@
 ---
 layout: post
-tags: [css]
+categories: ["FrontEnd"]
 title: "[CSS display속성] block, inline, inline-block 알아보기"
+lastmod: 2022-04-09
 ---
 HTML element는 크게 Block element와 Inline element로 나뉜다.  
 이 둘의 특징과 inline-block요소에 대해 알아보자.  

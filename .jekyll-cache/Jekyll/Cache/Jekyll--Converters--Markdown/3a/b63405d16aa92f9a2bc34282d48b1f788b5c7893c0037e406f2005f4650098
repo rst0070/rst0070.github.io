@@ -1,0 +1,73 @@
+I"a,<h2 id="문제-요구사항">문제 요구사항</h2>
+<p><a href="https://www.acmicpc.net/problem/1725">문제 링크</a> 
+<img src="/assets/img/BOJ/1725histogram.png" alt="문제" /> 
+히스토그램에서 밑변과 평행한 가장 큰 직사각형을 그리는것이 문제다.<br />
+이때 직사각형의 높이는 히스토그램의 높이보다 높을 수 없으므로 직사각형이 걸쳐있는 여러개의 막대중 가장 작은 막대의 높이와 같을 것 이다.</p>
+
+<p>직사각형이 어떤 형태를 가져야하는지 알았으니 어떻게 가장 큰 직사각형을 판단할지 정해야한다.</p>
+
+<h3 id="직사각형-구하기">직사각형 구하기</h3>
+<p>직사각형을 분류하자면 아래의 3가지중 하나이다.</p>
+<ol>
+  <li>전체 히스토그램의 가운데에 걸쳐있는 경우</li>
+  <li>히스토그램의 왼쪽 절반에 위치해 있는경우</li>
+  <li>히스토그램의 오른쪽 절반에 위치해 있는경우</li>
+</ol>
+
+<p>이러한 분류를 하면 <code class="language-plaintext highlighter-rouge">왼쪽의 직사각형</code>, <code class="language-plaintext highlighter-rouge">오른쪽의 직사각형</code>, <code class="language-plaintext highlighter-rouge">가운데에 걸친 직사각형</code> 3가지를 각각 구한다음 비교하면된다. 이때, 시간복잡도는 <code class="language-plaintext highlighter-rouge">Nlog(N)</code>인데 N이 크지 않으므로 제한시간안에 풀이가 가능하다.</p>
+
+<p>또, 이 분류의 장점은 전체 문제를 작은 문제로 나눌수 있으며 재귀적인 방법으로 구할 수 있다는것이다.<br />
+재귀적으로 구할 때 주의할 점은 기저사례를 놓치지 않는것인데 나는 이 문제의 기저사례를 막대 하나에 대해서만 직사각형을 구할때로 적용했다.</p>
+<h3 id="소스코드">소스코드</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">히스토그램1725</span> <span class="o">{</span>
+
+    <span class="cm">/**
+     * https://www.acmicpc.net/problem/1725
+     * 
+     * 큰 막대 부터 시작
+     */</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">{</span>
+        <span class="nc">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+        <span class="kt">int</span> <span class="no">N</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+        <span class="n">histogram</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="no">N</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="no">N</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>  <span class="n">histogram</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">find</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="no">N</span> <span class="o">-</span> <span class="mi">1</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[]</span> <span class="n">histogram</span><span class="o">;</span>
+
+    <span class="cm">/**
+     * start부터 end중에 가장 큰 직사각형 구한다.
+     */</span>
+    <span class="kd">static</span> <span class="kt">long</span> <span class="nf">find</span><span class="o">(</span><span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">start</span> <span class="o">==</span> <span class="n">end</span><span class="o">)</span> <span class="k">return</span> <span class="n">histogram</span><span class="o">[</span><span class="n">start</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">end</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+        <span class="c1">//왼쪽</span>
+        <span class="kt">long</span> <span class="n">result</span> <span class="o">=</span> <span class="n">find</span><span class="o">(</span><span class="n">start</span><span class="o">,</span> <span class="n">mid</span><span class="o">);</span>
+        <span class="c1">//오른쪽</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">find</span><span class="o">(</span><span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">end</span><span class="o">));</span>
+
+        <span class="c1">//중간에 걸친(큰 막대에서부터 구하기)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">histogram</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">histogram</span><span class="o">[</span><span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">])</span> <span class="n">mid</span><span class="o">++;</span>
+        <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span> <span class="kt">int</span> <span class="n">e</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">min</span> <span class="o">=</span> <span class="n">histogram</span><span class="o">[</span><span class="n">mid</span><span class="o">];</span><span class="c1">//막대중 최소 높이</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">s</span> <span class="o">&gt;=</span> <span class="n">start</span> <span class="o">&amp;&amp;</span> <span class="n">e</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="o">){</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">min</span> <span class="o">*</span> <span class="o">(</span><span class="n">e</span> <span class="o">-</span> <span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">e</span> <span class="o">==</span> <span class="n">end</span> <span class="o">&amp;&amp;</span> <span class="n">s</span> <span class="o">==</span> <span class="n">start</span><span class="o">)</span> <span class="k">break</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">e</span> <span class="o">==</span> <span class="n">end</span><span class="o">){</span><span class="n">s</span><span class="o">--;</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">histogram</span><span class="o">[</span><span class="n">s</span><span class="o">]);</span><span class="k">continue</span><span class="o">;}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span> <span class="o">==</span> <span class="n">start</span><span class="o">){</span><span class="n">e</span><span class="o">++;</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">histogram</span><span class="o">[</span><span class="n">e</span><span class="o">]);</span><span class="k">continue</span><span class="o">;}</span>
+
+            <span class="c1">//왼쪽, 오른쪽중 더 큰 막대의 방향으로 이동</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">histogram</span><span class="o">[</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">histogram</span><span class="o">[</span><span class="n">e</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]){</span><span class="n">e</span><span class="o">++;</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">histogram</span><span class="o">[</span><span class="n">e</span><span class="o">]);}</span>
+            <span class="k">else</span><span class="o">{</span><span class="n">s</span><span class="o">--;</span> <span class="n">min</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">histogram</span><span class="o">[</span><span class="n">s</span><span class="o">]);}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+:ET
