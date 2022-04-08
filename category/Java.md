@@ -1,5 +1,5 @@
 ---
 layout: category
-categories: "Java"
+categories: ["Java"]
 title: "Java"
 ---

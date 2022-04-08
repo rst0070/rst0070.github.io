@@ -1,5 +1,5 @@
 ---
 layout: category
-categories: "FrontEnd"
+categories: ["FrontEnd"]
 title: "FrontEnd"
 ---

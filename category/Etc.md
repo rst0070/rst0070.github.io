@@ -1,5 +1,5 @@
 ---
 layout: category
-categories: "Etc"
-title: "이것저것"
+categories: ["Etc"]
+title: "Etc"
 ---

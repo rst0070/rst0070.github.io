@@ -1,5 +1,5 @@
 ---
 layout: category
-categories: "Oracle"
+categories: ["Oracle"]
 title: "Oracle"
 ---

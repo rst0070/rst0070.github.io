@@ -1,5 +1,5 @@
 ---
 layout: category
-categories: "Jekyll"
+categories: ["Jekyll"]
 title: "Jekyll"
 ---

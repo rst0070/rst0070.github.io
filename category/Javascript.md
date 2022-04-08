@@ -1,5 +1,5 @@
 ---
 layout: category
-categories : "Javascript"
+categories : ["Javascript"]
 title: "Javascript"
 ---
