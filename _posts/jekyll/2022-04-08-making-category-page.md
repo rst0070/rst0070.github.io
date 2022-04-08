@@ -19,7 +19,7 @@ git은 개발도구이므로 `Tools`와 `Git`카테고리를 만들기로했으�
 
 ## 1. Post에서 카테고리 지정하기, 페이지에 카테고리 표시하기
 ### 1.1 카테고리 지정하기
-이때 [FrontMatter](https://jekyllrb.com/docs/front-matter/)에서 지정할 수 있는 `categories`라는 변수를 이용한다. 
+[FrontMatter](https://jekyllrb.com/docs/front-matter/)에서 지정할 수 있는 `categories`라는 변수를 이용한다. 
 (FrontMatter는 Jekyll에 페이지의 Metadata를 알려주는 역할을 한다.)  
 문자열 혹은 배열의 형태로도 지정이 가능하다.  
 필자는 배열로 카테고리를 지정했으며 배열원소의 순서를 이용해 카테고리의 상하관계를 나타냈다.  
