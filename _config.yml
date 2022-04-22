@@ -19,8 +19,6 @@ highlighter:         rouge
 permalink:           none
 plugins:             [jekyll-paginate, jekyll-sitemap, jekyll-feed, jekyll-seo-tag]
 
-#site.url
-url: https://rst0070.github.io
 # Customise atom feed settings (this is where Jekyll-Feed gets configuration information)
 title:		           'Rst'
 description:	       ''

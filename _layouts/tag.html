@@ -21,7 +21,7 @@
             <ul>
                 {% for post in tag.last %}
                     <li>
-                        <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+                        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
                         <small>{{ post.date | date: "%B %-d, %Y" }}</small>
                     </li>
                 {% endfor %}
