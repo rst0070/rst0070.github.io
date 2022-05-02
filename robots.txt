@@ -1,2 +1,3 @@
 User-agent: *
+Allow: /
 Sitemap: https://rst0070.github.io/sitemap2.xml
