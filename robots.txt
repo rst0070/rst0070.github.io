@@ -1,2 +1,2 @@
 User-agent: *
-Sitemap: https://rst0070.github.io/sitemap.xml
+Sitemap: https://rst0070.github.io/sitemap2.xml
