@@ -1,0 +1,13 @@
+I"�<p><a href="https://www.acmicpc.net/problem/13261">문제 링크</a><br />
+총 L명의 죄수를 G명의 간수가 관리하는 상황에서 위험도의 최솟값을 구하는 문제이다.<br />
+이를 dp로 표현하면</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dp[g][l] : g명의 간수가 l번째 까지의 죄수를 관리할 때 최소 위험도
+cost(i, j) : i번째부터 j번째 까지의 죄수를 한명의 간수가 관리할때 위험도
+dp[g][l] = dp[g-1][k] + cost(k+1, l)
+--&gt; 위를 만족시키는 k를 구하는 문제로 변경시킬 수 있다.
+</code></pre></div></div>
+<p>l이 증가함에 따라 k는 같거나 증가한다. 
+왜냐하면 마지막 cost에 해당하는 죄수들의 명수가 늘어나기 때문에 k가 줄어들면 위험도가 올라간다.</p>
+
+<p>따라서 분할정복을 이용한 동적계획법 최적화를 적용할 수 있다.</p>
+:ET

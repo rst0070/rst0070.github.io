@@ -29,4 +29,4 @@ gem 'jekyll-paginate'
 gem 'jekyll-sitemap'
 gem 'jekyll-seo-tag'
 
-gem 'bundler', '2.2.10'
+gem 'bundler', '2.2.25'

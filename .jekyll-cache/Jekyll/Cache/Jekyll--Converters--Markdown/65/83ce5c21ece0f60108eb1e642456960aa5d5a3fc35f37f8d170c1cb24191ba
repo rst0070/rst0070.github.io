@@ -1,9 +1,0 @@
-I"�<p>Github 블로그 포스팅을 정리하던중 카테고리 페이지의 필요성을 느꼈다.<br />
-<a href="https://jekyllrb.com/docs/variables/">Jekyll Docs</a>에 설명되어있는 변수들을 잘 이용하면 카테고리 페이지를 만들수 있다!</p>
-
-<ol>
-  <li>Post에서 카테고리를 지정, 보여주기</li>
-  <li>카테고리별 페이지 만들기</li>
-  <li>전체 카테고리 리스트를 보여주는 페이지 만들기</li>
-</ol>
-:ET

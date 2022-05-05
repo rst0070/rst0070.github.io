@@ -1,0 +1,15 @@
+I"�<p>이 글은 <a href="https://docs.spring.io/spring-security/reference/servlet/architecture.html">스프링 공식 문서</a>를 보고 작성했습니다.</p>
+
+<p><strong>목차</strong><br />
+<strong>1. <a href="#1-전체-구조">전체 구조</a></strong><br />
+<strong>2. <a href="#2-필터와-필터체인">필터와 필터체인</a></strong><br />
+<strong>3. <a href="#3-delegatingfilterproxy">DelegatingFilterProxy</a></strong><br />
+<strong>4. <a href="#4-filterchainproxy">FilterChainProxy</a></strong>
+<strong>5. <a href="#5-securityfilterchain">SecurityFilterChain</a></strong><br />
+<strong>6. <a href="#6-보안예외-처리">보안예외처리 과정</a></strong></p>
+
+<h2 id="1-전체-구조">1. 전체 구조</h2>
+<hr />
+<p>스프링 시큐리티는 클라이언트의 모든 http요청에 대한 필터링을 통해 보안기능을 제공한다.<br />
+이 글에서는 스프링 시큐리티의 필터링이 어떻게 구성되어있는지 알아보려한다.</p>
+:ET

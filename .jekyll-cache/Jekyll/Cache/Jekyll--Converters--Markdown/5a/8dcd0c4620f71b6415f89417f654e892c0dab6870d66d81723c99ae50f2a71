@@ -1,0 +1,63 @@
+I"60<p><a href="https://www.acmicpc.net/problem/13261">문제 링크</a><br />
+총 L명의 죄수를 G명의 간수가 관리하는 상황에서 위험도의 최솟값을 구하는 문제이다.<br />
+이를 dp로 표현하면</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dp[g][l] : g명의 간수가 l번째 까지의 죄수를 관리할 때 최소 위험도
+cost(i, j) : i번째부터 j번째 까지의 죄수를 한명의 간수가 관리할때 위험도
+dp[g][l] = dp[g-1][k] + cost(k+1, l)
+--&gt; 위를 만족시키는 k를 구하는 문제로 변경시킬 수 있다.
+</code></pre></div></div>
+<p>l이 증가함에 따라 k는 같거나 증가한다. 
+왜냐하면 마지막 cost에 해당하는 죄수들의 명수가 늘어나기 때문에 k가 줄어들면 위험도가 올라간다.</p>
+
+<p>따라서 분할정복을 이용한 동적계획법 최적화를 적용할 수 있다.</p>
+
+<h2 id="소스코드">소스코드</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.io.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">탈옥</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">{</span>
+        <span class="nc">BufferedReader</span> <span class="n">br</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="nc">InputStreamReader</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+        <span class="nc">StringTokenizer</span> <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+        <span class="no">L</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span><span class="c1">//방개수</span>
+        <span class="no">G</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span><span class="c1">//간수 명수</span>
+        <span class="n">sumCost</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="no">L</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="no">G</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="no">L</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span><span class="c1">//[i][j]: i명의 간수가 j번째 죄수까지 관리할때 최소비용</span>
+
+        <span class="n">st</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringTokenizer</span><span class="o">(</span><span class="n">br</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+        <span class="n">sumCost</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">());</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="no">L</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="n">sumCost</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">nextToken</span><span class="o">())</span> <span class="o">+</span> <span class="n">sumCost</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="no">L</span><span class="o">;</span> <span class="n">l</span><span class="o">++)</span>
+            <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="n">l</span><span class="o">]</span> <span class="o">=</span> <span class="n">cost</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">l</span><span class="o">);</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">g</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span> <span class="n">g</span> <span class="o">&lt;=</span> <span class="no">G</span><span class="o">;</span> <span class="n">g</span><span class="o">++)</span>
+            <span class="n">solve</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="no">L</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="no">L</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="no">G</span><span class="o">][</span><span class="no">L</span><span class="o">]);</span>
+    <span class="o">}</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="no">L</span><span class="o">,</span> <span class="no">G</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[]</span> <span class="n">sumCost</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[][]</span> <span class="n">dp</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">long</span> <span class="no">MAX</span> <span class="o">=</span> <span class="mi">8000</span><span class="o">*</span><span class="mi">8000</span><span class="o">*</span><span class="mi">1000_000_000</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">solve</span><span class="o">(</span><span class="kt">int</span> <span class="n">g</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lLow</span><span class="o">,</span> <span class="kt">int</span> <span class="n">lHigh</span><span class="o">,</span> <span class="kt">int</span> <span class="n">kLow</span><span class="o">,</span> <span class="kt">int</span> <span class="n">kHigh</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">lLow</span> <span class="o">&gt;</span> <span class="n">lHigh</span> <span class="o">||</span> <span class="n">kLow</span> <span class="o">&gt;</span> <span class="n">kHigh</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+        
+        <span class="kt">int</span> <span class="n">lMid</span> <span class="o">=</span> <span class="o">(</span><span class="n">lLow</span> <span class="o">+</span> <span class="n">lHigh</span><span class="o">)</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">optK</span> <span class="o">=</span> <span class="n">kLow</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">kLow</span> <span class="o">;</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">kHigh</span><span class="o">,</span> <span class="n">lMid</span><span class="o">);</span> <span class="n">k</span><span class="o">++){</span>
+            <span class="kt">long</span> <span class="n">num</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">g</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">+</span> <span class="n">cost</span><span class="o">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span> <span class="n">lMid</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">kLow</span> <span class="o">||</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="n">dp</span><span class="o">[</span><span class="n">g</span><span class="o">][</span><span class="n">lMid</span><span class="o">]){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">g</span><span class="o">][</span><span class="n">lMid</span><span class="o">]</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+                <span class="n">optK</span> <span class="o">=</span> <span class="n">k</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">solve</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">lLow</span><span class="o">,</span> <span class="n">lMid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">kLow</span><span class="o">,</span> <span class="n">optK</span><span class="o">);</span>
+        <span class="n">solve</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">lMid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">lHigh</span><span class="o">,</span> <span class="n">optK</span><span class="o">,</span> <span class="n">kHigh</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">long</span> <span class="nf">cost</span><span class="o">(</span><span class="kt">int</span> <span class="n">start</span><span class="o">,</span> <span class="kt">int</span> <span class="n">end</span><span class="o">){</span> <span class="k">return</span> <span class="o">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)*(</span><span class="n">sumCost</span><span class="o">[</span><span class="n">end</span><span class="o">]</span> <span class="o">-</span> <span class="n">sumCost</span><span class="o">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]);}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+:ET
