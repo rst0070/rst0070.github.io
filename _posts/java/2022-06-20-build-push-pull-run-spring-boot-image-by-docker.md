@@ -35,6 +35,7 @@ CMD ["java","-jar", "app.jar"]
 2. `target/front-office-0.0.1-SNAPSHOT.jar`파일을 컨테이너의 `/app/app.jar`파일로 복사시킨다. --> 실행파일을 복사시키기
 3. `/app`폴더에서 명령을 실행시킨다.
 4. `java -jar app.kar` 명령을 실행한다. --> 실행파일 실행  
+  
 - - -
 ## 3. 도커 이미지 생성하기
 이제 위에서 만든 Dockerfile을 이용해 이미지를 생성한다.  
