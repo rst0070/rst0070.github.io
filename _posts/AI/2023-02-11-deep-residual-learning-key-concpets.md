@@ -49,15 +49,13 @@ $Y \, = \, F(X, \, {W_i}) \, + \, W_sX \,\,\,(W_s:projection)$
 the input size needs to be changed, and the output is produced by projecting the input.  
   
 __etc__  
-In other studies, it is shown that identity mapping address the vanishing / exploding gradient problem.  
+In other studies, it is shown that identity mapping addresses the vanishing / exploding gradient problem.  
   
 ## 5. Deeper Bottleneck Architecture 
 The right one of below image is an example of bottleneck architecture.  
 ![bottleneck block](/assets/post/AI/deep_residual_learning/bottleneck.png)  
   
 A bottleneck architecture reduces the dimensionality of the input while maintaining that of the output.
-
-The architecture consists of three layers: a 1x1 convolution for reducing dimension, a 3x3 convolution for maintaining dimension, and a final 1x1 convolution for increasing dimension. This architecture is more computationally efficient than a deeper network without a bottleneck.
 
 __why use bottleneck?__  
 By reducing dimensionality of input, number of computation in building block can be decreased, and less computation leads to time efficiency.  
