@@ -18,7 +18,7 @@ __k means algorithm__
 5. 3, 4를 변화가 없을때까지 반복한다.
   
 아래 그림은 위키피디아에서 설명하는 k means algorithm이다.  
-![algorithm](assets/post/AI/k_means_clustering/algorithm.PNG)
+![algorithm](/assets/post/AI/k_means_clustering/algorithm.PNG)
 
 ## 2. R로 K-means 적용해보기
 R에선 `kmeans()`라는 함수를 제공한다. 이를 통해서 k-means를 적용할 수 있다.  
@@ -41,4 +41,4 @@ R에선 `kmeans()`라는 함수를 제공한다. 이를 통해서 k-means를 적
 > plot(data, col=clr, pch=shape)  # 분리한 데이터를 kmean로 구한 특징을 입혀 표현한다.
 ```
 
-![plot](assets/post/AI/k_means_clustering/plot.PNG)
+![plot](/assets/post/AI/k_means_clustering/plot.PNG)
