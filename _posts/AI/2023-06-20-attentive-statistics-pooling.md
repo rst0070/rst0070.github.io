@@ -36,7 +36,7 @@ These two values are aggregated frame level feature in ASP.
 ## Example code of ASP
 I built an ASP block in pytorch. 
 Commonly batch normalization is also used for getting attention weights. 
-```Python
+```python
 import torch
 import torch.nn as nn
 
