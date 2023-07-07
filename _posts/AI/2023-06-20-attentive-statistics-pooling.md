@@ -22,7 +22,7 @@ $$
 e_t = v^T f(W h_t + b) + k, \\
 \alpha_t = \frac{e^{e_t}}{\sum e^{e_k}}
 $$
-a scalar score $e_t$ of each frame $h_t$ is calculated by linear combination -> non-linear activation -> linear combination. 
+a scalar score $e_t$ of each frame $h_t$ is calculated by affine transformation -> non-linear activation -> affine transformation. 
 The normalization process is softmax. 
 
 ## 3. Applying Weights
