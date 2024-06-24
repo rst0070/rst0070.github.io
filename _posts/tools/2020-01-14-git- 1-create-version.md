@@ -1,6 +1,6 @@
 ---
 layout: post
-categories: ["Tools", "Git"]
+categories: ["Tools"]
 title: "[Git] 1. 버전관리의 개요와 버전관리 시작하기"
 lastmod: 2022-04-09
 ---
