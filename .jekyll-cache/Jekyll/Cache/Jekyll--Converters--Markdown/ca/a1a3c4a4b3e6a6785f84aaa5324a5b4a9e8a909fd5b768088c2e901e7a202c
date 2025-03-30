@@ -1,9 +1,0 @@
-I"n<p><a href="https://www.acmicpc.net/problem/1916">문제링크</a><br />
-이 문제에서는 N개의 정점과 M개의 음이아닌 가중치를 가지는 간선을 준다. 
-이때 특정 정점사이로 이동하는 최소 가중치의 합을 구해야한다.</p>
-
-<h2 id="소스코드">소스코드</h2>
-<p>```java
-import java.io.<em>;
-import java.util.</em>;</p>
-:ET

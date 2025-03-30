@@ -1,6 +1,0 @@
-I"<h2 id="문제">문제</h2>
-<p><a href="//https://algospot.com/judge/problem/read/WILDCARD">링크</a><br />
-링크에 설명돼 있는것 같이 와일드카드는 다양한 이름의 파일을 *와 ?를 이용해서 표현한 문자열이다. 
-와일드카드와 맞는 문자열들을 골라내는것이 이 문제의 핵심이다.<br />
-어려운점은 <code class="language-plaintext highlighter-rouge">*</code>와 문자열을 비교하는 것이다. 무수하게 많은 경우의 수가 발생 할 수 있기 때문이다.</p>
-:ET

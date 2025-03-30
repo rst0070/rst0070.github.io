@@ -1,4 +1,0 @@
-I"]<p>github page 블로그(jekyll)에 tag 페이지를 추가하는 방법을 정리했다.<br />
-liquid언어로 페이지를 만드는 것이기 때문에 방법은 여러가지가 있으며 
-나는 <a href="https://jekyllrb-ko.github.io/docs/variables/">지킬 홈페이지</a>에 정의된 변수들을 사용하여 페이지를 만들었다.</p>
-:ET
