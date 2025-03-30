@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "[Review] LongMemEval"
+date: 2025-03-29
 ---  
 - [paper](https://arxiv.org/pdf/2410.10813)  
 - [openreview](https://openreview.net/forum?id=pZiyCaVuti)  
@@ -26,10 +27,10 @@ __Index__
 
 ## 1. Structure of Evaluation Dataset  
 Each item of Evaluation Dataset, or a problem, is structured like below:  
-$$
+```math
 problem\,=\,(\textbf{S},q, t_q, a) \\
 \textbf{S} = [(t_1, S_1), (t_2, S_2), ..., (t_N, S_N)]
-$$  
+```  
 - $S_i$: multi-turn interaction between user and ai-assistant
 - $q$: question
 - $a$: answer

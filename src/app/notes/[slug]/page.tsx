@@ -1,6 +1,8 @@
 import {Note, NoteMetadata} from '@/core/entities';
 import { findAllNoteSlugs, findNoteBySlug } from '@/infra/note';
 import { NoteMdx } from './components';
+import { Metadata } from 'next';
+
 
 export default async function Page(
   {params,}: {params: Promise<{ slug: string }>}
@@ -9,9 +11,9 @@ export default async function Page(
   const note = findNoteBySlug(slug)
 
   return (
-    <div>
+    <>
       <NoteMdx note={note} />
-    </div>
+    </>
   )
 }
 
@@ -20,4 +22,11 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }
 
-export const dynamicParams = false
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const note = findNoteBySlug(slug)
+  return {
+    title: note.metadata.title,
+    description: note.metadata.description,
+  }
+}

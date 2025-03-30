@@ -2,6 +2,8 @@
 export type NoteMetadata = {
     title: string
     date: string
+    lastmod: string
+    description: string
     tags: string
 }
 

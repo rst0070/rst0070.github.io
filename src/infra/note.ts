@@ -17,7 +17,7 @@ function findAllNotePaths(): string[] {
         ).filter(
             (note) => note.isFile() && note.name.endsWith('.md')
         )
-        
+
     return notePaths.map(
         note => path.join(
             note.parentPath, note.name
@@ -72,7 +72,7 @@ function parseNoteRawData(noteRawData: string): {metadata: NoteMetadata, content
         let [key, ...valueArr] = line.split(': ')
         let value = valueArr.join(': ').trim()
         value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-        metadata[key.trim() as keyof NoteMetadata] = value
+        metadata[key.trim() as keyof NoteMetadata] = String(value)
     })
 
     return { metadata: metadata as NoteMetadata, content }
