@@ -1,8 +1,9 @@
 ---
 layout: post
-title: "[Review] LongMemEval"
+title: "How to evaluate memory of AI assistant? (editing)"
 date: 2025-03-29
 ---  
+{"<<<>>>"}
 - [paper](https://arxiv.org/pdf/2410.10813)  
 - [openreview](https://openreview.net/forum?id=pZiyCaVuti)  
 ## 0. Overview  
