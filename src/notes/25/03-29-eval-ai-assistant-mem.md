@@ -3,7 +3,7 @@ layout: post
 title: "How to evaluate memory of AI assistant? (editing)"
 date: 2025-03-29
 ---  
-{"<<<>>>"}
+<<<>>>
 - [paper](https://arxiv.org/pdf/2410.10813)  
 - [openreview](https://openreview.net/forum?id=pZiyCaVuti)  
 ## 0. Overview  
@@ -13,7 +13,7 @@ The contribution of the research could be divided into two parts:
 - Suggestion of design of long term memory, and Experiments on it  
   
 Before getting started, lets check what values are of long-term memory, refered to the research.  
-- _Information Extraction_
+- __Information Extraction__
 - _Multi-serssion Reasoning_
 - _Knowledge Updates_
 - _Temporal Reasoning_
@@ -28,14 +28,15 @@ __Index__
 
 ## 1. Structure of Evaluation Dataset  
 Each item of Evaluation Dataset, or a problem, is structured like below:  
-```math
+$$
 problem\,=\,(\textbf{S},q, t_q, a) \\
 \textbf{S} = [(t_1, S_1), (t_2, S_2), ..., (t_N, S_N)]
-```  
+$$  
+
 - $S_i$: multi-turn interaction between user and ai-assistant
 - $q$: question
 - $a$: answer
-- $t_q$: timestamp of QA session ($t_q > t_N$)  
+- $t_q$: timestamp of QA session ( $t_q > t_N$ )  
   
 The answer is desired from answer and user's interaction history.  
 
