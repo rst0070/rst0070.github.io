@@ -3,7 +3,6 @@ import Link from "next/link"
 
 export function NoteList() {
   const notes = findAllNotes().sort((a, b) => {
-    console.log(a.metadata.date, b.metadata.date)
     if (a.metadata.date && b.metadata.date) {
       return b.metadata.date.localeCompare(a.metadata.date)
     }

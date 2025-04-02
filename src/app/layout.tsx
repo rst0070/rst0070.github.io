@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header, Footer } from "./components";
+import Script from "next/script";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,25 +30,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-        <script>{`
-            if (typeof mermaid !== 'undefined') {
-              mermaid.initialize({
-                startOnLoad: true,
-                theme: 'neutral',
-                // Add more configuration options as needed
-              });
-            }
-          `}</script>
-      </head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" />
+        <Script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" 
+        />
+        </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
         <main>
           {children}
         </main>
         <Footer />
+        <Script id="hljs-init" strategy="lazyOnload">
+          {`
+            hljs.highlightAll();
+          `}
+        </Script>
       </body>
     </html>
   );
