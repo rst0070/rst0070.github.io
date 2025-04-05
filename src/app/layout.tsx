@@ -31,9 +31,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" />
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" 
-        />
         </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Header />
@@ -41,11 +38,6 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <Script id="hljs-init" strategy="lazyOnload">
-          {`
-            hljs.highlightAll();
-          `}
-        </Script>
       </body>
     </html>
   );
