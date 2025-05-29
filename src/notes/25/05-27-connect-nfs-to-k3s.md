@@ -15,6 +15,10 @@ and I watched [youtube video](https://youtu.be/0swOh5C3OVM?si=ZftjC_XU3d14vv69) 
   
 # 1. Set up nfs server in _iptime nas_  
 [ref](https://shonm.tistory.com/766)  
+```bash
+/opt/sbin/portmap
+/opt/sbin/unfsd -e /opt/etc/exports 
+```
 
 # 2. Concept of volumes in kubernetes
 ```mermaid
@@ -58,6 +62,7 @@ helm repo add csi-driver-nfs https://raw.githubusercontent.com/kubernetes-csi/cs
 
   
 nfs storage class
+checkout parameters for the provisioner [here](https://github.com/kubernetes-csi/csi-driver-nfs/blob/master/docs/driver-parameters.md)  
 ```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -69,4 +74,44 @@ parameters:
   path: /share
   readOnly: "false"
 
+```
+
+3. ERRORRRRRRR
+I got following at the first time:  
+```bash
+Warning  ProvisioningFailed    1s                 nfs.csi.k8s.io_agent-00_b97d6068-d50e-4296-b946-78e305338f70  failed to provision volume with StorageClass "iptime-nas-nfs": rpc error: code = Internal desc = failed to mount nfs server: rpc error: code = Internal desc = mount failed: exit status 32
+```
+and found stackoverflow [post](https://stackoverflow.com/questions/34113569/kubernetes-nfs-volume-mount-fail-with-exit-status-32).
+Need to install `nfs-common` to every k3s node.  
+
+# 4. Change default storage class
+Usually if you don't specifiy storage class to be used in a persistent volume claim, it uses default storage class. 
+In my case, it was like follows:  
+  
+```bash
+rst@Wonbinui-MacBookPro ~ % kubectl get storageclass
+NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+iptime-nas-nfs         nfs.csi.k8s.io          Delete          Immediate              false                  3h45m
+local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false  
+```
+
+I changed the default storage class because its hard find all helm chart's pvc.  
+  
+The first thing we need to do is marking default storage class as non-default. 
+In my case, It would be like
+```bash
+kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+```  
+  
+The second thing is marking the storage class you want as default storage class
+```bash
+kubectl patch storageclass iptime-nas-nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+Now you can see like
+```bash
+rst@Wonbinui-MacBookPro ~ % kubectl get storageclass  
+NAME                       PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+iptime-nas-nfs (default)   nfs.csi.k8s.io          Delete          Immediate              false                  3h49m
+local-path                 rancher.io/local-path   Delete          WaitForFirstConsumer   false                  13d
 ```
