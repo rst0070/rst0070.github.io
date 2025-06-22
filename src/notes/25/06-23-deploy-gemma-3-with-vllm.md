@@ -86,7 +86,7 @@ So I copied following jinja template and applied in the `command` setting in doc
 
     {#- Insert system message content (if present) at the beginning of the first message. -#}
     {%- if loop.first -%}
-        {#- modified to not insert first_user_prefix -#}
+        {{ first_user_prefix }}
         {#- Append system message with tool information if using tools in message request. -#}
         {%- if tools is not none -%}
             {{- "Tools (functions) are available. If you decide to invoke one or more of the tools, you must respond with a python list of the function calls.\n" -}}
@@ -169,4 +169,59 @@ So I copied following jinja template and applied in the `command` setting in doc
 {%- if add_generation_prompt -%}
     {{'<start_of_turn>model\n'}}
 {%- endif -%}
+```
+  
+
+# Example of usuage
+```python
+from litellm import Router
+
+router = Router(
+    model_list = [
+        {
+            "model_name": "rst0070/gemma-3-4b-it",
+            "litellm_params": {
+                "model": "hosted_vllm/google/gemma-3-4b-it",
+                "api_base": "http://vllm-api/v1"
+            },
+            "model_info": {
+                "supports_function_calling": True,
+                "base_model": "google/gemma-3-4b-it"
+            }
+        }
+    ]
+)
+
+messages = [
+    {"role": "system", "content": "You have to choose at least one tool to run based on user's request."},
+    {"role": "user", "content": "What's the weather like in San Francisco, Tokyo, and Paris?"}
+]
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA",
+                    },
+                    "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                },
+                "required": ["location"],
+            },
+        },
+    }
+]
+
+response = router.completion(
+    model="rst0070/gemma-3-4b-it",
+    messages=messages,
+    tools=tools,
+    tool_choice="required",  # auto 
+)
 ```
