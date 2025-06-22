@@ -15,7 +15,7 @@ function findAllNotePaths(): string[] {
                 withFileTypes: true
             }
         ).filter(
-            (note) => note.isFile() && note.name.endsWith('.md')
+            (note) => note.isFile() && note.name.endsWith('.md') && !note.name.startsWith('_')
         )
 
     return notePaths.map(
