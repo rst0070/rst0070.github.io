@@ -1,6 +1,7 @@
 ---
 title: Deploy Airflow Helm Chart
 date: 2025-06-24
+lastmod: 2025-07-01
 ---
 
 This note is about how I deployed airflow helm chart on home k3s cluster.  
@@ -59,6 +60,8 @@ The important things is that it should include all text(like "--- begin ...").
   
 To set values, you can following settings:
 ```yaml
+executor: "KubernetesExecutor"
+
 scheduler:
   extraVolumes:
     - name: git-sync-ssh-key
