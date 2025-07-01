@@ -1,6 +1,7 @@
 ---
 title: "Connect nfs to k3s cluster"
 date: 2025-05-27
+lastmod: 2025-07-01
 ---
 I tried to connect nfs, which is provided by nas, to k3s cluster, and now I'm going to note of that journey.  
   
@@ -15,9 +16,45 @@ and I watched [youtube video](https://youtu.be/0swOh5C3OVM?si=ZftjC_XU3d14vv69) 
   
 # 1. Set up nfs server in _iptime nas_  
 [ref](https://shonm.tistory.com/766)  
+
+## Install ipkg
 ```bash
-/opt/sbin/portmap
-/opt/sbin/unfsd -e /opt/etc/exports 
+test -e /opt && mv /opt /opt.bak 
+mkdir -p /big-disk/opt && ln -sf /big-disk/opt /opt 
+wget http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/cross/unstable/ipkg-opt_0.99.163-10_arm.ipk 
+tar -xOvzf ipkg-opt_0.99.163-10_arm.ipk ./data.tar.gz | tar -C / -xzvf - 
+mkdir -p /opt/etc/ipkg 
+echo "src cross http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/cross/unstable" > /opt/etc/ipkg/armel-feed.conf 
+echo "src native http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/native/unstable" >> /opt/etc/ipkg/armel-feed.conf
+```
+
+## Install packages
+```bash
+ipkg install portmap
+ipkg install unfs3
+```
+
+## Configuration file
+I made configuration file `/etc/nfs.conf`, which contains following content.
+```
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.100(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.101(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.102(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.110(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.111(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.112(rw,sync,no_root_squash,async)
+/mnt/HDD1/Home.abc/k3s-nfs 192.168.0.113(rw,sync,no_root_squash,async)
+```
+
+## Run the nfs server
+```bash
+portmap
+unfsd -e /etc/nfs.conf
+```
+
+## Check
+```bash
+showmount -e <nfs-server-ip>
 ```
 
 # 2. Concept of volumes in kubernetes
