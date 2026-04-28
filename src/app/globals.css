@@ -1,15 +1,19 @@
 @import "tailwindcss";
-@import url("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css");
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --code-bg: #f5f5f5;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --code-bg: #1f1f1f;
+  }
+  html {
+    color-scheme: dark;
   }
 }
 
@@ -27,24 +31,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-header {
-  padding: 20px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-footer {
-  padding: 20px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
+header,
+footer,
 main {
   padding: 20px;
   max-width: 800px;
-  
   margin-left: auto;
   margin-right: auto;
 }
@@ -53,10 +44,11 @@ code,
 pre {
   font-family: "Source Code Pro", monospace !important;
 }
+
 code {
   padding: .25em .5em;
   font-size: .8rem;
-  background-color: #f5f5f5;
+  background-color: var(--code-bg);
   border-radius: 3px;
 }
 
@@ -67,11 +59,9 @@ pre {
   padding: 1rem;
   font-size: .8rem;
   line-height: 1.4;
-  white-space: pre;
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
-  background-color: #f5f5f5;
+  overflow-x: auto;
+  border-radius: 6px;
+  background-color: var(--code-bg);
 }
 
 pre code {
@@ -79,61 +69,27 @@ pre code {
   font-size: 100%;
   color: inherit;
   background-color: transparent;
+  border-radius: 0;
 }
 
-pre.highlight {
-  white-space: pre;
-  overflow-x: auto;
+/* Shiki dual-theme: light by default, swap to dark via prefers-color-scheme */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
 }
-
-/* * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-} */
-
-/* a {
-  color: inherit;
-  text-decoration: none;
-} */
 
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+  .shiki,
+  .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
   }
 }
-
-/*/////*/
-
-@import 'tailwindcss';
 
 ::selection {
   background-color: #47a3f3;
   color: #fefefe;
-}
-
-:root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-string: #007f7a;
-  --sh-keyword: #e02518;
-  --sh-comment: #a19595;
-  --sh-jsxliterals: #6266d1;
-  --sh-property: #e25a1c;
-  --sh-entity: #e25a1c;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
-  }
-  html {
-    color-scheme: dark;
-  }
 }
 
 html {
@@ -166,7 +122,6 @@ html {
 .prose *:hover > .anchor {
   @apply visible;
 }
-
 
 .prose img {
   /* Don't apply styles to next/image */
@@ -209,15 +164,6 @@ html {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
   margin-bottom: 1.25em !important;
-}
-
-pre::-webkit-scrollbar {
-  display: none;
-}
-
-pre {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }
 
 /* Remove Safari input shadow on mobile */
