@@ -12,7 +12,7 @@
     "@tailwindcss/postcss": "^4.0.17",
     "@types/showdown": "^2.0.6",
     "next": "16.1.5",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "showdown": "^2.1.0",
