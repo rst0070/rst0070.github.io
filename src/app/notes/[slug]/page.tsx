@@ -1,6 +1,8 @@
 import { findAllNoteSlugs, findNoteBySlug } from '@/infra/note';
 import { NoteMdx } from './components/note';
 import { ClientScripts } from './components/scripts';
+import { CopyButtons } from './components/copy-buttons';
+import { ReadingProgress } from './components/reading-progress';
 import { Metadata } from 'next';
 
 export default async function Page(
@@ -11,8 +13,10 @@ export default async function Page(
 
   return (
     <>
+      <ReadingProgress />
       <NoteMdx note={note} />
       <ClientScripts />
+      <CopyButtons />
     </>
   )
 }
