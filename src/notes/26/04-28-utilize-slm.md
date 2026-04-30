@@ -2,9 +2,9 @@
 title: What a 0.8B Model Can't Do (and What It Actually Can)
 date: 2026-04-28
 ---
-What happens when you try to build a knowledge management system on a phone, with no cloud, using a model that fits in 500MB of RAM? You learn — mostly through failure — what small language models are actually good at.
+[OffNote AI](https://apps.apple.com/us/app/offnote-ai/id6762131607) is a knowledge app that runs entirely on-device — no cloud, no API calls. When a user saves a memo, the app extracts searchable knowledge so a chat feature can answer questions about it later (RAG).
 
-This is a record of five attempts to extract structured knowledge from personal memos using Qwen 3.5 0.8B (Q4), running fully on-device in a React Native app called OffNote AI. The goal was simple: when a user saves a memo, extract searchable knowledge so a chat feature can answer questions about it later (RAG). The journey to get there was not simple at all.
+This is a record of five attempts to do that extraction with Qwen 3.5 0.8B (Q4), and what the model can and can't handle.
 
 # The Constraint
 
@@ -13,13 +13,13 @@ This is a record of five attempts to extract structured knowledge from personal 
 - **Context window:** 2048 tokens
 - **No cloud fallback.** Everything runs locally.
 
-Anyone who works with LLMs will read that spec and think "that model is too small for NLP extraction." They're partially right. The question is: _which_ extraction task is too hard, and which one isn't?
+A 0.8B model sounds too small for NLP extraction. The real question is _which_ extraction tasks fail — and which ones don't.
 
 # Attempt 1: Knowledge Graph with JSON Schema
 
-The textbook approach. Extract entities (people, places, organizations) and relations (founded, works_at, located_in), output as structured JSON. This is what every knowledge graph paper does.
+**Goal:** The standard knowledge-graph approach. Extract entities (people, places, organizations) and relations (founded, works_at, located_in) as structured JSON, using GBNF grammar-constrained decoding to guarantee valid output.
 
-I used a system message with the instruction and one example, and a user message with the memo text. The entity extraction prompt looked like this:
+**Prompt** (with GBNF constraint, `temperature: 0`):
 
 ```
 System:
@@ -38,32 +38,29 @@ User:
 <memo text>
 ```
 
-The output had to be wrapped in an object (`{"entities": [...]}`) because the GBNF grammar constraint requires the top level to be a JSON object — you can't start with a bare array. The relation extraction followed the same pattern: `{"relations": [{"source": ..., "target": ..., "label": ...}]}`.
+The output had to be wrapped in `{"entities": [...]}` because GBNF requires the top level to be a JSON object — bare arrays aren't allowed. Relation extraction followed the same shape: `{"relations": [{"source": ..., "target": ..., "label": ...}]}`.
 
-I used grammar-constrained decoding (GBNF via llama.cpp) to force valid JSON output, with `temperature: 0`. In theory, this guarantees well-formed output. In practice, it destroyed the model.
+**Result:** Empty arrays, repeated tokens, degenerate output. Worked only on trivially simple sentences like "Steve Jobs founded Apple."
 
-**What went wrong:**
+**Why it failed:**
 
-Grammar constraints mask out large portions of the vocabulary at each decoding step. A 0.8B model's probability distribution is already less peaked than larger models — constraining it further pushes the model into low-confidence token paths. The result: empty arrays, repeated tokens, degenerate output.
-
-The `enum` constraint on entity types was especially brutal. The model might internally associate a concept with "place," but the grammar forces it to choose from exactly 9 string literals. If the probability mass for the grammar-valid token is near zero, generation stalls. And the nesting depth — object wrapping an array of objects, each with an enum field — made it even worse.
-
-Beyond formatting, the task itself was too compound for one pass. The model had to simultaneously:
-
-- Understand the text
-- Identify entities across 9 categories
-- Generate syntactically valid nested JSON (`{entities: [{name, type}, ...]}`)
-- Maintain coherent output across many tokens
-
-Each of these is feasible alone for a 0.8B model. Combined, they exceed its capacity.
-
-**Result:** Empty or garbage output on most inputs. Occasionally worked on trivially simple sentences like "Steve Jobs founded Apple."
+- Grammar constraints mask out large portions of the vocabulary at each decoding step. A 0.8B model's distribution is already less peaked than larger models — constraining it further pushes the model into low-confidence token paths.
+- The 9-value `enum` constraint on entity types is too tight. If the model internally associates a concept with "place" but the grammar forces one of 9 fixed strings, generation stalls.
+- The task itself is too compound for one pass: understand text + classify into 9 categories + generate nested JSON + maintain coherence over many tokens. Each is feasible alone for a 0.8B model. Combined, they exceed its capacity.
 
 # Attempt 2: Simplified Knowledge Graph (Drop Schema, Drop Types)
 
-The first insight: drop the JSON schema constraint entirely and simplify the output format.
+**Goal:** Drop the GBNF constraint and entity types. Switch to plain JSON arrays parsed from free text. Two separate LLM calls — one for entities, one for relations.
 
-Instead of asking for typed entities as nested JSON objects, I asked for just a flat list of names — a single LLM call, no entity types, no grammar constraint:
+Shared changes from Attempt 1:
+
+- No GBNF — parse the free-text output with a regex finding `[...]`
+- Text-first, instruction-after (small models have strong recency bias)
+- `/no_think` suffix to suppress Qwen 3.5's `<think>` blocks
+
+## Call 1 — Entity extraction
+
+**Prompt:**
 
 ```
 "{memo_text}"
@@ -72,16 +69,15 @@ List all important people, places, organizations, and things mentioned above.
 Output JSON: ["name1", "name2"] /no_think
 ```
 
-The key changes from v1:
+Flat names only — `["Apple", "Steve Jobs", "Cupertino"]` instead of typed objects. A post-hoc source-text validation rejects any extracted name not present in the original memo, catching hallucinations cheaply.
 
-- No GBNF grammar constraint — just parse the free-text output with a regex to find `[...]`
-- No entity types — all entities are just names. `["Apple", "Steve Jobs", "Cupertino"]` instead of `[{"name": "Apple", "type": "organization"}, ...]`
-- Text-first, instruction-after prompt pattern (small models have strong recency bias)
-- `/no_think` suffix to suppress Qwen 3.5's `<think>` blocks (plus `stripThinkingTags` as a fallback)
-- `stop: ["]"]` to help terminate output cleanly
-- Source-text validation: every extracted name must appear in the original text (catches hallucinations cheaply)
+**Result:** Worked. Flat `["name"]` arrays were within the model's capacity.
 
-For relations, I split text into sentences and asked about one entity pair at a time:
+## Call 2 — Relation extraction
+
+Split the memo into sentences, then ask about one entity pair at a time.
+
+**Prompt:**
 
 ```
 "{sentence}"
@@ -91,19 +87,11 @@ Output JSON: ["verb1", "verb2"]
 If unrelated, output: [] /no_think
 ```
 
-**What improved:**
+**Result:** Noisy and inconsistent. Per-sentence, per-pair extraction produced 10-20 LLM calls per memo — each individually okay, collectively unreliable.
 
-- Entity extraction started working — the flat `["name"]` format was far more reliable than nested objects with enum types
-- Source-text validation caught hallucinated entities cheaply
-- Simple JSON arrays (`["string", "string"]`) were within the model's capacity
+## Why it still wasn't enough
 
-**What still didn't work:**
-
-- Relations were noisy and inconsistent — per-sentence, per-pair extraction produced many LLM calls with unreliable results
-- The pipeline produced 10-20 LLM calls per memo, each individually okay but collectively unreliable
-- The whole pipeline — entities, relations, graph structure — was still a _structured_ task
-
-And here's the deeper problem I hadn't considered: **even if extraction were perfect, the RAG side would fail.** A 0.8B model can't reason over `Steve Jobs --[founded]--> Apple --[located_in]--> Cupertino` in a system prompt. It needs plain text it can simply read.
+The pipeline as a whole — entities, relations, graph structure — was still a _structured_ task. And there's a deeper problem: **even if extraction were perfect, the RAG side would fail.** A 0.8B model can't reason over `Steve Jobs --[founded]--> Apple --[located_in]--> Cupertino` in a system prompt. It needs plain text it can simply read.
 
 The structure was the problem on both ends.
 
@@ -135,7 +123,9 @@ The moment I saw the output, I knew this was the right direction.
 
 # Attempt 3: Per-Sentence Fact Extraction (Naive)
 
-First implementation: split the memo into sentences, make one LLM call per sentence. No system message. No few-shot examples. Zero-shot with language detection:
+**Goal:** Pivot to fact extraction (a rephrasing task, not a classification task). Split the memo into sentences, one LLM call per sentence. Zero-shot, no system message, no examples.
+
+**Prompt:**
 
 ```
 Break following text into simple facts. Respond in {language}.
@@ -144,17 +134,20 @@ Output JSON: ["fact1", "fact2"]
 text: "{sentence}" /no_think
 ```
 
-Short and clean. The model produced JSON arrays, the format was working.
+**Result:** The format worked — the model reliably produced JSON arrays. But the _content_ was wrong: hallucinated facts not present in the source. A sentence about "lunch at my desk" might produce a fact about "the user prefers eating alone" — a reasonable inference, but not what was written.
 
-**What went wrong: hallucination.**
+**Why it failed:**
 
-Without grounding, the model would invent facts not present in the source text. A sentence about "lunch at my desk" might produce a fact about "the user prefers eating alone" — a reasonable inference, but not what was written. For a knowledge base, we need extraction, not interpretation.
+- No grounding: nothing forced the model to stay close to the source. It interpreted instead of extracted.
+- No few-shot examples: the model had no concrete target for what "a fact" should look like. Sometimes it over-decomposed, sometimes under-decomposed, sometimes added interpretation.
 
-Without few-shot examples, the output quality was also inconsistent. The model didn't have a clear target for what "a fact" should look like — sometimes it would over-decompose, sometimes under-decompose, sometimes add interpretation.
+For a knowledge base, we need extraction, not interpretation.
 
 # Attempt 4: LLM-as-Judge
 
-The obvious fix for hallucination: add a verification layer. After extracting facts from each sentence, send all candidate facts back to the model along with the source text and ask it to filter:
+**Goal:** Add a verification layer to fix hallucinations. After extracting facts from each sentence, send all candidates back to the model with the source text and ask it to filter — "agentic reflection," generate then review.
+
+**Prompt:**
 
 ````
 Keep only facts that are directly supported by the source. Drop any fact that adds
@@ -165,7 +158,7 @@ Output JSON array of kept facts: ["fact1", "fact2"]
 Source:
 ```text
 {source sentence}
-````
+```
 
 Candidate facts:
 
@@ -177,13 +170,13 @@ Candidate facts:
 
 ````
 
-The idea was "agentic reflection" — the model generates, then the model reviews. I even built a fail-open safety mechanism: if the verification call returns nothing, keep the originals (so a broken judge doesn't make things worse than no judge).
+A fail-open safety mechanism kept the originals if the judge returned nothing — so a broken judge couldn't make things worse than no judge.
 
-**The judge was stupid too.**
+**Result:** The judge was no better than the extractor. It passed hallucinated facts through, occasionally dropped valid ones, and sometimes "rewrote" facts in a way that introduced _new_ hallucinations. Often it just returned the input list unchanged.
 
-A 0.8B model can't reliably meta-reason about its own outputs. It would pass hallucinated facts through, occasionally drop valid ones, and sometimes "rewrite" facts in a way that introduced *new* hallucinations. The batch verification format — sending all facts at once — was also too complex for the model to handle reliably. It would often just parrot back the input list unchanged.
+**Why it failed:**
 
-The "just add a judge" pattern that works with GPT-4 class models doesn't transfer to sub-1B models. The judge needs to be *smarter* than the extractor, and at 0.8B, you don't have that headroom.
+The "just add a judge" pattern assumes the judge is _smarter_ than the generator. At 0.8B, it isn't — there isn't enough capacity. A 0.8B model can't reliably meta-reason about its own outputs, and the batch verification format (multiple facts plus a source block in one prompt) was too complex for it to handle.
 
 ## Attempt 5: What Actually Works
 
@@ -196,7 +189,7 @@ Instead of per-sentence (too little context) or full-document (too much), I use 
 ```typescript
 const WINDOW_SIZE = 3;
 const WINDOW_OVERLAP = 1;
-````
+```
 
 This gives the model enough surrounding context to understand references and implicit subjects, without overwhelming its 2048-token context.
 
@@ -206,17 +199,17 @@ Two concrete examples in the prompt, showing exactly what input/output looks lik
 
 ```
 Example 1:
-Text: "I met Sarah at the cafe on Tuesday. She's starting a new job at Acme next month."
-Facts: ["The user met Sarah at a cafe on Tuesday", "Sarah is starting a new job at Acme next month"]
+Text: "I met Emma at the cafe on Tuesday. She's starting a new job at Acme next month."
+Facts: ["The user met Emma at a cafe on Tuesday", "Emma is starting a new job at Acme next month"]
 
 Example 2:
 Text: "Finished reading Dune. Thought the middle dragged but the ending was great."
 Facts: ["The user finished reading Dune", "The user thought the middle of Dune dragged", "The user thought the ending of Dune was great"]
 ```
 
-For Korean memos, a parallel set of Korean examples is used. Language detection picks the right set.
+Parallel example sets exist for Korean and Traditional Chinese; language detection picks the right one.
 
-Few-shot is non-negotiable for small models. Zero-shot works for GPT-4. At 0.8B, the model needs to see exactly what you want.
+Few-shot mattered far more than I expected. Zero-shot prompting worked fine in my earlier testing with larger models, but at 0.8B the output quality dropped without two concrete examples.
 
 ## Deterministic Grounding Filter
 
@@ -260,6 +253,8 @@ Text: "{window}"
 Facts:
 ```
 
+One more trick: the assistant turn is prefilled with `<think></think>` before generation starts. Qwen 3.5 sees the thinking phase as already complete and goes straight to the JSON output — no reasoning tokens generated, no time wasted. This is more reliable than `/no_think` instructions because it works at the chat-template level instead of asking the model to follow a directive.
+
 ## Pipeline
 
 ```
@@ -267,7 +262,7 @@ Memo text
   → split into sentences
   → build sliding windows (3 sentences, 1 overlap)
   → for each window: LLM extracts facts as JSON array
-  → strip <think> tags (Qwen 3.5 thinking mode)
+    (assistant turn prefilled with <think></think> to skip reasoning)
   → parse JSON array
   → filter: isGrounded(fact, window) ≥ 50% token overlap
   → deduplicate (case-insensitive)
@@ -278,34 +273,34 @@ For a typical memo (~200 words, 5-10 sentences), this produces 3-4 windows and 5
 
 # What I Learned
 
-**1. Design the task to match the model, not the other way around.**
+This is what worked for OffNote AI on one model. I'm still experimenting, and I'd expect some of these calls to shift as the product evolves.
 
-Knowledge graph extraction is a structured classification task. Fact extraction is a rephrasing task. A 0.8B model can rephrase. It cannot classify entities into 9 types while generating valid nested JSON.
+**1. Designing the task to fit the model worked better than fitting the model to a standard NLP approach.**
 
-**2. Structured output is expensive at small scale.**
+Knowledge graph extraction is a structured classification task. Fact extraction is a rephrasing task. The 0.8B model handled rephrasing reliably; classifying entities into 9 types while generating nested JSON didn't work in any version of the prompt I tried.
 
-JSON schema constraints, enum types, nested objects — all of these tax small models disproportionately. Simple JSON arrays (a flat list of strings) work. Complex schemas don't. The gap between `["string"]` and `[{"name": "string", "type": "enum"}]` is enormous at 0.8B.
+**2. Structured output cost more than I expected at this scale.**
 
-**3. Context matters, but not too much.**
+JSON schema constraints, enum types, and nested objects all seemed to tax the 0.8B model disproportionately. Simple flat JSON arrays were within its capacity; nested schemas with enum fields weren't. The gap between `["string"]` and `[{"name": "string", "type": "enum"}]` was much larger than I'd assumed.
 
-Per-sentence processing lost context (pronouns, implicit subjects). Full-document processing overwhelmed the model. Sliding windows of 3 sentences hit the sweet spot — enough context to resolve references, short enough for the model to fully attend.
+**3. Few-shot examples mattered far more than I expected.**
 
-**4. Few-shot is non-negotiable for small models.**
+Zero-shot prompting worked fine in my earlier testing with larger models. At 0.8B, the output quality fell apart without two concrete examples — but two seemed to be enough.
 
-Zero-shot prompting works for GPT-4. At 0.8B, the model needs concrete examples of the expected input-output format. Two examples were enough, but zero was not.
+**4. The small model worked best when I treated it as a language model, not a thinker.**
 
-**5. Replace LLM verification with deterministic checks.**
+The "LLM as judge" pattern assumes the judge can reason about the generator's output. At 0.8B, that assumption fell apart. A small model is closer to the language models I first learned about in school: a statistical next-token predictor, not a reasoner working inside a black box. Asking it to "judge" was asking the wrong thing.
 
-The "LLM as judge" pattern assumes the judge is smarter than the generator. At 0.8B, it isn't. A simple token-overlap heuristic catches hallucinations that the LLM judge confidently approved. When your model is small, move verification logic out of the model and into code.
+The practical consequence: when a step needed judgment, I moved it out of the model and into code. The deterministic grounding filter replaced the failed LLM judge — a few lines of token-overlap arithmetic, zero LLM calls — and it caught exactly the hallucinations the LLM judge had confidently approved. Traditional ML and algorithmic approaches became more useful as the model got smaller.
 
-**6. The consumption side matters as much as extraction.**
+**5. Extraction format is constrained by what the consumer can read.**
 
-Even perfect knowledge graphs are useless if the RAG model can't interpret graph notation. A 0.8B model reads natural language. So give it natural language — facts, not triples.
+A 0.8B RAG model handles plain text well and graph notation poorly. So I extracted plain text — facts, not triples.
 
-# The Uncomfortable Truth
+# What This Taught Me About Small Models
 
 Most LLM engineering advice assumes you have a capable model. "Use structured output." "Add a verification step." "Use chain-of-thought reasoning." These patterns break down below 1B parameters.
 
-Working with a 0.8B model forced me to think about what language models fundamentally _are_ — next-token predictors trained on natural language. The closer your task stays to natural language, the better small models perform. The further you push toward structured reasoning, classification, or meta-cognition, the faster they fall apart.
+Working with a 0.8B model forced me to think about what language models fundamentally _are_ — next-token predictors trained on natural language. The closer your task stays to natural language, the better small models perform. The further you push toward structured reasoning, classification, or meta-cognition, the worse they perform.
 
 Fact extraction works because it asks the model to do the one thing it's actually good at: read text and rewrite it, slightly differently.
