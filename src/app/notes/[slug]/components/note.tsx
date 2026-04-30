@@ -1,17 +1,27 @@
 import { Note } from "@/core/entities";
-import { parseMarkdownToHtml } from "@/infra/markdown";
+import { parseMarkdownToHtml, extractToc, estimateReadingMinutes } from "@/infra/markdown";
+import { findAdjacentNotes } from "@/infra/note";
+import { PostHeader } from "./post-header";
+import { Toc } from "./toc";
+import { PrevNext } from "./prev-next";
 
-export async function NoteMdx({ note }: { note: Note}) {
-    const {content, metadata} = note
-    const html = await parseMarkdownToHtml(content)
+export async function NoteMdx({ note }: { note: Note }) {
+    const { content, metadata, slug } = note;
+    const html = await parseMarkdownToHtml(content);
+    const toc = extractToc(html);
+    const readingMinutes = estimateReadingMinutes(content);
+    const { older, newer } = findAdjacentNotes(slug);
 
     return (
-        <article className="prose">
-            <h1 className="title font-semibold text-2xl tracking-tighter">{metadata.title}</h1>
-            <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Last Update: {metadata.date || metadata.lastmod}</p>
-            </div>
-            <div dangerouslySetInnerHTML={{ __html: html }} />
-        </article>
-    )
+        <div className="post-layout">
+            <article className="post-article">
+                <PostHeader metadata={metadata} readingMinutes={readingMinutes} />
+                <div className="prose post-body" dangerouslySetInnerHTML={{ __html: html }} />
+                <PrevNext older={older} newer={newer} />
+            </article>
+            <aside className="post-toc-wrapper">
+                <Toc items={toc} />
+            </aside>
+        </div>
+    );
 }

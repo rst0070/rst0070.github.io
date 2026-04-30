@@ -98,3 +98,23 @@ export function findAllNotes(): Note[] {
     const notePaths = findAllNotePaths()
     return notePaths.map(readNote)
 }
+
+function sortNotesByDateDesc(notes: Note[]): Note[] {
+    return [...notes].sort((a, b) => {
+        if (a.metadata.date && b.metadata.date) {
+            return b.metadata.date.localeCompare(a.metadata.date)
+        }
+        return 0
+    })
+}
+
+export function findAdjacentNotes(slug: string): { older: Note | null; newer: Note | null } {
+    const notes = sortNotesByDateDesc(findAllNotes())
+    const idx = notes.findIndex(n => n.slug === slug)
+    if (idx < 0) return { older: null, newer: null }
+    // List is newer-first: index+1 is older, index-1 is newer
+    return {
+        older: idx + 1 < notes.length ? notes[idx + 1] : null,
+        newer: idx - 1 >= 0 ? notes[idx - 1] : null,
+    }
+}
