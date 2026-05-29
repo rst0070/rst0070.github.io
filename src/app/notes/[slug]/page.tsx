@@ -2,6 +2,7 @@ import { findAllNoteSlugs, findNoteBySlug } from '@/infra/note';
 import { NoteMdx } from './components/note';
 import { ClientScripts } from './components/scripts';
 import { CopyButtons } from './components/copy-buttons';
+import { MermaidFullscreen } from './components/mermaid-fullscreen';
 import { ReadingProgress } from './components/reading-progress';
 import { Metadata } from 'next';
 
@@ -17,6 +18,7 @@ export default async function Page(
       <NoteMdx note={note} />
       <ClientScripts />
       <CopyButtons />
+      <MermaidFullscreen />
     </>
   )
 }

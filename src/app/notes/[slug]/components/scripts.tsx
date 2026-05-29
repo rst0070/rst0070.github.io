@@ -20,9 +20,9 @@ export function ClientScripts() {
 
     if (typeof window !== 'undefined' && (window as any).mermaid) {
       try {
-        (window as any).mermaid.init();
+        (window as any).mermaid.run({ querySelector: '.mermaid:not([data-processed])' });
       } catch (error) {
-        console.error('Mermaid init error:', error);
+        console.error('Mermaid run error:', error);
       }
     }
   }, [pathname]);
@@ -57,10 +57,19 @@ export function ClientScripts() {
         strategy="afterInteractive"
         onLoad={() => {
           if (typeof (window as any).mermaid !== 'undefined') {
-            (window as any).mermaid.initialize({
-              startOnLoad: true,
-              theme: 'neutral',
+            const mermaid = (window as any).mermaid;
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            // Script loads afterInteractive (after DOMContentLoaded), so
+            // startOnLoad never fires — initialize without it and run manually.
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: isDark ? 'dark' : 'neutral',
             });
+            try {
+              mermaid.run({ querySelector: '.mermaid:not([data-processed])' });
+            } catch (error) {
+              console.error('Mermaid run error:', error);
+            }
           }
         }}
       />

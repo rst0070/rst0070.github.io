@@ -37,13 +37,10 @@ flowchart LR
     User -->|message| I1
     In -->|pass / modify| Agent
     InputChain -.->|any hook returns `block` / `skip`| UserOut
-    Agent -->|reply (streaming or final)| O1
+    Agent -->|reply: streaming or final| O1
     Om -->|pass / modify| UserOut
     OutputChain -.->|any hook returns block| UserOut
 
-    classDef hook fill:#fef3c7,stroke:#d97706,color:#000
-    classDef actor fill:#e0e7ff,stroke:#4338ca,color:#000
-    classDef chain fill:#fffbeb,stroke:#d97706,color:#000
     class I1,I2,Idots,In,O1,O2,Odots,Om hook
     class Agent actor
     class InputChain,OutputChain chain
@@ -112,8 +109,6 @@ flowchart LR
     Engine -->|init / chunk| Supervisor
     Supervisor -->|ack / out / error| Engine
 
-    classDef trusted fill:#e0e7ff,stroke:#4338ca,color:#000
-    classDef untrusted fill:#fee2e2,stroke:#dc2626,color:#000
     class Caller trusted
     class Sandbox untrusted
 ```
