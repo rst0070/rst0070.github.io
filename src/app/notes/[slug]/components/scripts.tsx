@@ -58,11 +58,12 @@ export function ClientScripts() {
         onLoad={() => {
           if (typeof (window as any).mermaid !== 'undefined') {
             const mermaid = (window as any).mermaid;
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             // Script loads afterInteractive (after DOMContentLoaded), so
             // startOnLoad never fires — initialize without it and run manually.
             mermaid.initialize({
               startOnLoad: false,
-              theme: 'neutral',
+              theme: isDark ? 'dark' : 'neutral',
             });
             try {
               mermaid.run({ querySelector: '.mermaid:not([data-processed])' });
