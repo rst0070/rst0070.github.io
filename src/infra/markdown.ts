@@ -4,6 +4,7 @@ import { codeToHtml, bundledLanguages } from "shiki";
 const converter = new showdown.Converter({
     literalMidWordUnderscores: true,
     ghCompatibleHeaderId: true,
+    tables: true,
 })
 
 const SUPPORTED_LANGS = new Set(Object.keys(bundledLanguages));
