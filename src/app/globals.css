@@ -509,6 +509,69 @@ html {
   border: none !important;
 }
 
+/* Mermaid diagrams + fullscreen */
+
+.mermaid-block {
+  position: relative;
+  margin: 1.25em 0;
+}
+
+.mermaid-fullscreen {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  appearance: none;
+  background: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background-color 0.15s, border-color 0.15s;
+}
+
+.mermaid-block:hover .mermaid-fullscreen,
+.mermaid-fullscreen:focus-visible {
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .mermaid-fullscreen {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Expand the diagram to fill the viewport as an in-page overlay */
+.mermaid-block.mermaid-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background: var(--background);
+}
+
+.mermaid-block.mermaid-expanded .mermaid-fullscreen {
+  opacity: 1;
+}
+
+.mermaid-block.mermaid-expanded pre.mermaid {
+  margin: 0;
+}
+
+.mermaid-block.mermaid-expanded svg {
+  width: 85vw !important;
+  height: 85vh !important;
+  max-width: 85vw !important;
+  max-height: 85vh !important;
+}
+
 /* Prev / Next navigation */
 
 .prev-next {

@@ -41,7 +41,7 @@ async function createCodeBlock(lang: string, code: string): Promise<string> {
 }
 
 function createMermaidBlock(code: string): string {
-    return `<pre class="mermaid">${code}</pre>`;
+    return `<figure class="mermaid-block"><button class="mermaid-fullscreen" type="button" aria-label="View fullscreen">⛶</button><pre class="mermaid">${code}</pre></figure>`;
 }
 
 async function highlightCodeBlocks(html: string): Promise<string> {
