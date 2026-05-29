@@ -24,12 +24,23 @@ function extractLang(cls: string | undefined): string {
     const match = cls.match(/language-([\w+-]+)/);
     if (!match) return "text";
     const lang = match[1].toLowerCase();
+
+    if (lang === "mermaid") return "mermaid"; // mermaid is not supported by shiki
     return SUPPORTED_LANGS.has(lang) ? lang : "text";
 }
 
-function wrapCodeBlock(lang: string, highlighted: string): string {
+async function createCodeBlock(lang: string, code: string): Promise<string> {
+    const highlighted = await codeToHtml(code, {
+        lang,
+        themes: { light: "github-light", dark: "github-dark" },
+        defaultColor: false,
+    });
     const showLang = lang !== "text";
     return `<figure class="code-block"><div class="code-block-header"><span class="code-lang" data-empty="${!showLang}">${showLang ? lang : ""}</span><button class="code-copy" type="button" aria-label="Copy code">Copy</button></div>${highlighted}</figure>`;
+}
+
+function createMermaidBlock(code: string): string {
+    return `<pre class="mermaid">${code}</pre>`;
 }
 
 async function highlightCodeBlocks(html: string): Promise<string> {
@@ -40,12 +51,10 @@ async function highlightCodeBlocks(html: string): Promise<string> {
         matches.map(async (m) => {
             const code = decodeEntities(m[2]);
             const lang = extractLang(m[1]);
-            const highlighted = await codeToHtml(code, {
-                lang,
-                themes: { light: "github-light", dark: "github-dark" },
-                defaultColor: false,
-            });
-            return { original: m[0], replacement: wrapCodeBlock(lang, highlighted) };
+            const replacement = lang === "mermaid"
+                ? createMermaidBlock(code)
+                : await createCodeBlock(lang, code);
+            return { original: m[0], replacement };
         }),
     );
 
