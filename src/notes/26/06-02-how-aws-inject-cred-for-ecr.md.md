@@ -31,13 +31,13 @@ No static keys live in the container. The **task IAM role** is just an *identity
 
 ```mermaid
 flowchart TD
-    subgraph infra["Infra (you define this)"]
+    subgraph infra["Infra"]
         TD["Task Definition<br/>taskRoleArn"]
         ROLE["IAM Task Role<br/>• ecr:GetAuthorizationToken<br/>• ecr:BatchGetImage<br/>• ecr:GetDownloadUrlForLayer"]
         TD --> ROLE
     end
 
-    subgraph ecstask["ECS Task (the app)"]
+    subgraph ecstask["ECS Task - the app"]
         AGENT["ECS Agent<br/>assumes role → temp STS creds"]
         ENDPOINT["Local credential endpoint<br/>169.254.170.2"]
         APP["App + boto3<br/>reads AWS_CONTAINER_CREDENTIALS_RELATIVE_URI"]
@@ -48,14 +48,14 @@ flowchart TD
     end
 
     subgraph ec2["EC2 host"]
-        DOCKER["Docker daemon<br/>(listens on docker.sock)"]
+        DOCKER["Docker daemon:<br/>listens on docker.sock"]
     end
 
     ROLE -.->|"identity + permissions"| AGENT
-    APP -->|"3 · get_authorization_token()"| ECR["AWS ECR / IAM<br/>checks permissions at call time"]
-    ECR -->|"4 · AWS:<token>"| APP
+    APP -->|"3 · get_authorization_token"| ECR["AWS ECR / IAM<br/>checks permissions at call time"]
+    ECR -->|"4 · AWS:-token-"| APP
     APP -->|"5 · Docker API call<br/>+ auth_config"| DOCKER
-    DOCKER -->|"6 · pull image (runs here)"| ECR
+    DOCKER -->|"6 · pull image - runs here"| ECR
 ```
 
 
