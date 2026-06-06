@@ -1,5 +1,7 @@
 ---
-title: happy nvidia driver
+title: Nvidia driver issue on Ubuntu
+date: 2026-06-03
+lastmod: 2026-06-06
 ---
 It feels like almost every month I run into an nvidia driver problem on my ubuntu server, such as the following message  
 ```bash
@@ -55,3 +57,47 @@ Confirm the gap directly with:
 # Returns NOTHING when mismatched
 dpkg -l | grep -E "linux-modules-nvidia-[0-9]+-$(uname -r)"
 ```
+
+## This time was because of version mismatch -> downgrade and fix kernel version
+This time I found that the isssue was caused by version mismatch between ubuntu kernel and nvidia driver.  
+The kernel was updated automatically, but the driver wasn't.  
+  
+I tried to upgrade the driver at the first moment, but there was no driver for the new kernel, so decided to downgrade the kernel.  
+  
+__How to downgrade?__  
+```bash
+# 1. Check menu entry names
+awk -F\' '/menuentry / {print $2}' /boot/grub/grub.cfg
+
+# 2. Edit /etc/default/grub, set:
+GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.8.0-110-generic"
+
+# 3. Apply
+sudo update-grub
+```
+
+### Some details about grub setting
+Each files and Command:
+- `/etc/default/grub` holds booting preferences using shell variables such as `GRUB_DEFAULT`
+- `/boot/grub/grub.cfg` is actual bootloader config - it is auto generated 
+- `update-grub` command reads `/etc/default/grub` and do configurations including re-write `/boot/grub/grub.cfg`
+  
+
+__How `GRUB_DEFAULT` points the boot entry?__  
+there are also another ways, but i used following way.  
+
+1. `/boot/grub/grub.cfg` contains entries like this:
+    ```bash
+    menuentry 'Ubuntu' {...}
+    submenu 'Advanced options for Ubuntu' {
+        menuentry 'Ubuntu, with Linux 6.8.0-124-generic' {...}
+        menuentry 'Ubuntu, with Linux 6.8.0-124-generic (recovery)' {...}
+        menuentry 'Ubuntu, with Linux 6.8.0-111-generic' {...}
+        menuentry 'Ubuntu, with Linux 6.8.0-111-generic (recovery)' {...}
+        menuentry 'Ubuntu, with Linux 6.8.0-110-generic' {...}
+    }
+    ```
+2. `GRUB_DEFAULT` points one of that
+    ```bash
+    GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.8.0-110-generic"
+    ```
