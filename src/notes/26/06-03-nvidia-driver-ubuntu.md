@@ -87,17 +87,17 @@ __How `GRUB_DEFAULT` points the boot entry?__
 there are also another ways, but i used following way.  
 
 1. `/boot/grub/grub.cfg` contains entries like this:
-    ```bash
-    menuentry 'Ubuntu' {...}
-    submenu 'Advanced options for Ubuntu' {
-        menuentry 'Ubuntu, with Linux 6.8.0-124-generic' {...}
-        menuentry 'Ubuntu, with Linux 6.8.0-124-generic (recovery)' {...}
-        menuentry 'Ubuntu, with Linux 6.8.0-111-generic' {...}
-        menuentry 'Ubuntu, with Linux 6.8.0-111-generic (recovery)' {...}
-        menuentry 'Ubuntu, with Linux 6.8.0-110-generic' {...}
-    }
-    ```
+```bash
+menuentry 'Ubuntu' {...}
+submenu 'Advanced options for Ubuntu' {
+    menuentry 'Ubuntu, with Linux 6.8.0-124-generic' {...}
+    menuentry 'Ubuntu, with Linux 6.8.0-124-generic (recovery)' {...}
+    menuentry 'Ubuntu, with Linux 6.8.0-111-generic' {...}
+    menuentry 'Ubuntu, with Linux 6.8.0-111-generic (recovery)' {...}
+    menuentry 'Ubuntu, with Linux 6.8.0-110-generic' {...}
+}
+```
 2. `GRUB_DEFAULT` points one of that
-    ```bash
-    GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.8.0-110-generic"
-    ```
+```bash
+GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 6.8.0-110-generic"
+```
