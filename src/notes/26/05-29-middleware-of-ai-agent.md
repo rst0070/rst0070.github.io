@@ -124,6 +124,14 @@ Above the line: the rest of the system. Below the line: stdlib-only Python, no p
 The channel turned out to be more concrete than it looks. Docker exec multiplexes handler stdout, handler stderr, and our protocol over one socket using 8-byte frame headers. The protocol travels on **stderr** so a handler's stray `print()` can't break framing. (See `findings/docker-exec-multiplex.md`.)
 
 ### 3.2 Supervisor and handlers
+A handler is a single `execute(context, settings)` function: it gets the text flowing through the chain (`context`) plus its own `settings`, and returns an action. A minimal redactor:
+
+```python
+def execute(context, settings):
+    text = context["outgoing"]
+    return {"action": "modify", "outgoing": text.replace("secret", "***")}
+```
+
 Inside the container, a small stdlib-only **supervisor** walks the chain. It's stateless between calls — everything that needs to persist lives on the caller side.
 
 - On `init`: for each chain entry, `exec` the handler's source into a **fresh namespace** dict, then check that `execute` is callable and that the `declared_action` is one of `{modify, block, skip, detect, pass}`.
