@@ -1,6 +1,7 @@
 ---
 title: "RPC from sandbox to application - when untrusted code needs to call you back"
 date: 2026-06-08
+lastmod: 2026-06-13
 ---
 
 This is a design record of an RPC protocol that extends the middleware system from *[Design of AI Agent Middelware](./26-05-29-middleware-of-ai-agent)*.
@@ -43,23 +44,34 @@ The benefits:
 - **Reuse** existing application functionality
 - **One integration point** for application conventions like credit — the implementation stays on the application side, using the same patterns as everything else
 
+## 3. Architecture Diagram
 
 ```mermaid
 sequenceDiagram
+    participant J as Async job (deferred effect)
     participant A as Application
     participant H as Hook (sandbox)
 
     A->>+H: forward — run the hook on this text
     H->>+A: backward — host_call(name, payload)
+    Note over A: gate logic (sync) — admit or refuse the call
     A-->>-H: result
+    Note over A: record effect (not committed here)
     H-->>-A: modified text
+    A-)J: trigger deferred job later — off the hot path
 ```
 
-## 3. Design decisions
+- The backward call returns the hook its result immediately, but its side-effect isn't committed inline.  
+- The application runs gate logic synchronously (refusing the call if the precondition fails) then records the effect
+- **deferred async job** applies the recorded effect. 
+
+The slow / committing work stays off the streaming path, and the sandbox never decides policy: it says *what* to run, the application decides *whether it's allowed* and *what it costs*. 
+
+## 4. Design decisions
 
 Running the protocol backwards raises two questions the forward direction never had.
 
-### 3.1. What can a hook call?
+### 4.1. What can a hook call?
 
 In the forward direction the application knows exactly which hooks exist — it built the chain.  
 In reverse, the application can't predict what a hook will ask for.  
@@ -78,7 +90,7 @@ Every `host_call` goes through the runner, which always does the same steps in o
 Adding a feature is "write a capability and register it" — the protocol and the runner don't change. 
 And since the sandbox can only *name* a capability, what untrusted code can do is exactly the registry, nothing more.
 
-### 3.2. How do application conventions stay enforced?
+### 4.2. How do application conventions stay enforced?
 
 Every application feature carries conventions that must hold no matter who calls it — credit is one of the example. 
 Untrusted code must never be able to skip them.
