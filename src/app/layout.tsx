@@ -5,9 +5,6 @@ import { Header, Footer } from "./components";
 export const metadata: Metadata = {
   title: "rst0070 - notes",
   description: "Notes from rst0070",
-  icons: {
-    icon: "/favicon.ico"
-  }
 };
 
 export default function RootLayout({
