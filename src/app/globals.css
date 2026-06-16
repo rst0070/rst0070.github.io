@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Drive Tailwind's `dark:` utilities off the `data-theme` attribute that the
+   theme toggle sets on <html>, instead of the OS `prefers-color-scheme`. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,15 +12,11 @@
     "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --code-bg: #1f1f1f;
-  }
-  html {
-    color-scheme: dark;
-  }
+[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --code-bg: #1f1f1f;
+  color-scheme: dark;
 }
 
 html,
@@ -78,19 +78,17 @@ pre code {
   border-radius: 0;
 }
 
-/* Shiki dual-theme: light by default, swap to dark via prefers-color-scheme */
+/* Shiki dual-theme: light by default, swap to dark via [data-theme="dark"] */
 .shiki,
 .shiki span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg);
 }
 
-@media (prefers-color-scheme: dark) {
-  .shiki,
-  .shiki span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-  }
+[data-theme="dark"] .shiki,
+[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }
 
 ::selection {
@@ -211,19 +209,17 @@ table {
   background-color: rgba(0, 0, 0, 0.025);
 }
 
-@media (prefers-color-scheme: dark) {
-  .prose th,
-  .prose td {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
+[data-theme="dark"] .prose th,
+[data-theme="dark"] .prose td {
+  border-color: rgba(255, 255, 255, 0.15);
+}
 
-  .prose thead th {
-    background-color: rgba(255, 255, 255, 0.08);
-  }
+[data-theme="dark"] .prose thead th {
+  background-color: rgba(255, 255, 255, 0.08);
+}
 
-  .prose tbody tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.04);
-  }
+[data-theme="dark"] .prose tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .title {
@@ -284,10 +280,8 @@ html {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  .post-header {
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-  }
+[data-theme="dark"] .post-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .post-title {
@@ -313,10 +307,8 @@ html {
   text-wrap: pretty;
 }
 
-@media (prefers-color-scheme: dark) {
-  .post-description {
-    color: rgb(180, 180, 180);
-  }
+[data-theme="dark"] .post-description {
+  color: rgb(180, 180, 180);
 }
 
 .post-meta {
@@ -345,11 +337,9 @@ html {
   color: rgb(82, 82, 82);
 }
 
-@media (prefers-color-scheme: dark) {
-  .post-tag {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: rgb(200, 200, 200);
-  }
+[data-theme="dark"] .post-tag {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgb(200, 200, 200);
 }
 
 /* Headings inside the body get scroll offset so anchor jumps don't hug the top edge */
@@ -392,10 +382,8 @@ html {
   border-left: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  .toc-list {
-    border-left-color: rgba(255, 255, 255, 0.1);
-  }
+[data-theme="dark"] .toc-list {
+  border-left-color: rgba(255, 255, 255, 0.1);
 }
 
 .toc-item {
@@ -443,10 +431,8 @@ html {
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  .code-block {
-    border-color: rgba(255, 255, 255, 0.06);
-  }
+[data-theme="dark"] .code-block {
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .code-block-header {
@@ -460,10 +446,8 @@ html {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  .code-block-header {
-    border-bottom-color: rgba(255, 255, 255, 0.06);
-  }
+[data-theme="dark"] .code-block-header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .code-lang {
@@ -492,13 +476,11 @@ html {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-  .code-copy {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-  .code-copy:hover {
-    background-color: rgba(255, 255, 255, 0.06);
-  }
+[data-theme="dark"] .code-copy {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+[data-theme="dark"] .code-copy:hover {
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 .code-copy-done {
@@ -542,10 +524,8 @@ html {
   opacity: 1;
 }
 
-@media (prefers-color-scheme: dark) {
-  .mermaid-fullscreen {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
+[data-theme="dark"] .mermaid-fullscreen {
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Expand the diagram to fill the viewport as an in-page overlay */
@@ -586,10 +566,8 @@ html {
   gap: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .prev-next {
-    border-top-color: rgba(255, 255, 255, 0.08);
-  }
+[data-theme="dark"] .prev-next {
+  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 .prev-next-card {
@@ -604,20 +582,16 @@ html {
   transition: border-color 0.15s, background-color 0.15s;
 }
 
-@media (prefers-color-scheme: dark) {
-  .prev-next-card {
-    border-color: rgba(255, 255, 255, 0.08);
-  }
+[data-theme="dark"] .prev-next-card {
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .prev-next-card:hover {
   border-color: rgba(0, 0, 0, 0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-  .prev-next-card:hover {
-    border-color: rgba(255, 255, 255, 0.25);
-  }
+[data-theme="dark"] .prev-next-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .prev-next-newer {
