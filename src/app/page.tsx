@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "rst0070 - notes",
+  description:
+    "Software engineer sharing notes on software engineering, machine learning, and infrastructure.",
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   return (

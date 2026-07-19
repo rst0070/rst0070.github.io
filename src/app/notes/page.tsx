@@ -1,4 +1,12 @@
 import { NoteList } from "./components"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Notes",
+  description:
+    "All notes by rst0070 on software engineering, machine learning, and infrastructure.",
+  alternates: { canonical: "/notes" },
+}
 
 export default function Page() {
   return (
