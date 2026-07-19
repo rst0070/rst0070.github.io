@@ -108,6 +108,36 @@ function sortNotesByDateDesc(notes: Note[]): Note[] {
     })
 }
 
+/**
+ * Derive a plain-text excerpt from markdown content, for use as a
+ * meta description fallback when a note has no explicit `description`.
+ */
+export function excerptFromContent(content: string, maxLen = 160): string {
+    const text = content
+        .replace(/```[\s\S]*?```/g, ' ')          // fenced code blocks
+        .replace(/`[^`]*`/g, ' ')                  // inline code
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')     // images
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')   // links -> link text
+        .replace(/<[^>]+>/g, ' ')                  // html tags
+        .replace(/^\s{0,3}#{1,6}\s+/gm, '')        // heading markers
+        .replace(/[*_~>#|]/g, ' ')                 // leftover md symbols
+        .replace(/\s+/g, ' ')
+        .trim()
+
+    if (text.length <= maxLen) return text
+    return text.slice(0, maxLen - 1).replace(/\s+\S*$/, '').trim() + '…'
+}
+
+/**
+ * The best available description for a note: its explicit frontmatter
+ * `description`, otherwise an excerpt derived from its content.
+ */
+export function getNoteDescription(note: Note): string {
+    const explicit = note.metadata.description?.trim()
+    if (explicit) return explicit
+    return excerptFromContent(note.content)
+}
+
 export function findAdjacentNotes(slug: string): { older: Note | null; newer: Note | null } {
     const notes = sortNotesByDateDesc(findAllNotes())
     const idx = notes.findIndex(n => n.slug === slug)

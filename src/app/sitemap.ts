@@ -7,7 +7,7 @@ export const dynamic = 'force-static'
 export default function sitemap(): MetadataRoute.Sitemap {
     let notes = findAllNotes().map((note) => ({
         url: `${baseUrl}/notes/${note.slug}`,
-        lastModified: note.metadata.date,
+        lastModified: note.metadata.lastmod || note.metadata.date,
     }))
 
     let routes = ['', '/notes'].map((route) => ({
