@@ -130,6 +130,16 @@ html {
 .prose img {
   /* Don't apply styles to next/image */
   @apply m-0;
+  max-width: 100%;
+  height: auto;
+}
+
+.prose video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
 }
 
 .prose p {

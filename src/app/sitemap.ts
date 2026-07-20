@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: note.metadata.lastmod || note.metadata.date,
     }))
 
-    let routes = ['', '/notes'].map((route) => ({
+    let routes = ['', '/notes', '/portfolio'].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date().toISOString().split('T')[0],
     }))
