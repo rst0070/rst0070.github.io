@@ -20,8 +20,23 @@ const jsonLd = {
   alternateName: 'rst0070',
   url,
   jobTitle: 'AI Engineer',
-  description,
-  sameAs: ['https://github.com/rst0070'],
+  description: `${description} Based in Taipei and open to relocation to Singapore.`,
+  email: 'mailto:kwb0711@gmail.com',
+  homeLocation: {
+    '@type': 'Place',
+    name: 'Taipei, Taiwan',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Taipei',
+      addressCountry: 'TW',
+    },
+  },
+  sameAs: [
+    'https://github.com/rst0070',
+    'https://www.linkedin.com/in/wonbin-kim-7263a7184/',
+    'https://huggingface.co/rst0070',
+    'https://rst0070.github.io/notes',
+  ],
   worksFor: [
     { '@type': 'Organization', name: 'MaiAgent' },
     { '@type': 'Organization', name: 'Wrtn Technologies' },

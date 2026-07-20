@@ -1,5 +1,11 @@
 # Wonbin Kim
 
+AI Engineer
+
+Taipei · open to relocation to Singapore
+
+[kwb0711@gmail.com](mailto:kwb0711@gmail.com) · [GitHub](https://github.com/rst0070) · [LinkedIn](https://www.linkedin.com/in/wonbin-kim-7263a7184/) · [HuggingFace](https://huggingface.co/rst0070) · [blog](https://rst0070.github.io/notes)
+
 ## Summary
 
 AI Engineer with production experience across the full LLM agent — stack agent orchestration, tool design, sandboxed agent governance (prompt-injection blocking, PII redaction, output moderation), evaluation pipelines, multimodal RAG, and conversation memory. 
@@ -510,7 +516,8 @@ Terraform provider to provision infrastructure with Linux's KVM using libvirt. I
 
 - Github: [dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 - Contributions: [Pull Requests](https://github.com/dmacvicar/terraform-provider-libvirt/pulls?q=is%3Apr+is%3Aclosed+author%3Arst0070)
-
+  
+  
 ---
 
 ## Personal Projects
