@@ -12,15 +12,22 @@ AI Engineer with production experience across the full LLM agent — stack agent
 
 Hands-on with RL fine-tuning, knowledge graph, and AWS/Kubernetes infrastructure.
 
-Contributor to Mem0 (58k stars AI memory system)
+Contributor to Mem0 (Over 58k stars AI memory system)
 
 1st author paper on speaker verification
+
+## Skills
+
+- **LLM / Agents:** LlamaIndex, LangChain, LangGraph, RAG (multimodal), agent tools, MCP-style protocols, vLLM, structured outputs, evaluation (DeepEval)
+- **Training / ML:** PyTorch, GRPO, QLoRA, LLM fine-tuning, Speaker Verification
+- **Infra:** AWS, GCP, Kubernetes, Docker, Terraform, Airflow, Argo Workflows, Elasticsearch, Redis, Kafka, Neo4J
+- **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring)
 
 ## Work Experience
 
 ### MaiAgent(AI Engineer, 2025.12 - , Taipei)
 
-AI Agent platform for Enterprise https://maiagent.ai/en/about
+AI Agent platform for Enterprise [maiagent.ai](https://maiagent.ai/en/about)
 
 Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex codebase - designing within the constraints of the existing system, across AI pipeline, backend, and frontend.
 
