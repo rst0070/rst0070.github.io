@@ -536,10 +536,11 @@ QLoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora](ht
 
 Fine-tuning a Qwen3.5-0.8B model with GRPO to extract entities and (subject, relation, object) triplets from text — replacing expensive frontier-LLM API calls in the [knowledge graph management system](https://github.com/rst0070/knowledge-base) built for the Moodmate project with a tiny model that runs on a single consumer GPU.
 
-![Extraction quality: fine-tuned 0.8B vs pretrained vs Gemini 2.5 Flash Lite](/assets/portfolio/tiny-graph-extractor-gemini-comparison.svg)
-
-- **Constraint:** The knowledge graph pipeline required multiple frontier-LLM API calls per document (entity extraction, edge extraction, knowledge checking, graph update) with structured output — high per-call cost that scaled linearly with document volume. Entity/relation extraction is a narrow, structured task; the question was whether a sub-1B fine-tuned model could handle it at comparable accuracy, trading recurring API cost for a one-time training cost.
+- **Constraint (purpose):** The knowledge graph pipeline required multiple frontier-LLM API calls per document (entity extraction, edge extraction, knowledge checking, graph update) with structured output. Entity/relation extraction is a narrow, structured task; the question was whether a sub-1B fine-tuned model could handle it at comparable accuracy, trading recurring API cost for a one-time training cost.
 - **approach:** 
+    1. Evaluation
+    2. Training method
+    
 - **Result:** the fine-tuned 0.8B model reaches a mean reward of **0.796** vs **0.422** pretrained and **0.858** for Gemini 2.5 Flash Lite — closing **~86% of the base-model → Gemini gap** and matching Gemini on parse reliability (**8/200** failures each), on a single consumer GPU.
 - **Phase 1 — SFT on REBEL, and why it was the wrong direction:**
     - Trained QLoRA SFT on the REBEL dataset (Wikipedia sentences paired with Wikidata triplets), aligning the supervised target to the base model's natural output format to minimize the gap SFT has to close
