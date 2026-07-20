@@ -518,33 +518,59 @@ Terraform provider to provision infrastructure with Linux's KVM using libvirt. I
 ### Tiny Graph Extractor — Sub-1B LLM for Knowledge Graph Extraction (in progress)
 
 Github: [rst0070/tiny-graph-extractor](https://github.com/rst0070/tiny-graph-extractor)
-LoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-lora](https://huggingface.co/rst0070/tiny-graph-extractor-qwen3.5-0.8b-lora)
+QLoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora](https://huggingface.co/rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora)
 
-Fine-tuning a Qwen3.5-0.8B model to extract entities and (subject, relation, object) triplets from text — replacing expensive frontier-LLM API calls in the [knowledge graph management system](https://github.com/rst0070/knowledge-base) built for the Moodmate project with a tiny model that runs on a single consumer GPU.
+Fine-tuning a Qwen3.5-0.8B model with GRPO to extract entities and (subject, relation, object) triplets from text — replacing expensive frontier-LLM API calls in the [knowledge graph management system](https://github.com/rst0070/knowledge-base) built for the Moodmate project with a tiny model that runs on a single consumer GPU.
+
+![Extraction quality: fine-tuned 0.8B vs pretrained vs Gemini 2.5 Flash Lite](/assets/portfolio/tiny-graph-extractor-gemini-comparison.svg)
 
 - **Constraint:** The knowledge graph pipeline required multiple frontier-LLM API calls per document (entity extraction, edge extraction, knowledge checking, graph update) with structured output — high per-call cost that scaled linearly with document volume. Entity/relation extraction is a narrow, structured task; the question was whether a sub-1B fine-tuned model could handle it at comparable accuracy, trading recurring API cost for a one-time training cost.
+- **approach:** 
+- **Result:** the fine-tuned 0.8B model reaches a mean reward of **0.796** vs **0.422** pretrained and **0.858** for Gemini 2.5 Flash Lite — closing **~86% of the base-model → Gemini gap** and matching Gemini on parse reliability (**8/200** failures each), on a single consumer GPU.
 - **Phase 1 — SFT on REBEL, and why it was the wrong direction:**
     - Trained QLoRA SFT on the REBEL dataset (Wikipedia sentences paired with Wikidata triplets), aligning the supervised target to the base model's natural output format to minimize the gap SFT has to close
     - Through analyzing model outputs on real examples, identified that the base model already produces well-structured JSON with surface-form relations zero-shot — the remaining failure modes were specific: repeated relations, relation text merged with tail entities, and multi-entity spans in head/tail fields
     - Discovered a fundamental collision: REBEL trains the model toward a closed Wikidata ontology (`point in time`, `parent taxon`) where relations never appear verbatim in the source text, but the grounding-based reward needed for RL penalizes exactly those canonical relations. **SFT on REBEL and grounding rewards are mutually exclusive** — REBEL-style SFT would actively teach the vocabulary that the RL reward then penalizes
-- **Phase 2 (current) — Pivoting to RL-only with reference-free rewards:**
-    - Dropped SFT entirely; applying GRPO directly to the base model, using REBEL only as a source of input sentences (gold answers discarded)
-    - Designed a 3-layer reference-free reward that scores whatever the model emits without needing canonical gold targets:
-        - **Layer 0 — Gate:** valid JSON + valid schema, or reward = 0 (no partial credit)
-        - **Layer 1 — Penalties:** grounding check (head/tail/relation text found in source), consistency check (head/tail present in entities list), atomicity check (penalize multi-entity spans joined by comma/" and "), deduplication check — all string-checkable, deterministic, cheap
-        - **Layer 2 — Rewards:** per-triple direction/factuality scoring via NLI entailment model (the only thing that catches direction errors like reversing subject and object), plus coverage reward as anti-collapse counterweight (penalty-only reward collapses to sparse output — fewer triples = fewer violations)
-    - Planned rollout: Layer 0 + Layer 1 first (cheap, deterministic, stabilize format), then add Layer 2 (expensive NLI judge, catches what string rules cannot)
+- **Phase 2 — RL-only with a reference-free reward:**
+    - Dropped SFT entirely; applied GRPO directly to the base model, using REBEL only as a source of input sentences (gold answers discarded) so the model is never anchored to the closed Wikidata vocabulary
+    - Designed a **reference-free reward** that scores whatever the model emits without canonical gold targets — a hard structure gate (unparseable output → −1.0) in front of cheap deterministic checks (grounding, dedup, well-formedness), with the separating signal coming from an NLI judge (FactCG-DeBERTa) scoring each triplet's factuality and direction against the source, plus a coverage term as an anti-collapse counterweight *(full reward breakdown in Details)*
+    - Ran **five disciplined GRPO iterations**, each continuing the previous run's best adapter on a fresh disjoint REBEL slice and changing **exactly one thing** (reward weights, NLI acceptance ramp) so every effect is attributable in isolation
 - Built a production-robust training pipeline on a single 16GB GPU (RTX 4060 Ti) with a predictive+reactive hybrid against VRAM overflow:
     - **Predictive layer:** token-budget batching with length-bucketed shuffling — examples quantile-bucketed by sequence length, shuffled within buckets for stochasticity, then greedy-packed under a VRAM budget so batch size varies naturally
     - **Reactive layer:** OOM-catch with recursive batch halving — on CUDA OOM, halves the collated batch, retries recursively to B=1, skips with logged diagnostics at base case. Token-weighted loss accumulation ensures mathematically identical gradients whether a micro-step runs as one batch or N sub-batches after halving
 - Implemented GRPO loss math with full test coverage: group advantage normalization, clipped surrogate objective, per-token KL divergence penalty (DeepSeek formulation)
-- Drove the project with design-doc-first engineering: each major change (training robustness, dataset loader scaling, RL reward redesign) planned in a written design document with goals/non-goals, decision log, and test plan before implementation
-- Tools used: PyTorch, QLoRA (PEFT + bitsandbytes), Unsloth, HuggingFace Transformers & Datasets, REBEL dataset (Babelscape), Qwen3.5-0.8B, W&B, Docker, pytest
+- Drove the project with design-doc-first engineering: each major change (training robustness, dataset loader scaling, RL reward redesign, each single-variable GRPO run) planned in a written design document with goals/non-goals, decision log, and test plan before implementation
+- Tools used: PyTorch, QLoRA (PEFT + bitsandbytes), Unsloth, HuggingFace Transformers & Datasets, GRPO, FactCG-DeBERTa (NLI reward judge), REBEL dataset (Babelscape), Qwen3.5-0.8B, W&B, Docker, pytest
 
 <details>
-<summary>Details</summary>
+<summary>Details — results, reward design & evaluation rigor</summary>
 
-- Training Pipeline Architecture
+**Benchmark vs Gemini 2.5 Flash Lite** — fixed 200-item test set, scored by the reference-free reward. "Mean total" counts unparseable outputs as −1.0 (the quantity GRPO optimizes); "weighted total" is over parsed outputs only:
+
+| | Gemini 2.5 Flash Lite | Qwen3.5-0.8B pretrained | GRPO run 5 |
+|---|---|---|---|
+| mean total (incl. parse failures) | 0.858 | 0.422 | **0.796** |
+| weighted total (parsed only) | 0.935 | 0.788 | **0.871** |
+| parse failures / 200 | 8 | 41 | **8** |
+
+Progression across runs (mean total): 0.422 (pretrained) → 0.581 → 0.663 → 0.775 → 0.792 → **0.796**. The gains come both from eliminating parse failures (41 → 8, matching Gemini) and from steady relation-quality improvement.
+
+**Reference-free reward (`src/reward/`)** — a structure gate plus a weighted sum of seven [0,1] components:
+
+| Component | Weight | What it measures |
+|---|---|---|
+| `structure` | 0.10 | Fraction of well-formed relations (non-empty head/relation/tail, head ≠ tail) |
+| `entity_dedup` | 0.10 | 1 − duplicate ratio over normalized entities |
+| `relation_dedup` | 0.10 | 1 − duplicate ratio over normalized triplets |
+| `entity_grounding` | 0.10 | Fraction of entities appearing verbatim in the source |
+| `relation_grounding` | 0.10 | Fraction of relations whose head and tail are both in the entity list |
+| `relation_correctness` | 0.35 | Mean NLI acceptance of each triplet against the source (FactCG-DeBERTa) |
+| `relation_coverage` | 0.15 | Accepted unique triplets vs. expected count (anti-collapse counterweight) |
+
+- **NLI acceptance is a clipped linear ramp** over confidence, not a hard threshold — borderline triplets earn a gradient instead of a per-rollout coin flip, while saturation removes any incentive to inflate an already-confident score.
+- **Conjunction-split triplets** ("A and B beat C" → two triplets) verbalize to ungrammatical fragments the NLI rejects, so each group is *also* scored as the coordinated sentence and members take the max — failing safe both ways.
+- **The reward has a ceiling below 1.0.** The gold answers themselves score only ~0.885 mean NLI correctness, putting a perfect extractor's ceiling at ~0.93–0.94. Gemini (0.935) sits on that ceiling, so scores are read as *distance to the ~0.93 band, not to 1.0*.
+- **Evaluation isolates model from reward drift:** every run is scored with a **fixed** eval configuration (weights + NLI ramp held constant) even as the training-time reward weights evolve run to run. Test set = 200 items (144 CrossRE + 30 v1 + 26 real news) with surface-form gold, via a two-phase `run_inference` → `run_evaluation` pipeline. Per-component breakdowns and confidence-interval analysis in [`data/result/README.md`](https://github.com/rst0070/tiny-graph-extractor/blob/main/data/result/README.md).
 
 </details>
 
