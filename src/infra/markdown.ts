@@ -66,9 +66,40 @@ async function highlightCodeBlocks(html: string): Promise<string> {
     return result;
 }
 
+// Showdown wraps the `<details>`/`<summary>`/`</details>` tag lines of an
+// authored collapsible block in stray `<p>` tags (the markdown *inside* the
+// block is still parsed correctly). Unwrap those tags so the block is valid.
+function unwrapDetailsParagraphs(html: string): string {
+    return html
+        .replace(
+            /<p>\s*(<details(?:\s[^>]*)?>\s*<summary>[\s\S]*?<\/summary>)\s*<\/p>/g,
+            "$1",
+        )
+        .replace(/<p>\s*<\/details>\s*<\/p>/g, "</details>");
+}
+
+// Showdown's markdown-inside-raw-HTML path (used for authored `<details>`
+// blocks) breaks a fenced code block at any internal blank line, re-parsing the
+// remainder as an indented code block. Mermaid ignores blank lines, so strip
+// them from mermaid fences to keep diagrams intact inside collapsible blocks.
+// (Only mermaid — real code blocks rely on blank lines for readability.)
+const MERMAID_FENCE_RE = /^([ \t]*)```mermaid[ \t]*\n([\s\S]*?)\n[ \t]*```[ \t]*$/gm;
+
+function stripBlankLinesInMermaidFences(markdown: string): string {
+    return markdown.replace(MERMAID_FENCE_RE, (_m, indent: string, body: string) => {
+        const cleaned = body
+            .split("\n")
+            .filter((line) => line.trim() !== "")
+            .join("\n");
+        return `${indent}\`\`\`mermaid\n${cleaned}\n${indent}\`\`\``;
+    });
+}
+
 export async function parseMarkdownToHtml(markdown: string): Promise<string> {
-    const html = converter.makeHtml(markdown);
-    return highlightCodeBlocks(html);
+    const prepared = stripBlankLinesInMermaidFences(markdown);
+    const html = converter.makeHtml(prepared);
+    const unwrapped = unwrapDetailsParagraphs(html);
+    return highlightCodeBlocks(unwrapped);
 }
 
 export type TocItem = {

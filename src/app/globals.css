@@ -142,6 +142,38 @@ html {
   border-radius: 0.5rem;
 }
 
+.prose details {
+  @apply border-l-2 border-neutral-200 dark:border-neutral-700;
+  margin: 0.5rem 0 1rem;
+  padding-left: 1rem;
+}
+
+.prose details > summary {
+  @apply text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200;
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+  user-select: none;
+  transition: color 0.15s;
+}
+
+.prose details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose details > summary::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.prose details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
 .prose p {
   @apply my-4 text-neutral-800 dark:text-neutral-200;
 }
