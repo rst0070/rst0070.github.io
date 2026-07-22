@@ -61,52 +61,8 @@ flowchart LR
 - Zero-deployment delivery in practice: new per-customer hooks ship through admin, not through the release cycle.
   
 
-**Details:**  
-Full concept of the middleware hook chain:
-```mermaid
-flowchart LR
-    User(((User)))
-
-    subgraph InputChain["input hook chain"]
-      direction LR
-      I1["hook 1"]
-      I2["hook 2"]
-      Idots["..."]
-      In["hook n"]
-      I1 -->|pass / modify| I2
-      I2 -->|pass / modify| Idots
-      Idots -->|pass / modify| In
-    end
-
-    Agent["AI Agent"]
-
-    subgraph OutputChain["output hook chain"]
-      direction LR
-      O1["hook 1"]
-      O2["hook 2"]
-      Odots["..."]
-      Om["hook m"]
-      O1 -->|pass / modify| O2
-      O2 -->|pass / modify| Odots
-      Odots -->|pass / modify| Om
-    end
-
-    UserOut(((User)))
-
-    User -->|message| I1
-    In -->|pass / modify| Agent
-    InputChain -.->|any hook returns `block` / `skip`| UserOut
-    Agent -->|reply: streaming or final| O1
-    Om -->|pass / modify| UserOut
-    OutputChain -.->|any hook returns block| UserOut
-
-    class I1,I2,Idots,In,O1,O2,Odots,Om hook
-    class Agent actor
-    class InputChain,OutputChain chain
-```
-
+**Write-ups:**  
 Design write-ups with the full thought process:
-
 1. [Overall architecture and the sandbox isolation model](https://rst0070.github.io/notes/26-05-29-middleware-of-ai-agent) — trust boundary, three-layer execution, dual-path streaming
 2. [Reverse RPC from sandbox to application](https://rst0070.github.io/notes/26-06-08-rpc-from-sandbox-to-application) — capability registry and gate design
 3. [A contract for heterogeneous PII/guardrail vendors](https://rst0070.github.io/notes/26-07-22-contract-heterogeneous-adapters) — how the negotiated-union contract was reached
@@ -504,7 +460,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 
 ### Mem0 AI Assistant Memory System
 
- https://github.com/mem0ai/mem0 is an open source AI assistant memory system which received over **58k starts** on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.
+ https://github.com/mem0ai/mem0 is an open source AI assistant memory system which received over **58k stars** on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.
 
 - Github: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
