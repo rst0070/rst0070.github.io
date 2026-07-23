@@ -72,7 +72,7 @@ Design write-ups with the full thought process:
 
 #### Multimodal RAG
 <details>
-<summary>Multimodal RAG</summary>
+<summary>Zero-migration multimodal overlay on the existing RAG pipeline — image ingestion, cross-modal retrieval, and image-grounded answers in 6,534 of 9,026 production knowledge bases</summary>
 
 **Goal:** The requirement arrived as a single abstract sentence — "make our RAG support images" — on a platform whose only image handling was chat attachments: no ingestion, no retrieval, no image-aware generation. I scoped it into a concrete end-to-end contract: knowledge bases ingest images (standalone or embedded in documents), and both the RAG chatbot and the agentic chatbot use them at inference — under the same configuration as text, not a separate mode.  
   
@@ -86,7 +86,54 @@ Design write-ups with the full thought process:
 - **Image ingestion as a capability:** The platform already parsed many document types that can contain images (PDF, Office, …), so image extraction was added as a capability mixed into the existing document readers rather than a new pipeline. Whether it activates is decided not by a hard type check but **at adapter-connection time** — the reader asks the connected knowledge base's embedding model whether it is multimodal, emits image nodes when yes, and emits nothing when no. Text extraction behaves identically either way.
 - **Patched LlamaIndex's native engines to carry the custom image structure:** Both inference paths drop images by design — the chat engine's synthesizer flattens every retrieved node to a text string, and the agent framework returns tool results as text only. Extended both: a custom synthesizer that builds LLM messages with real image blocks, and agent-side injection of tool-result images into the scratchpad (budgeted, and cleaned out before memory persistence). Each patch engages only when tagged image nodes actually appear and the LLM is multimodal; otherwise the stock path runs, and images are skipped with a log line — never an error, never a different behavior for the user.
   
+**Result:**  
+- **72% of active knowledge bases (6,534 of 9,026) now run on the multimodal pipeline** — the overlay design serves the majority of production, not a niche opt-in. The remaining text-only knowledge bases run the same code path with the image logic dormant: the graceful-degradation design carrying both populations in production.
+- Enterprise customers can **upload and search images in their knowledge bases for the first time**, in both RAG and agentic chatbots — with cross-modal search (text→image, image→text, image→image) exposed to end users and to the agent as a tool.
+- Images went from a failure case — a hard error or a silently different LLM call path — to a **supported modality under unchanged chatbot configuration**, shipped with zero index migration.
 
+<details>
+<summary>Details</summary>
+
+- Full pipeline — the three conditional gates are what make it an overlay: text always flows the original path, image logic only engages when every gate passes
+
+    ```mermaid
+    flowchart TB
+        subgraph ING["Ingestion — existing document pipeline + image capability"]
+            direction LR
+            UP["Upload<br/>documents (PDF, Office, …)<br/>or standalone images"] --> RD["Existing document parsers<br/>(unchanged)"]
+            RD --> TXT["text chunks<br/>indexed as before"]
+            RD --> G1{"does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"}
+            G1 -- yes --> IMG["images stored as tagged entries<br/>with image embeddings"]
+            G1 -- no --> NOP["images skipped —<br/>text ingestion unaffected"]
+            TXT --> VI[("one shared vector index<br/>text & images in the same<br/>embedding space")]
+            IMG --> VI
+        end
+
+        subgraph QRY["Inference — RAG mode & AGENT mode"]
+            direction TB
+            Q["User message<br/>text and/or images"] --> RET["existing retrieval logic<br/>4 cross-modal search modes:<br/>text→text · text→image · image→text · image→image"]
+            RET --> G2{"any images involved?<br/>(retrieved or attached)"}
+            G2 -- no --> STOCK["original text-only<br/>answer path, unmodified"]
+            G2 -- yes --> G3{"does the chatbot's LLM<br/>support images?"}
+            G3 -- no --> SKIP["images quietly dropped (logged) —<br/>same answer path, no error"]
+            G3 -- yes --> MM["extended answer path:<br/>images sent to the LLM alongside text —<br/>count-limited, never persisted to chat history"]
+            STOCK --> LLM[LLM response]
+            SKIP --> LLM
+            MM --> LLM
+        end
+
+        VI --> RET
+
+        style ING fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
+        style QRY fill:#0f172a,stroke:#f472b6,color:#e2e8f0
+        style G1 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style G2 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style G3 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style VI fill:#581c87,stroke:#c084fc,color:#e2e8f0
+        style LLM fill:#9f1239,stroke:#fb7185,color:#fff
+    ```
+
+</details>
 </details>
 
 
