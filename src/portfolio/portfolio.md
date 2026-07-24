@@ -137,6 +137,95 @@ Design write-ups with the full thought process:
 </details>
 
 
+#### Deep Research
+<details>
+<summary>OpenAI-style deep research agent built on LangGraph inside a LlamaIndex platform — the two frameworks collaborate through a cross-framework interrupt protocol, with zero changes to the existing pipeline</summary>
+
+**Goal:** An OpenAI-style Deep Research mode inside the existing enterprise
+chatbot: the agent plans, gets user confirmation, then autonomously researches
+across the web *and* the tenant's internal knowledge bases, files, and tools —
+streaming progress live and delivering a structured report — as a per-conversation
+mode under unchanged chatbot configuration, not a separate product.  
+  
+
+**Constraint:**  
+- **New framework by directive, collision by consequence:** The direction was "don't build this on LlamaIndex — research a good deep-research library and integrate it." I evaluated the options and chose deepagents (LangChain/LangGraph). But the entire platform — LLM access, agents, memory, every reply path — is built on LlamaIndex, so any choice meant two frameworks with incompatible LLM interfaces, message formats, and tool-calling protocols running inside one request path.
+- **No redesign of the LLM layer:** The codebase-wide rule other engineers rely on is "business logic is coupled to LlamaIndex." Introducing a clean, framework-agnostic inference interface would have broken that shared convention — so the new framework could not get its own LLM stack. LangChain had to drive the existing LlamaIndex LLM abstraction, for every tenant-configured model, including ones with no native function-calling support.
+- **Reuse, don't reimplement, the existing chatbot:** Research needed the platform's existing capabilities — knowledge-base retrieval, file/image analysis, per-organization tools — but they are all wired into the "chatbot" pipeline in direct-implementation style, not exposed as callable services. Rebuilding them in the new framework was infeasible; the deep research agent had to invoke the old pipeline as-is.
+- **Pause and resume across stateless requests:** Plan confirmation means the agent stops mid-run, waits for a user reply that arrives in a *later* HTTP request — possibly on a different worker — and resumes exactly where it left off, on a pipeline designed for one-shot request/reply.
+  
+  
+**Approach:** Rather than bridging the two frameworks everywhere they disagree, I
+confined the collision to two seams — an LLM adapter at the bottom of the stack, a
+typed interrupt protocol at the top — and left each framework unchanged on its own
+side of the line.  
+- **Accept the codebase rule — adapt upward, don't redesign:** LlamaIndex stayed the platform's single LLM abstraction; I wrote an adapter that exposes it as a LangChain `BaseChatModel`, so the new framework drives the old one's LLMs instead of getting a second stack. The adapter absorbs the real gaps: it delegates to native function calling when the tenant's model supports it and falls back to prompt-based JSON tool calling when it doesn't, rebuilds LangChain tool schemas into the typed Pydantic schemas LlamaIndex expects (nested models, enums intact), and swallows provider quirks — so deep research runs on every tenant-configured model, not just the well-behaved ones.
+
+- **A cross-framework interrupt protocol:** I repurposed LangGraph's human-in-the-loop `interrupt()` primitive as a general RPC boundary between the two stacks. Anything the deep research agent cannot do itself is a *typed interrupt* raised from inside a tool; a thin orchestrator loop outside the graph reads the type, fulfills the request — routing it to the human (plan confirmation) or to the existing LlamaIndex pipeline (internal knowledge) — and resumes the graph with the result as the tool's return value. The insight: "waiting for a human" and "waiting for another agent framework" are the same problem — the graph pauses, someone outside answers. Neither framework knows the other exists.
+
+- **The existing chatbot as a sub-agent:** Reimplementing the chatbot's capabilities was off the table, so the entire existing pipeline became the research agent's sub-agent behind a single tool, `use_internal_assistant`. Its description tells the agent the division of labor — what the researcher does (web search, report writing) versus what the sub-agent does (knowledge bases, file/image analysis, org tools). The tool body just raises an interrupt; the orchestrator routes the query through the unmodified chatbot and feeds the answer back. Collaboration by prompt contract, zero changes to the old pipeline.
+
+- **Durable pause/resume with a two-phase state machine:** The agent's serialized checkpoint lives on the conversation record, with a small status machine (planning → researching → completed). Planning runs a strict tool-calling agent whose only moves are "ask the user" or "start research"; confirmation can arrive in a later request on a different worker, and the graph resumes mid-flight. Interrupt budgets degrade gracefully: exhausted interrupt tools stay bound but return redirect instructions instead of pausing — checkpoint replay stays valid while the model gets steered away.
+
+- **Delivered end-to-end:** adapter, interrupt protocol, prompts and agent tools, real-time progress streaming over Socket.IO (progress derived from the agent's own todo list), report rendering as a canvas document, credit-gated web search with idempotent billing, per-turn token accounting including embeddings, and frontend integration.
+  
+
+**Result:**  
+- **Two heterogeneous agent frameworks collaborate in production with zero changes to the existing pipeline** — the LlamaIndex chatbot serves deep research as a sub-agent through the interrupt protocol, and no interface in the existing codebase was redesigned to make that possible.
+- **Deep research runs on every tenant-configured LLM** — including models with no native function-calling support (via the adapter's JSON fallback). No organization had to change its chatbot configuration to gain the feature.
+- Delivered as a per-conversation mode of the existing chatbot: plan confirmation survives across requests, progress streams live, and the final report renders as a structured document.
+
+- **Depth per run — a representative example:** one question about Korean invasive-species fishing law triggered **22 autonomous web searches** over Korean-language government, legal, and news sources, producing a **~5,300-word structured report citing 18 distinct sources** — statute-level legal analysis, enforcement assessment, program budget tables, and an international comparison — from a single English-language prompt. Deep research is a deliberate, heavyweight action by design, complementing the chatbot's instant answers.
+
+
+<details>
+<summary>Details</summary>
+
+**Cross-Framework Interrupt Protocol:**  
+```mermaid
+sequenceDiagram
+    participant User
+    participant Orch as Orchestrator<br/>(Django)
+    participant DR as Deep Research Agent<br/>(LangChain / LangGraph)
+    participant EA as Existing Agent<br/>(LlamaIndex)
+
+    User->>Orch: User query
+
+    rect rgb(30, 41, 59)
+    Note over Orch,DR: Phase 1 — Planning (status: started)
+    Orch->>DR: arun(status=started)
+    DR->>DR: Create research plan
+    DR-->>Orch: interrupt(USER_INPUT)
+    Orch-->>User: Present plan
+    User->>Orch: Confirm
+    Orch->>DR: Command(resume=user_input)
+    DR-->>Orch: interrupt(RUN_RESEARCH)
+    end
+
+    rect rgb(15, 23, 42)
+    Note over Orch,EA: Phase 2 — Research (status: running)
+    Orch->>DR: Command(resume="Start research")
+
+    loop Research Loop
+        DR->>DR: internet_search, write_file, etc.
+        DR->>DR: use_internal_assistant(query)
+        DR-->>Orch: interrupt(CHATBOT_RESPONSE)
+        Orch->>EA: Route query to existing agent
+        EA-->>Orch: LlamaIndex response
+        Orch->>DR: Command(resume=response)
+    end
+
+    DR->>DR: append_to_final_report
+    DR->>DR: finish_research
+    DR-->>Orch: interrupt(FINISH_RESEARCH)
+    end
+
+    Orch-->>User: Final report
+```
+
+</details>
+</details>
+
 #### Agent Evaluation
 <details>
 <summary>Agent Evaluation</summary>
@@ -187,63 +276,6 @@ Design write-ups with the full thought process:
 
 - Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO events broadcasting
 - Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
-</details>
-
-#### Deep Research
-<details>
-<summary>Deep Research</summary>
-
-- **Constraint:** The deep research feature was specified to use LangChain/LangGraph, while the entire existing AI pipeline was built on LlamaIndex — the two frameworks use incompatible LLM interfaces, message formats, and tool-calling protocols.
-- Designed a cross-framework interrupt protocol to enable the LangChain deep research agent to delegate queries to the existing LlamaIndex agent at runtime: the deep research agent raises a typed interrupt, the orchestrator routes the query through the existing agent pipeline, and resumes the LangChain agent with the response — enabling two heterogeneous agent systems to collaborate without rewriting either.
-- Delivered end-to-end: LLM adapter between LlamaIndex and Langchain, cross-framework interrupt protocol, prompt design, agent tools, streaming over SocketIO, and frontend integration.
-
-<details>
-<summary>Details</summary>
-
-- Cross-Framework Interrupt Protocol
-
-    ```mermaid
-    sequenceDiagram
-        participant User
-        participant Orch as Orchestrator<br/>(Django)
-        participant DR as Deep Research Agent<br/>(LangChain / LangGraph)
-        participant EA as Existing Agent<br/>(LlamaIndex)
-
-        User->>Orch: User query
-
-        rect rgb(30, 41, 59)
-        Note over Orch,DR: Phase 1 — Planning (status: started)
-        Orch->>DR: arun(status=started)
-        DR->>DR: Create research plan
-        DR-->>Orch: interrupt(USER_INPUT)
-        Orch-->>User: Present plan
-        User->>Orch: Confirm
-        Orch->>DR: Command(resume=user_input)
-        DR-->>Orch: interrupt(RUN_RESEARCH)
-        end
-
-        rect rgb(15, 23, 42)
-        Note over Orch,EA: Phase 2 — Research (status: running)
-        Orch->>DR: Command(resume="Start research")
-
-        loop Research Loop
-            DR->>DR: internet_search, write_file, etc.
-            DR->>DR: use_internal_assistant(query)
-            DR-->>Orch: interrupt(CHATBOT_RESPONSE)
-            Orch->>EA: Route query to existing agent
-            EA-->>Orch: LlamaIndex response
-            Orch->>DR: Command(resume=response)
-        end
-
-        DR->>DR: append_to_final_report
-        DR->>DR: finish_research
-        DR-->>Orch: interrupt(FINISH_RESEARCH)
-        end
-
-        Orch-->>User: Final report
-    ```
-
-</details>
 </details>
 
 #### Agent Conversation Memory
