@@ -283,9 +283,89 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 </details>
 
 
+#### Agent Schedule
+<details>
+<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9,600 runs/week from 143 self-serve production schedules</summary>
+  
+
+**Goal:** The requirement arrived as a one-line verbal request inspired by a competitor feature — "our agents should be able to run on a schedule." I scoped it into a concrete end-to-end contract: any AI agent on the platform can execute autonomously — on a cron expression, a fixed interval, or a one-time trigger — with its result delivered to the places people already watch (existing conversations, external systems via webhook), every run recorded in an auditable history, and the whole thing configured self-serve by enterprise admins under per-tenant limits, not provisioned by engineers.  
+  
+  
+**Constraint:**  
+- **No spec, no scheduling infrastructure:** nothing in the platform executed anything on a timer, and there was no product design to work from — what "running on a schedule" should mean, both as a product and as an architecture, was mine to define against a one-sentence request.
+- **The agent is not a callable service:** the codebase is written in direct-implementation style — agent invocation, message persistence, and token billing are wired inline into one flow that assumes a real human sending a message into a conversation. There is no portable "run the agent" interface to call from a scheduler, and rebuilding one would fork billing and persistence logic that must stay consistent. Scheduled execution had to enter through the existing human-facing pipeline unchanged.  
+  
+
+**Approach:** Two design decisions shaped the system: don't extract the agent — impersonate the user instead; and treat every run as unattended by default, so failure handling is designed in, not bolted on.  
+- **The scheduler enters the pipeline as a synthetic user:** instead of carving a callable interface out of the direct-implementation pipeline, each schedule owns a system-created contact, and every run injects the schedule's prompt as a synthetic incoming message — then lets the unchanged reply pipeline do what it always does: invoke the agent with the tenant's full configuration (knowledge bases, tools, LLM), persist messages, bill tokens. The agent cannot tell a scheduled run from a human one, and zero inference logic was forked or duplicated.
+- **Two execution modes, because "run on a schedule" splits into two products:**
+  *in-context* mode gives a schedule a dedicated persistent conversation, so
+  each run sees the accumulated history of previous runs — enabling iterative
+  work like "compare today's numbers with the trend you reported yesterday."
+  *Isolated* mode creates an ephemeral conversation per run and destroys it
+  after — stateless by construction for repeated one-shot tasks. One prompt
+  field, one pipeline, two memory semantics.
+- **Trigger layer on Celery Beat:** each schedule maps to a dynamically managed periodic task — cron (timezone-aware), fixed interval, or one-shot — with a lifecycle service keeping the scheduler entry in sync through create, update, pause, and soft-delete.
+- **Reliability designed for nobody-is-watching:** the task queue's at-least-once semantics mean a killed worker redelivers the task — and a duplicate run silently spends real tenant credits — so every execution is deduplicated by an atomic per-schedule lock. A guard chain (enabled → max executions → credit balance) runs before the agent does, every run writes an audit record with status, errors, and per-run token usage, and delivery to multiple targets degrades to a "partial" status per failed target instead of all-or-nothing.
+- **Tenant input is validated by construction, not trust:** an arbitrary cron expression's real firing frequency can't be checked statically, so it is measured — simulating upcoming fire times and rejecting expressions that beat the platform's minimum interval. Webhook delivery goes through an SSRF-safe transport, delivery targets are validated to stay inside the tenant's own agent, and per-organization caps bound how many schedules can be active.
+  
+
+**Result:**  
+- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 107 active organizations, scheduled execution went from nonexistent to a continuously running workload.
+- **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
+- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failure surface as queryable records, not silent gaps or customer complaints.
+- Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
+
+<details>
+<summary>Details</summary>
+
+- Execution modes — **in-context** (persistent conversation with accumulated context across runs) and **isolated** (stateless, ephemeral resources cleaned up after each run), supporting both iterative analysis and one-off tasks
+- Architecture
+
+    ```mermaid
+    flowchart TD
+        subgraph Trigger["Schedule Trigger"]
+            CB[Celery Beat] -->|cron / interval / one-shot| Task[Celery Task]
+        end
+
+        Task --> Guards
+
+        subgraph Guards["Pre-execution Guards"]
+            direction LR
+            CK[Credit Check] --- EN[Enabled Check] --- MX[Max Executions Check]
+        end
+
+        Guards --> Mode{Execution Mode}
+
+        subgraph Execution["Agent Execution"]
+            Mode -->|In-Context| IC[Chatbot Ability\n+ Accumulated Context\nvia dedicated conversation]
+            Mode -->|Isolated| IS[Chatbot Ability Only\nephemeral conversation\ncleaned up after run]
+        end
+
+        IC --> Delivery
+        IS --> Delivery
+
+        subgraph Delivery["Multi-Target Delivery"]
+            direction LR
+            CV[Conversations\noutgoing messages] --- WH[Webhooks\nHTTP POST]
+        end
+
+        Delivery --> Audit[Execution Audit Record\nstatus / token usage / errors]
+
+        style Trigger fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
+        style Guards fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style Execution fill:#0f172a,stroke:#818cf8,color:#e2e8f0
+        style Delivery fill:#1e293b,stroke:#34d399,color:#e2e8f0
+        style Audit fill:#581c87,stroke:#c084fc,color:#e2e8f0
+    ```
+
+</details>
+</details>
+  
+  
 #### Agent Evaluation
 <details>
-<summary>Agent Evaluation</summary>
+<summary>Tiered pass/fail semantics over DeepEval metrics and an LLM-generated improvement playbook — evaluation results non-technical enterprise users can actually act on</summary>
 
 - **Constraint:** The existing evaluation pipeline used DeepEval’s raw metric pass/fail output directly — non-technical enterprise users received 8+ individual metric scores with no guidance on which failures mattered or what to do about them, making evaluation results effectively unactionable.
 - Redesigned the pass/fail determination by designing a **tiered metric priority system** based on studying DeepEval’s metric semantics to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
@@ -334,64 +414,8 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 - Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO events broadcasting
 - Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
 </details>
-
-
-#### Agent Schedule
-<details>
-<summary>Agent Schedule</summary>
-
-- **Constraint:** No scheduling infrastructure existed; the only requirement was a verbal request inspired by a competitor feature — all product design, technical architecture, and implementation were self-directed
-- Designed and implemented an end-to-end agent scheduling system from scratch, enabling AI agents to execute autonomously on cron, interval, or one-shot schedules via Celery Beat and django-celery-beat
-- Implemented execution audit trail with token usage tracking, soft-delete with race condition handling, and per-organization schedule limits
-- Introduced a ports-and-adapters architecture to decouple business logic from infrastructure dependencies (Celery Beat registration, RAG service invocation), enabling each concern to be tested and replaced independently
-- Delivered full-stack: Django models, service layer, REST API (CRUD + toggle + run-now), Celery task, and admin frontend
-
-<details>
-<summary>Details</summary>
-
-- Execution modes — **in-context** (persistent conversation with accumulated context across runs) and **isolated** (stateless, ephemeral resources cleaned up after each run), supporting both iterative analysis and one-off tasks
-- Architecture
-
-    ```mermaid
-    flowchart TD
-        subgraph Trigger["Schedule Trigger"]
-            CB[Celery Beat] -->|cron / interval / one-shot| Task[Celery Task]
-        end
-
-        Task --> Guards
-
-        subgraph Guards["Pre-execution Guards"]
-            direction LR
-            CK[Credit Check] --- EN[Enabled Check] --- MX[Max Executions Check]
-        end
-
-        Guards --> Mode{Execution Mode}
-
-        subgraph Execution["Agent Execution"]
-            Mode -->|In-Context| IC[Chatbot Ability\n+ Accumulated Context\nvia dedicated conversation]
-            Mode -->|Isolated| IS[Chatbot Ability Only\nephemeral conversation\ncleaned up after run]
-        end
-
-        IC --> Delivery
-        IS --> Delivery
-
-        subgraph Delivery["Multi-Target Delivery"]
-            direction LR
-            CV[Conversations\noutgoing messages] --- WH[Webhooks\nHTTP POST]
-        end
-
-        Delivery --> Audit[Execution Audit Record\nstatus / token usage / errors]
-
-        style Trigger fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
-        style Guards fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-        style Execution fill:#0f172a,stroke:#818cf8,color:#e2e8f0
-        style Delivery fill:#1e293b,stroke:#34d399,color:#e2e8f0
-        style Audit fill:#581c87,stroke:#c084fc,color:#e2e8f0
-    ```
-
-</details>
-</details>
-
+  
+  
 #### Production Hardening
 <details>
 <summary>Auth/session security overhaul and resumable LLM streaming — full-stack reliability work across Django, Redis, Socket.IO, and two Vue apps</summary>
