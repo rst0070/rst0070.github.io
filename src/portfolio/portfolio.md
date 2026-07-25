@@ -31,404 +31,400 @@ AI Agent platform for Enterprise [maiagent.ai](https://maiagent.ai/en/about)
 
 Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex codebase - designing within the constraints of the existing system, across AI pipeline, backend, and frontend.
 
-- **Agent Middleware**
-    - **Constraint:** Enterprise customers needed per-tenant custom logic (PII redaction, prompt-injection blocking, output moderation) on every agent message, but hook requirements changed weekly, were written by non-engineers, and shipped through admin — ruling out git-tracked, deploy-gated Python functions.
-    - Designed and delivered end-to-end a middleware hook system that sits between the user and the AI agent, where hook code lives in the database and executes in a gVisor-sandboxed container, with a JSON-formatted protocol over a single Docker-exec socket as the only integration surface — keeping untrusted per-customer code fully isolated from the application internals.
-    - Designed a three-layer execution model — application engine, sandbox supervisor, and per-hook handlers — to manage middleware hook chain with isolation
-    - Designed a reverse-direction RPC protocol so hooks can call back into the application (e.g. invoke an LLM, check credits)
-    - Handled streaming output through a buffered stream path with a lookback tail for real-time UX (solving cross-chunk pattern splitting)
-    - Solved three distinct isolation concerns in a layered model:
-        - runtime security via gVisor
-        - code-to-code isolation via fresh namespaces per handler (preventing globals, imports, state leakage between hooks in the same chain)
-        - resource isolation via cgroups — settling on one container per trigger-point middleware chain as the cost-isolation tradeoff after ruling out one container per hook.
+#### Agent Middleware
+<details>
+<summary>Sandboxed per-tenant hook layer around the AI agent — 77k executions/week across 10 enterprise orgs</summary>
 
-    <details>
-    <summary>Details</summary>
+```mermaid
+flowchart LR
+    U(((User))) -->|message| IN["input hook chain"] --> A["AI Agent"]
+    A -->|reply / stream| OUT["output hook chain"] --> U2(((User)))
+    IN -.->|block| U2
+```
 
-    Design writeup covering the sandbox protocol, isolation model, and streaming architecture: [middleware-of-ai-agent](https://rst0070.github.io/notes/26-05-29-middleware-of-ai-agent)
+**Goal:** Every message rule on the platform — "reply in Traditional Chinese", "never mention competitors", PII masking — relied on prompting, which fails ~5% of the time, or on hardcoded backend logic, which can't scale per-customer in multi-tenant SaaS. The goal was a 100% deterministic interception layer before and after the AI agent, where per-tenant rules ship with no deployment.
 
-    Follow-up on the reverse RPC protocol and capability registry design: [rpc-from-sandbox-to-application](https://rst0070.github.io/notes/26-06-08-rpc-from-sandbox-to-application)
+**Constraint:** The realistic demand was ~one new custom hook per week — per-customer, written by non-engineers, changing often — which rules out git-tracked, deploy-gated code and forces untrusted code onto the hot path of every message. The design had to give that code application context without internal access, isolate hooks from different authors sharing one chain, and stream in real time without ever flashing unredacted PII.
 
-    Concept graph of Middleware hook chain:
+**Approach:** Designed and delivered end-to-end a middleware hook system where hook code lives in the database and executes in a gVisor-sandboxed container — one container per trigger point (input / output streaming / output final), with a JSON protocol over a single docker-exec socket as the only integration surface.
 
-    ```mermaid
-    flowchart LR
-        User(((User)))
+- **Three-layer execution model** — application engine, stdlib-only supervisor, per-hook handlers in fresh namespaces. The sandbox is stateless; the trusted side threads a per-hook state vector, so hooks from different authors can't read each other's state.
+- **Reverse-direction RPC** (`host_call`) so hooks can invoke application capabilities (run an LLM, consume credit) through a gated capability registry — the sandbox names an effect, the application decides whether it's allowed and what it costs.
+- **Dual-path streaming** — a buffered stream path with a lookback tail catches PII patterns split across chunks in real time, while a final pass over the assembled reply is the source of truth for persistence: at worst over-redacted, never under-redacted.
+- **Layered isolation** — runtime security via gVisor, code-to-code isolation via fresh namespaces per handler, resource isolation via cgroups, settling on one container per trigger-point chain after ruling out one container per hook as too expensive.
+- **Negotiated-union contract for heterogeneous detection vendors** (one supports ~200 PII categories, another 30): business logic owns a small stable category set, providers declare their own catalogs, and selections are validated at configuration time — so provider churn never touches the business contract.
 
-        subgraph InputChain["input hook chain"]
-          direction LR
-          I1["hook 1"]
-          I2["hook 2"]
-          Idots["..."]
-          In["hook n"]
-          I1 -->|pass / modify| I2
-          I2 -->|pass / modify| Idots
-          Idots -->|pass / modify| In
-        end
+**Result:**
 
-        Agent["AI Agent"]
+- **77k hook executions per week** against 28k agent messages per week — **~2.7 hook runs per message**, showing adopters chain multiple hooks and attach them to both input and output paths.
+- **10 enterprise organizations** (of 107 active on the platform) run custom hooks in production.
+- Zero-deployment delivery in practice: new per-customer hooks ship through admin, not through the release cycle.
+  
 
-        subgraph OutputChain["output hook chain"]
-          direction LR
-          O1["hook 1"]
-          O2["hook 2"]
-          Odots["..."]
-          Om["hook m"]
-          O1 -->|pass / modify| O2
-          O2 -->|pass / modify| Odots
-          Odots -->|pass / modify| Om
-        end
+**Write-ups:**  
+Design write-ups with the full thought process:
+1. [Overall architecture and the sandbox isolation model](https://rst0070.github.io/notes/26-05-29-middleware-of-ai-agent) — trust boundary, three-layer execution, dual-path streaming
+2. [Reverse RPC from sandbox to application](https://rst0070.github.io/notes/26-06-08-rpc-from-sandbox-to-application) — capability registry and gate design
+3. [A contract for heterogeneous PII/guardrail vendors](https://rst0070.github.io/notes/26-07-22-contract-heterogeneous-adapters) — how the negotiated-union contract was reached
 
-        UserOut(((User)))
+</details>
 
-        User -->|message| I1
-        In -->|pass / modify| Agent
-        InputChain -.->|any hook returns `block` / `skip`| UserOut
-        Agent -->|reply: streaming or final| O1
-        Om -->|pass / modify| UserOut
-        OutputChain -.->|any hook returns block| UserOut
 
-        class I1,I2,Idots,In,O1,O2,Odots,Om hook
-        class Agent actor
-        class InputChain,OutputChain chain
-    ```
+#### Multimodal RAG
+<details>
+<summary>Zero-migration multimodal overlay on the existing RAG pipeline — image ingestion, cross-modal retrieval, and image-grounded answers in 6,534 of 9,026 production knowledge bases</summary>
 
-    Architecture(Application engine, Sandbox supervisor, per hook handler):
+**Goal:** The requirement arrived as a single abstract sentence — "make our RAG support images" — on a platform whose only image handling was chat attachments: no ingestion, no retrieval, no image-aware generation. I scoped it into a concrete end-to-end contract: knowledge bases ingest images (standalone or embedded in documents), and both the RAG chatbot and the agentic chatbot use them at inference — under the same configuration as text, not a separate mode.  
+  
+**Constraint:**  
+- **Text-only LlamaIndex:** The codebase is deeply coupled to LlamaIndex, and LlamaIndex's core abstractions have no concept of image nodes — the response synthesizer flattens every retrieved node to a text string, rerankers assume text content, and the agent framework returns tool results as text only. Images don't fail loudly anywhere; they get **silently stripped** at each layer. Rewriting the stack was off the table, so every fix had to be a surgical extension of an existing LlamaIndex class.
+- **The "same index" mandate:** My first design used a separate Elasticsearch index for image vectors, but the direction was "keep it simple" — image data had to live in the **same index** as text nodes, flow through the same ingestion/deletion/persistence pipeline, and require zero migration.
+- **Same configuration, graceful degradation:** Multi-tenant reality: some knowledge bases run non-multimodal embedding models, some chatbots run non-multimodal LLMs, and the platform previously reacted to an image by throwing a hard error or silently switching to a different LLM call path. The feature had to be **one code path** that degrades gracefully — images used when the stack supports them, cleanly skipped when it doesn't — with no per-tenant forks.
+  
+**Approach:** Introduced multimodal processing as an overlay on the existing text pipeline — at every layer it activates only when images are present and the connected components support them; otherwise the original text path runs unchanged.  
+- **Indexing with a small trick:** The same-index mandate constrains retrieval too — the *existing* retriever stack had to serve image results, and LlamaIndex has no image support on that path. So an image is indexed as an ordinary text node carrying a `node_type='image'` tag, with its embedding pre-generated by a multimodal model into the shared vector space. Existing indexing, retrieval, and deletion logic runs unmodified; downstream layers recognize images by the tag alone, and one query path yields all four cross-modal modes (text→text, text→image, image→text, image→image).
+- **Image ingestion as a capability:** The platform already parsed many document types that can contain images (PDF, Office, …), so image extraction was added as a capability mixed into the existing document readers rather than a new pipeline. Whether it activates is decided not by a hard type check but **at adapter-connection time** — the reader asks the connected knowledge base's embedding model whether it is multimodal, emits image nodes when yes, and emits nothing when no. Text extraction behaves identically either way.
+- **Patched LlamaIndex's native engines to carry the custom image structure:** Both inference paths drop images by design — the chat engine's synthesizer flattens every retrieved node to a text string, and the agent framework returns tool results as text only. Extended both: a custom synthesizer that builds LLM messages with real image blocks, and agent-side injection of tool-result images into the scratchpad (budgeted, and cleaned out before memory persistence). Each patch engages only when tagged image nodes actually appear and the LLM is multimodal; otherwise the stock path runs, and images are skipped with a log line — never an error, never a different behavior for the user.
+  
+**Result:**  
+- **72% of active knowledge bases (6,534 of 9,026) now run on the multimodal pipeline** — the overlay design serves the majority of production, not a niche opt-in. The remaining text-only knowledge bases run the same code path with the image logic dormant: the graceful-degradation design carrying both populations in production.
+- Enterprise customers can **upload and search images in their knowledge bases for the first time**, in both RAG and agentic chatbots — with cross-modal search (text→image, image→text, image→image) exposed to end users and to the agent as a tool.
+- Images went from a failure case — a hard error or a silently different LLM call path — to a **supported modality under unchanged chatbot configuration**, shipped with zero index migration.
 
-    ```mermaid
-    flowchart LR
-        subgraph Caller["The application (trusted)"]
-          direction TB
-          Engine["engine
-          • chain session
-          • state vector
-          • audit log"]
-        end
+<details>
+<summary>Details</summary>
 
-        subgraph Sandbox["Sandbox (gVisor)"]
-          direction TB
-          Supervisor["supervisor
-          (stdlib-only, stateless)"]
-          H1["handler 1
-          (fresh namespace)"]
-          H2["handler 2
-          (fresh namespace)"]
-          Hn["..."]
-          Supervisor --> H1
-          Supervisor --> H2
-          Supervisor --> Hn
-        end
-
-        Engine -->|init / chunk| Supervisor
-        Supervisor -->|ack / out / error| Engine
-
-        class Caller trusted
-        class Sandbox untrusted
-    ```
-
-    reverse-direction RPC protocol:
+- Full pipeline — the three conditional gates are what make it an overlay: text always flows the original path, image logic only engages when every gate passes
 
     ```mermaid
-    sequenceDiagram
-        participant J as Async job (deferred effect)
-        participant A as Application
-        participant H as Hook (sandbox)
+    flowchart TB
+        subgraph ING["Ingestion — existing document pipeline + image capability"]
+            direction LR
+            UP["Upload<br/>documents (PDF, Office, …)<br/>or standalone images"] --> RD["Existing document parsers<br/>(unchanged)"]
+            RD --> TXT["text chunks<br/>indexed as before"]
+            RD --> G1{"does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"}
+            G1 -- yes --> IMG["images stored as tagged entries<br/>with image embeddings"]
+            G1 -- no --> NOP["images skipped —<br/>text ingestion unaffected"]
+            TXT --> VI[("one shared vector index<br/>text & images in the same<br/>embedding space")]
+            IMG --> VI
+        end
 
-        A->>+H: forward — run the hook on this text
-        H->>+A: backward — host_call(name, payload)
-        Note over A: gate logic (sync) — admit or refuse the call
-        A-->>-H: result
-        Note over A: record effect (not committed here)
-        H-->>-A: modified text
-        A-)J: trigger deferred job later — off the hot path
+        subgraph QRY["Inference — RAG mode & AGENT mode"]
+            direction TB
+            Q["User message<br/>text and/or images"] --> RET["existing retrieval logic<br/>4 cross-modal search modes:<br/>text→text · text→image · image→text · image→image"]
+            RET --> G2{"any images involved?<br/>(retrieved or attached)"}
+            G2 -- no --> STOCK["original text-only<br/>answer path, unmodified"]
+            G2 -- yes --> G3{"does the chatbot's LLM<br/>support images?"}
+            G3 -- no --> SKIP["images quietly dropped (logged) —<br/>same answer path, no error"]
+            G3 -- yes --> MM["extended answer path:<br/>images sent to the LLM alongside text —<br/>count-limited, never persisted to chat history"]
+            STOCK --> LLM[LLM response]
+            SKIP --> LLM
+            MM --> LLM
+        end
+
+        VI --> RET
+
+        style ING fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
+        style QRY fill:#0f172a,stroke:#f472b6,color:#e2e8f0
+        style G1 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style G2 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style G3 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style VI fill:#581c87,stroke:#c084fc,color:#e2e8f0
+        style LLM fill:#9f1239,stroke:#fb7185,color:#fff
+    ```
+
+</details>
+</details>
+
+
+#### Deep Research
+<details>
+<summary>OpenAI-style deep research agent built on LangGraph inside a LlamaIndex platform — the two frameworks collaborate through a cross-framework interrupt protocol, with zero changes to the existing pipeline</summary>
+
+**Goal:** An OpenAI-style Deep Research mode inside the existing enterprise
+chatbot: the agent plans, gets user confirmation, then autonomously researches
+across the web *and* the tenant's internal knowledge bases, files, and tools —
+streaming progress live and delivering a structured report — as a per-conversation
+mode under unchanged chatbot configuration, not a separate product.  
+  
+
+**Constraint:**  
+- **New framework by directive, collision by consequence:** The direction was "don't build this on LlamaIndex — research a good deep-research library and integrate it." I evaluated the options and chose deepagents (LangChain/LangGraph). But the entire platform — LLM access, agents, memory, every reply path — is built on LlamaIndex, so any choice meant two frameworks with incompatible LLM interfaces, message formats, and tool-calling protocols running inside one request path.
+- **No redesign of the LLM layer:** The codebase-wide rule other engineers rely on is "business logic is coupled to LlamaIndex." Introducing a clean, framework-agnostic inference interface would have broken that shared convention — so the new framework could not get its own LLM stack. LangChain had to drive the existing LlamaIndex LLM abstraction, for every tenant-configured model, including ones with no native function-calling support.
+- **Reuse, don't reimplement, the existing chatbot:** Research needed the platform's existing capabilities — knowledge-base retrieval, file/image analysis, per-organization tools — but they are all wired into the "chatbot" pipeline in direct-implementation style, not exposed as callable services. Rebuilding them in the new framework was infeasible; the deep research agent had to invoke the old pipeline as-is.
+- **Pause and resume across stateless requests:** Plan confirmation means the agent stops mid-run, waits for a user reply that arrives in a *later* HTTP request — possibly on a different worker — and resumes exactly where it left off, on a pipeline designed for one-shot request/reply.
+  
+  
+**Approach:** Rather than bridging the two frameworks everywhere they disagree, I
+confined the collision to two seams — an LLM adapter at the bottom of the stack, a
+typed interrupt protocol at the top — and left each framework unchanged on its own
+side of the line.  
+- **Accept the codebase rule — adapt upward, don't redesign:** LlamaIndex stayed the platform's single LLM abstraction; I wrote an adapter that exposes it as a LangChain `BaseChatModel`, so the new framework drives the old one's LLMs instead of getting a second stack. The adapter absorbs the real gaps: it delegates to native function calling when the tenant's model supports it and falls back to prompt-based JSON tool calling when it doesn't, rebuilds LangChain tool schemas into the typed Pydantic schemas LlamaIndex expects (nested models, enums intact), and swallows provider quirks — so deep research runs on every tenant-configured model, not just the well-behaved ones.
+
+- **A cross-framework interrupt protocol:** I repurposed LangGraph's human-in-the-loop `interrupt()` primitive as a general RPC boundary between the two stacks. Anything the deep research agent cannot do itself is a *typed interrupt* raised from inside a tool; a thin orchestrator loop outside the graph reads the type, fulfills the request — routing it to the human (plan confirmation) or to the existing LlamaIndex pipeline (internal knowledge) — and resumes the graph with the result as the tool's return value. The insight: "waiting for a human" and "waiting for another agent framework" are the same problem — the graph pauses, someone outside answers. Neither framework knows the other exists.
+
+- **The existing chatbot as a sub-agent:** Reimplementing the chatbot's capabilities was off the table, so the entire existing pipeline became the research agent's sub-agent behind a single tool, `use_internal_assistant`. Its description tells the agent the division of labor — what the researcher does (web search, report writing) versus what the sub-agent does (knowledge bases, file/image analysis, org tools). The tool body just raises an interrupt; the orchestrator routes the query through the unmodified chatbot and feeds the answer back. Collaboration by prompt contract, zero changes to the old pipeline.
+
+- **Durable pause/resume with a two-phase state machine:** The agent's serialized checkpoint lives on the conversation record, with a small status machine (planning → researching → completed). Planning runs a strict tool-calling agent whose only moves are "ask the user" or "start research"; confirmation can arrive in a later request on a different worker, and the graph resumes mid-flight. Interrupt budgets degrade gracefully: exhausted interrupt tools stay bound but return redirect instructions instead of pausing — checkpoint replay stays valid while the model gets steered away.
+
+- **Delivered end-to-end:** adapter, interrupt protocol, prompts and agent tools, real-time progress streaming over Socket.IO (progress derived from the agent's own todo list), report rendering as a canvas document, credit-gated web search with idempotent billing, per-turn token accounting including embeddings, and frontend integration.
+  
+
+**Result:**  
+- **Two heterogeneous agent frameworks collaborate in production with zero changes to the existing pipeline** — the LlamaIndex chatbot serves deep research as a sub-agent through the interrupt protocol, and no interface in the existing codebase was redesigned to make that possible.
+- **Deep research runs on every tenant-configured LLM** — including models with no native function-calling support (via the adapter's JSON fallback). No organization had to change its chatbot configuration to gain the feature.
+- Delivered as a per-conversation mode of the existing chatbot: plan confirmation survives across requests, progress streams live, and the final report renders as a structured document.
+
+- **Depth per run — a representative example:** one question about Korean invasive-species fishing law triggered **22 autonomous web searches** over Korean-language government, legal, and news sources, producing a **~5,300-word structured report citing 18 distinct sources** — statute-level legal analysis, enforcement assessment, program budget tables, and an international comparison — from a single English-language prompt. Deep research is a deliberate, heavyweight action by design, complementing the chatbot's instant answers.
+
+
+<details>
+<summary>Details</summary>
+
+**Cross-Framework Interrupt Protocol:**  
+```mermaid
+sequenceDiagram
+    participant User
+    participant Orch as Orchestrator<br/>(Django)
+    participant DR as Deep Research Agent<br/>(LangChain / LangGraph)
+    participant EA as Existing Agent<br/>(LlamaIndex)
+
+    User->>Orch: User query
+
+    rect rgb(30, 41, 59)
+    Note over Orch,DR: Phase 1 — Planning (status: started)
+    Orch->>DR: arun(status=started)
+    DR->>DR: Create research plan
+    DR-->>Orch: interrupt(USER_INPUT)
+    Orch-->>User: Present plan
+    User->>Orch: Confirm
+    Orch->>DR: Command(resume=user_input)
+    DR-->>Orch: interrupt(RUN_RESEARCH)
+    end
+
+    rect rgb(15, 23, 42)
+    Note over Orch,EA: Phase 2 — Research (status: running)
+    Orch->>DR: Command(resume="Start research")
+
+    loop Research Loop
+        DR->>DR: internet_search, write_file, etc.
+        DR->>DR: use_internal_assistant(query)
+        DR-->>Orch: interrupt(CHATBOT_RESPONSE)
+        Orch->>EA: Route query to existing agent
+        EA-->>Orch: LlamaIndex response
+        Orch->>DR: Command(resume=response)
+    end
+
+    DR->>DR: append_to_final_report
+    DR->>DR: finish_research
+    DR-->>Orch: interrupt(FINISH_RESEARCH)
+    end
+
+    Orch-->>User: Final report
+```
+
+</details>
+</details>
+
+
+#### Agent Conversation Memory
+<details>
+<summary>Diagnosed and fixed silently-failing long-term vector memory (0/4 → 4/4 recall across 8,000+ turns) and added agentic conversation-search tools — zero added LLM cost, zero migration</summary>
+  
+Demo: the agent recovering the exact wording of the first message in a long conversation — an exact-quote recall that pure vector similarity cannot do.  
+<video controls preload="metadata" src="/assets/portfolio/conversation-search-tool.mp4"></video>  
+  
+**Goal:** The assignment arrived deliberately open-ended — "find any issues in our memory system, or points to enhance it" — with a single hint: the agent's recall of prior conversation felt unreliable in production. There was no bug report, no benchmark, no metric; whether memory was even broken was itself the first question to answer. After investigation I scoped it into a two-part goal:
+1. **Fix the passive path**
+    make long-term vector memory *measurably* reliable: build the missing retrieval evaluation first, then fix whatever it exposes.
+2. **Add an active path**
+    cover the questions semantic recall structurally cannot answer ("did you resolve the issue I reported last week?", "what exact wording did we agree on?") by letting the agent search its own conversation history through tools.
+  
+
+**Constraint:**
+- **No way to even see the failure:**
+    Long-term memory had no tests, no metrics, and no evaluation data — retrieval could fail silently on every message and nothing would catch it. Any fix had to start by building the measurement that proved the problem existed, and the failures only reproduced at scale (beyond ~50 turns), so realistic multi-thousand-turn conversation data had to be sourced first.
+- **Zero additional LLM cost:** 
+    Memory runs on every message of every conversation in a multi-tenant SaaS — a per-message LLM call for summarization or reranking (the approach most memory products take) multiplies inference cost platform-wide. Both the fix and the new recall mechanism had to work without adding LLM cost beyond what the pipeline already spent.
+- **Existing stack only, no migration:** 
+    The memory pipeline is built on LlamaIndex's `Memory` abstraction over a shared Elasticsearch index, and conversations live in the production message table. Improvements had to be surgical extensions of the existing classes — no new index, no schema migration, no replacement framework.
+- **The LLM is an untrusted caller:** 
+    Any search tool exposed to the agent receives  LLM-generated input on a hot path — a malformed or malicious regex hits the production database, and a hallucinated ID could cross conversation boundaries in a multi-tenant system. The tools had to be safe against bad input by construction, not by prompting.
+  
+
+**Approach:** One mechanism per goal — repair the passive vector memory so it recalls reliably on its own, and give the agent tools to actively recall what embeddings structurally cannot.  
+  
+**1. Passive path — measure first, then fix what the measurement exposes:**  
+- **Built the missing benchmark before touching the code:**
+    a quantitative retrieval evaluation with evidence-based ground truth, built from the Salesforce/ConvoMem HuggingFace dataset and published as a reusable dataset ([wonbin-tw/mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test)) — 4 recall scenarios over multi-thousand-turn conversations, run against the real production stack (Elasticsearch + OpenAI embeddings), so a "fix" only counts if the number moves.
+- **Two root causes surfaced by systematic testing:**
+    LlamaIndex's default XML-wrapped formatting of stored memory nodes was degrading vector similarity matching, and the absence of deduplication was polluting the Elasticsearch index with identical memory chunks.
+- **Rewrote the persistence path, not the retrieval path:** 
+    each message is now stored as a structured Document carrying session ID, role, and message metadata instead of preformatted XML — role markup is re-attached at *read* time for the LLM, so presentation never contaminates the embedding space. Deduplication became a property of the write path itself: every node gets a deterministic content-hashed ID, so re-ingesting identical content overwrites instead of duplicating — no cleanup job, no second index.
+  
+**2. Active path — a search → locate → expand pattern over the conversation:**
+- **Two tools, deliberately asymmetric:** 
+    a *search* tool does keyword/regex search over the current conversation and returns many short snippets with match positions; an *expand* tool returns the N neighboring messages around one chosen match. Splitting "many shallow matches" from "one deep context window" lets the LLM chain them efficiently — wide and cheap first, deep and targeted second — instead of overpaying tokens on every call.
+- **Safe against the untrusted caller by construction:**
+    pattern length cap, per-message content truncation, page size and context window caps, and a silent fallback to literal substring search when an LLM-supplied regex fails to compile — invalid input never surfaces as an exception to the agent. The conversation ID is bound when the tool is constructed, never a tool parameter, so the LLM cannot query another tenant's conversation; a foreign message ID simply reads as "not found."
+- **The tools don't pollute the memory they compensate for:** 
+    tool outputs are tagged so the memory layer keeps raw search dumps out of long-term vector and fact memory — recall stays a read path, never a feedback loop.
+  
+  
+**Result:**
+- **Recall went from broken to reliable at production scale:**
+    memory retrieval was completely failing beyond ~50 conversation turns (0/4 benchmark cases); after the persistence-path rewrite it reliably retrieves across **8,000+ turns (4/4 cases)** — sufficient for typical annual usage of a single conversation.
+- **Zero added LLM cost, as constrained:**
+    the recall fix is pure storage-format and deduplication work, and the new tools are database queries — no summarization calls, no reranking calls, no per-message inference added to the platform, unlike memory solutions that rely on LLM-powered summarization.
+- **A class of previously unanswerable questions became answerable:**
+    time-referenced and exact-quote recall ("did you resolve the issue I reported last week?", "what exact wording did we agree on?") now works through the search → expand tool chain — shipped with no new index and no migration.
+- **The failure mode itself is now visible:** 
+    the retrieval benchmark is a permanent, reusable asset ([wonbin-tw/mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test)) — any future memory regression shows up as a number, not as a customer complaint.
+</details>
+
+
+#### Agent Schedule
+<details>
+<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9,600 runs/week from 143 self-serve production schedules</summary>
+  
+
+**Goal:** The requirement arrived as a one-line verbal request inspired by a competitor feature — "our agents should be able to run on a schedule." I scoped it into a concrete end-to-end contract: any AI agent on the platform can execute autonomously — on a cron expression, a fixed interval, or a one-time trigger — with its result delivered to the places people already watch (existing conversations, external systems via webhook), every run recorded in an auditable history, and the whole thing configured self-serve by enterprise admins under per-tenant limits, not provisioned by engineers.  
+  
+  
+**Constraint:**  
+- **No spec, no scheduling infrastructure:** nothing in the platform executed anything on a timer, and there was no product design to work from — what "running on a schedule" should mean, both as a product and as an architecture, was mine to define against a one-sentence request.
+- **The agent is not a callable service:** the codebase is written in direct-implementation style — agent invocation, message persistence, and token billing are wired inline into one flow that assumes a real human sending a message into a conversation. There is no portable "run the agent" interface to call from a scheduler, and rebuilding one would fork billing and persistence logic that must stay consistent. Scheduled execution had to enter through the existing human-facing pipeline unchanged.  
+  
+
+**Approach:** Two design decisions shaped the system: don't extract the agent — impersonate the user instead; and treat every run as unattended by default, so failure handling is designed in, not bolted on.  
+- **The scheduler enters the pipeline as a synthetic user:** instead of carving a callable interface out of the direct-implementation pipeline, each schedule owns a system-created contact, and every run injects the schedule's prompt as a synthetic incoming message — then lets the unchanged reply pipeline do what it always does: invoke the agent with the tenant's full configuration (knowledge bases, tools, LLM), persist messages, bill tokens. The agent cannot tell a scheduled run from a human one, and zero inference logic was forked or duplicated.
+- **Two execution modes, because "run on a schedule" splits into two products:**
+  *in-context* mode gives a schedule a dedicated persistent conversation, so
+  each run sees the accumulated history of previous runs — enabling iterative
+  work like "compare today's numbers with the trend you reported yesterday."
+  *Isolated* mode creates an ephemeral conversation per run and destroys it
+  after — stateless by construction for repeated one-shot tasks. One prompt
+  field, one pipeline, two memory semantics.
+- **Trigger layer on Celery Beat:** each schedule maps to a dynamically managed periodic task — cron (timezone-aware), fixed interval, or one-shot — with a lifecycle service keeping the scheduler entry in sync through create, update, pause, and soft-delete.
+- **Reliability designed for nobody-is-watching:** the task queue's at-least-once semantics mean a killed worker redelivers the task — and a duplicate run silently spends real tenant credits — so every execution is deduplicated by an atomic per-schedule lock. A guard chain (enabled → max executions → credit balance) runs before the agent does, every run writes an audit record with status, errors, and per-run token usage, and delivery to multiple targets degrades to a "partial" status per failed target instead of all-or-nothing.
+- **Tenant input is validated by construction, not trust:** an arbitrary cron expression's real firing frequency can't be checked statically, so it is measured — simulating upcoming fire times and rejecting expressions that beat the platform's minimum interval. Webhook delivery goes through an SSRF-safe transport, delivery targets are validated to stay inside the tenant's own agent, and per-organization caps bound how many schedules can be active.
+  
+
+**Result:**  
+- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 107 active organizations, scheduled execution went from nonexistent to a continuously running workload.
+- **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
+- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failure surface as queryable records, not silent gaps or customer complaints.
+- Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
+
+<details>
+<summary>Details</summary>
+
+- Execution modes — **in-context** (persistent conversation with accumulated context across runs) and **isolated** (stateless, ephemeral resources cleaned up after each run), supporting both iterative analysis and one-off tasks
+- Architecture
+
+    ```mermaid
+    flowchart TD
+        subgraph Trigger["Schedule Trigger"]
+            CB[Celery Beat] -->|cron / interval / one-shot| Task[Celery Task]
+        end
+
+        Task --> Guards
+
+        subgraph Guards["Pre-execution Guards"]
+            direction LR
+            CK[Credit Check] --- EN[Enabled Check] --- MX[Max Executions Check]
+        end
+
+        Guards --> Mode{Execution Mode}
+
+        subgraph Execution["Agent Execution"]
+            Mode -->|In-Context| IC[Chatbot Ability\n+ Accumulated Context\nvia dedicated conversation]
+            Mode -->|Isolated| IS[Chatbot Ability Only\nephemeral conversation\ncleaned up after run]
+        end
+
+        IC --> Delivery
+        IS --> Delivery
+
+        subgraph Delivery["Multi-Target Delivery"]
+            direction LR
+            CV[Conversations\noutgoing messages] --- WH[Webhooks\nHTTP POST]
+        end
+
+        Delivery --> Audit[Execution Audit Record\nstatus / token usage / errors]
+
+        style Trigger fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
+        style Guards fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
+        style Execution fill:#0f172a,stroke:#818cf8,color:#e2e8f0
+        style Delivery fill:#1e293b,stroke:#34d399,color:#e2e8f0
+        style Audit fill:#581c87,stroke:#c084fc,color:#e2e8f0
+    ```
+
+</details>
+</details>
+  
+  
+#### Agent Evaluation
+<details>
+<summary>Tiered pass/fail semantics over DeepEval metrics and an LLM-generated improvement playbook — evaluation results non-technical enterprise users can actually act on</summary>
+
+- **Constraint:** The existing evaluation pipeline used DeepEval’s raw metric pass/fail output directly — non-technical enterprise users received 8+ individual metric scores with no guidance on which failures mattered or what to do about them, making evaluation results effectively unactionable.
+- Redesigned the pass/fail determination by designing a **tiered metric priority system** based on studying DeepEval’s metric semantics to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
+
+    <details>
+    <summary>Details</summary>
+    
+    Safety metrics (Bias, Toxicity, Hallucination) take highest priority, followed by Outcome metrics (Answer Relevancy, Task Completion), then Grounding metrics (Context Recall)
+    
+    Algorithm:
+    
+    ```mermaid
+    flowchart TD
+        Fail[success = False]
+        Start([Each test case]) --> Classify[Classify metrics into 4 tiers:<br/>• Guardrails<br/>• Outcomes<br/>• Groundings<br/>• Others]
+        Classify --> T1{Tier 1: All<br/>Guardrails passed?}
+
+        T1 -->|No| Fail
+        T1 -->|Yes| T2{Tier 2: All<br/>Outcomes passed?}
+
+        T2 -->|No| Fail
+        T2 -->|Yes| T3{Tier 3: All<br/>Groundings passed?}
+
+        T3 -->|No| Fail
+        T3 -->|Yes| T4{Tier 4: All<br/>Others passed?}
+
+        T4 -->|Yes| Pass([PASS<br/>success = True])
+        T4 -->|No| Override{Adaptive Override:<br/>Do all 3 core tiers<br/>have at least 1 metric?}
+
+        Override -->|Yes<br/>Ignore Others| Pass
+        Override -->|No| Fail
+    
     ```
 
     </details>
 
-- **Agent Evaluation**
-    - **Constraint:** The existing evaluation pipeline used DeepEval’s raw metric pass/fail output directly — non-technical enterprise users received 8+ individual metric scores with no guidance on which failures mattered or what to do about them, making evaluation results effectively unactionable.
-    - Redesigned the pass/fail determination by designing a **tiered metric priority system** based on studying DeepEval’s metric semantics to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
-
-        <details>
-        <summary>Details</summary>
-        
-        Safety metrics (Bias, Toxicity, Hallucination) take highest priority, followed by Outcome metrics (Answer Relevancy, Task Completion), then Grounding metrics (Context Recall)
-        
-        Algorithm:
-        
-        ```mermaid
-        flowchart TD
-        	Fail[success = False]
-            Start([Each test case]) --> Classify[Classify metrics into 4 tiers:<br/>• Guardrails<br/>• Outcomes<br/>• Groundings<br/>• Others]
-            Classify --> T1{Tier 1: All<br/>Guardrails passed?}
-
-            T1 -->|No| Fail
-            T1 -->|Yes| T2{Tier 2: All<br/>Outcomes passed?}
-
-            T2 -->|No| Fail
-            T2 -->|Yes| T3{Tier 3: All<br/>Groundings passed?}
-
-            T3 -->|No| Fail
-            T3 -->|Yes| T4{Tier 4: All<br/>Others passed?}
-
-            T4 -->|Yes| Pass([PASS<br/>success = True])
-            T4 -->|No| Override{Adaptive Override:<br/>Do all 3 core tiers<br/>have at least 1 metric?}
-
-            Override -->|Yes<br/>Ignore Others| Pass
-            Override -->|No| Fail
-        
-        ```
-
-        </details>
-
-    - Built an LLM-powered insight generation layer using Structured Outputs that automatically produces a natural-language summary, per-metric severity classification, and prioritized actionable recommendations with rationale — transforming raw evaluation data into an improvement playbook for non-technical users, with on-demand multilingual translation via Celery async tasks
-        <details>
-        <summary>Details</summary>
-
-        ![Screenshot 2026-04-25 at 11.47.55 AM.png](/assets/portfolio/screenshot-2026-04-25-at-11-47-55-am.png)
-
-        </details>
-
-    - Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO events broadcasting
-    - Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
-- Deep Research
-    - **Constraint:** The deep research feature was specified to use LangChain/LangGraph, while the entire existing AI pipeline was built on LlamaIndex — the two frameworks use incompatible LLM interfaces, message formats, and tool-calling protocols.
-    - Designed a cross-framework interrupt protocol to enable the LangChain deep research agent to delegate queries to the existing LlamaIndex agent at runtime: the deep research agent raises a typed interrupt, the orchestrator routes the query through the existing agent pipeline, and resumes the LangChain agent with the response — enabling two heterogeneous agent systems to collaborate without rewriting either.
-    - Delivered end-to-end: LLM adapter between LlamaIndex and Langchain, cross-framework interrupt protocol, prompt design, agent tools, streaming over SocketIO, and frontend integration.
+- Built an LLM-powered insight generation layer using Structured Outputs that automatically produces a natural-language summary, per-metric severity classification, and prioritized actionable recommendations with rationale — transforming raw evaluation data into an improvement playbook for non-technical users, with on-demand multilingual translation via Celery async tasks
 
     <details>
     <summary>Details</summary>
 
-    - Cross-Framework Interrupt Protocol
-
-        ```mermaid
-        sequenceDiagram
-            participant User
-            participant Orch as Orchestrator<br/>(Django)
-            participant DR as Deep Research Agent<br/>(LangChain / LangGraph)
-            participant EA as Existing Agent<br/>(LlamaIndex)
-
-            User->>Orch: User query
-
-            rect rgb(30, 41, 59)
-            Note over Orch,DR: Phase 1 — Planning (status: started)
-            Orch->>DR: arun(status=started)
-            DR->>DR: Create research plan
-            DR-->>Orch: interrupt(USER_INPUT)
-            Orch-->>User: Present plan
-            User->>Orch: Confirm
-            Orch->>DR: Command(resume=user_input)
-            DR-->>Orch: interrupt(RUN_RESEARCH)
-            end
-
-            rect rgb(15, 23, 42)
-            Note over Orch,EA: Phase 2 — Research (status: running)
-            Orch->>DR: Command(resume="Start research")
-
-            loop Research Loop
-                DR->>DR: internet_search, write_file, etc.
-                DR->>DR: use_internal_assistant(query)
-                DR-->>Orch: interrupt(CHATBOT_RESPONSE)
-                Orch->>EA: Route query to existing agent
-                EA-->>Orch: LlamaIndex response
-                Orch->>DR: Command(resume=response)
-            end
-
-            DR->>DR: append_to_final_report
-            DR->>DR: finish_research
-            DR-->>Orch: interrupt(FINISH_RESEARCH)
-            end
-
-            Orch-->>User: Final report
-        ```
+    ![Screenshot 2026-04-25 at 11.47.55 AM.png](/assets/portfolio/screenshot-2026-04-25-at-11-47-55-am.png)
 
     </details>
 
-- Multimodal RAG
-    - **Constraint:** Existing RAG pipeline was built entirely on LlamaIndex with text-only embedding — no image ingestion, retrieval, or generation logic existed, and LlamaIndex’s core abstractions (chat engine, response synthesizer, agent framework) had no native support for image nodes
-    - Took an abstract requirement (“make RAG support images”) and designed a multimodal RAG architecture with 4 cross-modal retrieval modes — text→image, image→text, text→text, and image→image — over a shared vector space with multimodal embeddings
-    - Extended LlamaIndex’s text-only abstractions end-to-end so image data survives every layer — ingestion, retrieval, reranking, response synthesis, and the agent scratchpad — replacing components that would otherwise silently strip images to plain text
-    - Exposed cross-modal knowledge base search to AI agents as a first-class tool, with an image budget system to prevent token overflow
-    - Delivered end-to-end: image ingestion pipeline, cross-modal retrieval, chat engine and response synthesizer extensions, agent tool integration, image processing utilities, and frontend integration
-    - Enabled enterprise customers to upload and search images within their knowledge bases for the first time, with full integration into the AI agent workflow
+- Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO events broadcasting
+- Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
+</details>
+  
+  
+#### Production Hardening
+<details>
+<summary>Auth/session security overhaul and resumable LLM streaming — full-stack reliability work across Django, Redis, Socket.IO, and two Vue apps</summary>
 
-    <details>
-    <summary>Details</summary>
+Shipped end-to-end (backend + frontend) alongside the AI feature work:
 
-    - Architecture
-
-        ```mermaid
-        flowchart TB
-            subgraph Ingestion["Ingestion Pipeline"]
-                direction LR
-                ImgUp[Image Upload] --> IR[Image Reader + Multimodal Mixin]
-                IR --> ME[Multimodal Embedding Generation]
-                ME --> VI[(Vector Index text + image nodes)]
-                TxtUp[Text Upload] --> TE[Text Embedding]
-                TE --> VI
-            end
-
-            subgraph QueryFlow["Query Flow"]
-                UQ[User Query\ntext and/or image]
-
-                subgraph Engine["Chat Engine / Agent Framework — extended for multimodal —"]
-
-                    subgraph Retrieval["Cross-Modal Retrieval"]
-                        direction LR
-                        TT[Text → Text]
-                        TI[Text → Image]
-                        IT[Image → Text]
-                        II[Image → Image]
-                    end
-
-                    IST[Image Search Tool for AI Agent]
-                    BPR[Bypass Reranker for Image Nodes]
-                    SYN[Custom Response Synthesizer\nbuild ImageBlocks for LLM]
-                end
-
-                IPL[Image Processing Layer resize / convert / base64 sync + async]
-                LLM[LLM Response with image understanding]
-            end
-
-            UQ --> Retrieval
-            UQ --> IST
-            IST --> Retrieval
-            Retrieval <--> VI
-            Retrieval --> BPR --> SYN
-            SYN --> IPL --> LLM
-
-            style Ingestion fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
-            style QueryFlow fill:#1e293b,stroke:#f472b6,color:#e2e8f0
-            style Engine fill:#0f172a,stroke:#818cf8,color:#e2e8f0
-            style Retrieval fill:#172554,stroke:#60a5fa,color:#e2e8f0
-            style VI fill:#581c87,stroke:#c084fc,color:#e2e8f0
-            style LLM fill:#9f1239,stroke:#fb7185,color:#fff
-            style IPL fill:#164e63,stroke:#22d3ee,color:#e2e8f0
-            style IST fill:#172554,stroke:#60a5fa,color:#e2e8f0
-        ```
-
-    - LlamaIndex Extensions (before vs after)
-
-        ```mermaid
-        flowchart LR
-            subgraph Original["LlamaIndex Default"]
-                direction TB
-                CE1[Chat Engine] --> S1[Synthesizer strips nodes to text]
-                A1[Agent Framework] --> T1[Tool results images ignored]
-                S1 --> L1[LLM text only]
-            end
-
-            subgraph Extended["Developed Extensions"]
-                direction TB
-                CE2[Chat Engine + multimodal retrieval + image node bypass + empty retrieval fallback]
-                CE2 --> S2[Custom Synthesizer builds ImageBlocks passes image nodes to LLM]
-                A2[Agent Adapter + scratchpad image injection + image budget management + memory cleanup]
-                A2 --> T2[Image Search Tool 4 cross-modal modes]
-                S2 --> L2[LLM with image understanding]
-                T2 --> S2
-            end
-
-            Original -- extended --> Extended
-
-            style Original fill:#1e293b,stroke:#64748b,color:#94a3b8
-            style Extended fill:#0f172a,stroke:#60a5fa,color:#e2e8f0
-            style L2 fill:#9f1239,stroke:#fb7185,color:#fff
-        ```
-
-    </details>
-
-- Agent Conversation Memory
-    - **Constraint**: The production agent’s recall of prior conversations was unreliable on two fronts — long-term vector memory was silently failing retrieval with no tests or metrics to catch it, and semantic recall alone could not answer time-referenced or exact-quote questions ("did you resolve the issue I reported last week?", "what exact wording did we agree on earlier?").
-    - Diagnosed and fixed the long-term vector memory:
-        - Built a quantitative retrieval benchmark measuring recall, using conversation data extracted from the Salesforce/ConvoMem HuggingFace dataset with evidence-based ground truth, tested across 4 distinct scenarios with multi-thousand-turn conversations against Elasticsearch and OpenAI embeddings.
-        - Identified two root causes through systematic testing: LlamaIndex’s default XML formatting in stored memory nodes was degrading vector similarity matching, and the absence of deduplication was polluting the Elasticsearch vector store with identical memory chunks.
-        - Replaced the long-term memory persistence path so each message is stored as a structured Document carrying session ID, role, and message metadata instead of preformatted XML, keyed by a deterministic content-hashed node ID
-        - Improved memory retrieval from completely failing beyond 50 conversation turns (0/4 test cases) to reliably retrieving across 8,000+ turns (4/4 test cases) — sufficient for typical annual usage — with zero additional LLM API cost, unlike memory solutions that rely on LLM-powered summarization.
-
-        <details>
-        <summary>Details</summary>
-
-        Collected data for evaluation - https://huggingface.co/datasets/wonbin-tw/mem-test
-
-        </details>
-
-    - Closed the recall gap that semantic memory cannot cover by adding two LLM-callable conversation-history tools — no new index, no migration, no additional LLM API cost workflow:
-        - Designed a search → locate → expand pattern on conversation: Splitting "many shallow matches" from "one deep context window" lets the LLM chain them efficiently rather than overpaying tokens on every call.
-            - search tool - keyword/regex search over the current conversation and returns short snippets
-            - expand tool - N neighboring messages around a chosen match to recover the surrounding dialogue.
-        - Added defensive bounds against regex DoS, token bloat, and bad input: pattern length cap, per-message content truncation, page size cap, context window cap, and silent fallback to literal substring search when a user-supplied regex fails to compile, so invalid patterns never surface as exceptions to the LLM.
-        <details>
-        <summary>Example</summary>
-
-            <video controls preload="metadata" src="/assets/portfolio/conversation-search-tool.mp4"></video>
-
-        </details>
-
-- Agent Schedule
-    - **Constraint:** No scheduling infrastructure existed; the only requirement was a verbal request inspired by a competitor feature — all product design, technical architecture, and implementation were self-directed
-    - Designed and implemented an end-to-end agent scheduling system from scratch, enabling AI agents to execute autonomously on cron, interval, or one-shot schedules via Celery Beat and django-celery-beat
-    - Implemented execution audit trail with token usage tracking, soft-delete with race condition handling, and per-organization schedule limits
-    - Introduced a ports-and-adapters architecture to decouple business logic from infrastructure dependencies (Celery Beat registration, RAG service invocation), enabling each concern to be tested and replaced independently
-    - Delivered full-stack: Django models, service layer, REST API (CRUD + toggle + run-now), Celery task, and admin frontend
-
-    <details>
-    <summary>Details</summary>
-
-    - Execution modes — **in-context** (persistent conversation with accumulated context across runs) and **isolated** (stateless, ephemeral resources cleaned up after each run), supporting both iterative analysis and one-off tasks
-    - Architecture
-
-        ```mermaid
-        flowchart TD
-            subgraph Trigger["Schedule Trigger"]
-                CB[Celery Beat] -->|cron / interval / one-shot| Task[Celery Task]
-            end
-
-            Task --> Guards
-
-            subgraph Guards["Pre-execution Guards"]
-                direction LR
-                CK[Credit Check] --- EN[Enabled Check] --- MX[Max Executions Check]
-            end
-
-            Guards --> Mode{Execution Mode}
-
-            subgraph Execution["Agent Execution"]
-                Mode -->|In-Context| IC[Chatbot Ability\n+ Accumulated Context\nvia dedicated conversation]
-                Mode -->|Isolated| IS[Chatbot Ability Only\nephemeral conversation\ncleaned up after run]
-            end
-
-            IC --> Delivery
-            IS --> Delivery
-
-            subgraph Delivery["Multi-Target Delivery"]
-                direction LR
-                CV[Conversations\noutgoing messages] --- WH[Webhooks\nHTTP POST]
-            end
-
-            Delivery --> Audit[Execution Audit Record\nstatus / token usage / errors]
-
-            style Trigger fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
-            style Guards fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-            style Execution fill:#0f172a,stroke:#818cf8,color:#e2e8f0
-            style Delivery fill:#1e293b,stroke:#34d399,color:#e2e8f0
-            style Audit fill:#581c87,stroke:#c084fc,color:#e2e8f0
-        ```
-
-    </details>
-
-- Auth & Session Security Hardening
-    - **Constraint:** Production auth had four converging gaps — JWT access tokens were configured with a **100-year lifetime**, no revocation mechanism existed (logout was a no-op for the access token), Socket.IO connections survived logout indefinitely, and SSO logout paths (Keycloak, SAML) silently left simplejwt refresh tokens valid for 30 days, so a captured refresh token could mint fresh access tokens long after the user "logged out".
-    - Designed a defense-in-depth model: shortened access token lifetime from 100 years to 15 minutes (phased through 1 day to give frontends time to land silent refresh) and built a Redis-backed access-token blacklist keyed by `jti` with TTL pinned to the token's remaining lifetime — sub-millisecond lookup on every authenticated request, no DB migration, and entries auto-expire so the blacklist never grows unbounded.
-    - Solved per-user Socket.IO disconnect across 7 namespaces by repurposing Socket.IO rooms as a reverse index — each connection joins a `user_{id}` room on connect, so logout becomes an O(1) room lookup instead of an O(n) session scan, and the room-based pub/sub fans out across multiple server instances for free.
-    - Closed the SSO refresh-token gap by routing Keycloak and SAML logout flows through a shared logout path that blacklists the simplejwt refresh token via SimpleJWT's built-in DB blacklist — eliminating the 30-day post-logout window where a captured refresh token could mint new sessions.
-    - Built frontend silent token refresh end-to-end across two Vue apps (Axios for admin, `@vueuse/core` createFetch for web chat): a singleton-promise pattern collapses concurrent 401s into one refresh call, multi-tab coordination falls out of localStorage-backed reactive token state, and Socket.IO reconnection naturally picks up refreshed tokens via reactive token getters — no explicit reconnect logic needed.
-    - Delivered end-to-end across backend (Django, simplejwt, Redis, Socket.IO room indexing across 7 namespaces, logout orchestration, new logout endpoint, SSO logout updates) and frontend (Axios + createFetch silent refresh modules, multi-tab coordination, Socket.IO reactive token plumbing), eliminating a class of post-logout token-replay risks across regular and SSO sessions.
-- LLM Generation Streaming
-    - **Constraint:** LLM streaming relied on Socket.IO room broadcasts with no persistence — if a client disconnected mid-stream (network switch, page refresh), all streamed content was irreversibly lost, requiring users to regenerate the entire response.
-    - Designed a Redis-backed stream catch-up mechanism that caches every streamed chunk during an active LLM generation session and replays the cached sequence to reconnecting clients, enabling seamless recovery without re-triggering the LLM call.
-    - Solved race conditions in the replay-to-room-join transition by enforcing replay-before-join ordering and adding a fallback for streams that finish during the replay window.
-    - Updated the frontend streaming renderer to handle burst replay, where cached chunks arrive all at once instead of the gradual pace of live generation.
-    - Delivered end-to-end across backend (Django/Socket.IO/Redis) and frontend (Vue), eliminating a class of user-facing message loss during connection instability.
+- **Auth & session security:** Logout didn't actually end sessions — access tokens had a **100-year lifetime** with no revocation, live Socket.IO connections survived logout, and SSO logout left refresh tokens valid for 30 days. Redesigned the session lifecycle so logout means logout: short-lived tokens (**100 years → 15 minutes**) backed by Redis-based revocation and instant per-user socket disconnect, with silent token refresh built across two Vue apps so the tighter security cost users nothing.
+- **Resumable LLM streaming:** Streamed responses were lost on any mid-generation disconnect (page refresh, network switch), forcing full regeneration. Added a Redis-backed catch-up cache that replays the stream to reconnecting clients — **recovery without re-triggering the LLM call**.
+</details>
 
 ### Wrtn Technologies(Data Engineer Intern, 2024.12 - 2025.06, Seoul)
 
@@ -439,6 +435,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 - **Data pipelines**
     - Developed data pipelines to be used in RAG system leveraging Airflow, BigQuery, Aws Batch, and Elasticsearch
     - Developed deal price crawling pipeline extracting structured data from 20+ e-commerce sites leveraging Vision Language Model (gpt 4o mini)
+
 - **RAG system**
     - Participated in developing RAG system for better performance on questions about “wrtn company” and “book recommendation”
     - Conducted experiments to find best chunking strategy on Elasticsearch with the result of 23% better performance compare to existing strategy
@@ -464,6 +461,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
         ![Screenshot 2025-06-19 at 9.08.23 PM (1).png](/assets/portfolio/screenshot-2025-06-19-at-9-08-23-pm-1.png)
     </details>
 
+
 - **Long Term Memory Module**
     - Participated in developing and operating Long Term Memory module of AI assistant using Elasticsearch
     - Built comprehensive evaluation pipeline through cross-functional collaboration with data labeling specialists and conducted POC evaluation of third-party memory service
@@ -481,6 +479,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 
     </details>
 
+
 - **AI Quality Assurance & Automation**
     - Developed automated quality evaluation system using LLM-powered validation to reduce manual data labeling workload and improve development velocity
     - Deployed production-ready evaluation API with FastAPI and Retool integration for real-time quality assessment workflows
@@ -492,14 +491,15 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 
     ![retool_answer_eval.png](/assets/portfolio/retool-answer-eval.png)
     </details>
-
+  
+  
 ---
 
 ## Open source contribution
 
 ### Mem0 AI Assistant Memory System
 
- https://github.com/mem0ai/mem0 is an open source AI assistant memory system which received over **58k starts** on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.
+ https://github.com/mem0ai/mem0 is an open source AI assistant memory system which received over **58k stars** on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.
 
 - Github: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
