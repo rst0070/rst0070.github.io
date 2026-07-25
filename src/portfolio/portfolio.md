@@ -226,6 +226,63 @@ sequenceDiagram
 </details>
 </details>
 
+
+#### Agent Conversation Memory
+<details>
+<summary>Diagnosed and fixed silently-failing long-term vector memory (0/4 → 4/4 recall across 8,000+ turns) and added agentic conversation-search tools — zero added LLM cost, zero migration</summary>
+  
+Demo: the agent recovering the exact wording of the first message in a long conversation — an exact-quote recall that pure vector similarity cannot do.  
+<video controls preload="metadata" src="/assets/portfolio/conversation-search-tool.mp4"></video>  
+  
+**Goal:** The assignment arrived deliberately open-ended — "find any issues in our memory system, or points to enhance it" — with a single hint: the agent's recall of prior conversation felt unreliable in production. There was no bug report, no benchmark, no metric; whether memory was even broken was itself the first question to answer. After investigation I scoped it into a two-part goal:
+1. **Fix the passive path**
+    make long-term vector memory *measurably* reliable: build the missing retrieval evaluation first, then fix whatever it exposes.
+2. **Add an active path**
+    cover the questions semantic recall structurally cannot answer ("did you resolve the issue I reported last week?", "what exact wording did we agree on?") by letting the agent search its own conversation history through tools.
+  
+
+**Constraint:**
+- **No way to even see the failure:**
+    Long-term memory had no tests, no metrics, and no evaluation data — retrieval could fail silently on every message and nothing would catch it. Any fix had to start by building the measurement that proved the problem existed, and the failures only reproduced at scale (beyond ~50 turns), so realistic multi-thousand-turn conversation data had to be sourced first.
+- **Zero additional LLM cost:** 
+    Memory runs on every message of every conversation in a multi-tenant SaaS — a per-message LLM call for summarization or reranking (the approach most memory products take) multiplies inference cost platform-wide. Both the fix and the new recall mechanism had to work without adding LLM cost beyond what the pipeline already spent.
+- **Existing stack only, no migration:** 
+    The memory pipeline is built on LlamaIndex's `Memory` abstraction over a shared Elasticsearch index, and conversations live in the production message table. Improvements had to be surgical extensions of the existing classes — no new index, no schema migration, no replacement framework.
+- **The LLM is an untrusted caller:** 
+    Any search tool exposed to the agent receives  LLM-generated input on a hot path — a malformed or malicious regex hits the production database, and a hallucinated ID could cross conversation boundaries in a multi-tenant system. The tools had to be safe against bad input by construction, not by prompting.
+  
+
+**Approach:** One mechanism per goal — repair the passive vector memory so it recalls reliably on its own, and give the agent tools to actively recall what embeddings structurally cannot.  
+  
+**1. Passive path — measure first, then fix what the measurement exposes:**  
+- **Built the missing benchmark before touching the code:**
+    a quantitative retrieval evaluation with evidence-based ground truth, built from the Salesforce/ConvoMem HuggingFace dataset and published as a reusable dataset ([wonbin-tw/mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test)) — 4 recall scenarios over multi-thousand-turn conversations, run against the real production stack (Elasticsearch + OpenAI embeddings), so a "fix" only counts if the number moves.
+- **Two root causes surfaced by systematic testing:**
+    LlamaIndex's default XML-wrapped formatting of stored memory nodes was degrading vector similarity matching, and the absence of deduplication was polluting the Elasticsearch index with identical memory chunks.
+- **Rewrote the persistence path, not the retrieval path:** 
+    each message is now stored as a structured Document carrying session ID, role, and message metadata instead of preformatted XML — role markup is re-attached at *read* time for the LLM, so presentation never contaminates the embedding space. Deduplication became a property of the write path itself: every node gets a deterministic content-hashed ID, so re-ingesting identical content overwrites instead of duplicating — no cleanup job, no second index.
+  
+**2. Active path — a search → locate → expand pattern over the conversation:**
+- **Two tools, deliberately asymmetric:** 
+    a *search* tool does keyword/regex search over the current conversation and returns many short snippets with match positions; an *expand* tool returns the N neighboring messages around one chosen match. Splitting "many shallow matches" from "one deep context window" lets the LLM chain them efficiently — wide and cheap first, deep and targeted second — instead of overpaying tokens on every call.
+- **Safe against the untrusted caller by construction:**
+    pattern length cap, per-message content truncation, page size and context window caps, and a silent fallback to literal substring search when an LLM-supplied regex fails to compile — invalid input never surfaces as an exception to the agent. The conversation ID is bound when the tool is constructed, never a tool parameter, so the LLM cannot query another tenant's conversation; a foreign message ID simply reads as "not found."
+- **The tools don't pollute the memory they compensate for:** 
+    tool outputs are tagged so the memory layer keeps raw search dumps out of long-term vector and fact memory — recall stays a read path, never a feedback loop.
+  
+  
+**Result:**
+- **Recall went from broken to reliable at production scale:**
+    memory retrieval was completely failing beyond ~50 conversation turns (0/4 benchmark cases); after the persistence-path rewrite it reliably retrieves across **8,000+ turns (4/4 cases)** — sufficient for typical annual usage of a single conversation.
+- **Zero added LLM cost, as constrained:**
+    the recall fix is pure storage-format and deduplication work, and the new tools are database queries — no summarization calls, no reranking calls, no per-message inference added to the platform, unlike memory solutions that rely on LLM-powered summarization.
+- **A class of previously unanswerable questions became answerable:**
+    time-referenced and exact-quote recall ("did you resolve the issue I reported last week?", "what exact wording did we agree on?") now works through the search → expand tool chain — shipped with no new index and no migration.
+- **The failure mode itself is now visible:** 
+    the retrieval benchmark is a permanent, reusable asset ([wonbin-tw/mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test)) — any future memory regression shows up as a number, not as a customer complaint.
+</details>
+
+
 #### Agent Evaluation
 <details>
 <summary>Agent Evaluation</summary>
@@ -278,37 +335,6 @@ sequenceDiagram
 - Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
 </details>
 
-#### Agent Conversation Memory
-<details>
-<summary>Agent Conversation Memory</summary>
-
-- **Constraint**: The production agent’s recall of prior conversations was unreliable on two fronts — long-term vector memory was silently failing retrieval with no tests or metrics to catch it, and semantic recall alone could not answer time-referenced or exact-quote questions ("did you resolve the issue I reported last week?", "what exact wording did we agree on earlier?").
-- Diagnosed and fixed the long-term vector memory:
-    - Built a quantitative retrieval benchmark measuring recall, using conversation data extracted from the Salesforce/ConvoMem HuggingFace dataset with evidence-based ground truth, tested across 4 distinct scenarios with multi-thousand-turn conversations against Elasticsearch and OpenAI embeddings.
-    - Identified two root causes through systematic testing: LlamaIndex’s default XML formatting in stored memory nodes was degrading vector similarity matching, and the absence of deduplication was polluting the Elasticsearch vector store with identical memory chunks.
-    - Replaced the long-term memory persistence path so each message is stored as a structured Document carrying session ID, role, and message metadata instead of preformatted XML, keyed by a deterministic content-hashed node ID
-    - Improved memory retrieval from completely failing beyond 50 conversation turns (0/4 test cases) to reliably retrieving across 8,000+ turns (4/4 test cases) — sufficient for typical annual usage — with zero additional LLM API cost, unlike memory solutions that rely on LLM-powered summarization.
-
-    <details>
-    <summary>Details</summary>
-
-    Collected data for evaluation - https://huggingface.co/datasets/wonbin-tw/mem-test
-
-    </details>
-
-- Closed the recall gap that semantic memory cannot cover by adding two LLM-callable conversation-history tools — no new index, no migration, no additional LLM API cost workflow:
-    - Designed a search → locate → expand pattern on conversation: Splitting "many shallow matches" from "one deep context window" lets the LLM chain them efficiently rather than overpaying tokens on every call.
-        - search tool - keyword/regex search over the current conversation and returns short snippets
-        - expand tool - N neighboring messages around a chosen match to recover the surrounding dialogue.
-    - Added defensive bounds against regex DoS, token bloat, and bad input: pattern length cap, per-message content truncation, page size cap, context window cap, and silent fallback to literal substring search when a user-supplied regex fails to compile, so invalid patterns never surface as exceptions to the LLM.
-    <details>
-    <summary>Example</summary>
-
-        <video controls preload="metadata" src="/assets/portfolio/conversation-search-tool.mp4"></video>
-
-    </details>
-
-</details>
 
 #### Agent Schedule
 <details>
