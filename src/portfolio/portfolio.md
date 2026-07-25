@@ -15,6 +15,10 @@ Hands-on with RL fine-tuning, knowledge graph, and AWS/Kubernetes infrastructure
 Contributor to Mem0 (Over 58k stars AI memory system)
 
 1st author paper on speaker verification
+  
+
+---  
+  
 
 ## Skills
 
@@ -22,6 +26,10 @@ Contributor to Mem0 (Over 58k stars AI memory system)
 - **Training / ML:** PyTorch, GRPO, QLoRA, LLM fine-tuning, Speaker Verification
 - **Infra:** AWS, GCP, Kubernetes, Docker, Terraform, Airflow, Argo Workflows, Elasticsearch, Redis, Kafka, Neo4J
 - **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring)
+  
+
+---  
+  
 
 ## Work Experience
 
@@ -432,65 +440,207 @@ AI-search platform serving 5 millions of monthly active users https://wrtn.ai/
 
 I had the opportunity to experience data infrastructure and AI systems in a fast-paced startup environment through daily scrums and cross-functional collaboration.
 
-- **Data pipelines**
-    - Developed data pipelines to be used in RAG system leveraging Airflow, BigQuery, Aws Batch, and Elasticsearch
-    - Developed deal price crawling pipeline extracting structured data from 20+ e-commerce sites leveraging Vision Language Model (gpt 4o mini)
+#### Long Term Memory Module
+<details>
+<summary>Evaluation-driven overhaul of the AI assistant's long-term memory — built the recall benchmark from real user conversations, settled a buy-vs-build decision with it, and improved memory recall accuracy from 23% to 71%; the feature became the core of the Wrtn 3.0 release.</summary>
+  
+**Goal:** Wrtn's AI assistant needed long-term memory: remember what a user said across conversations and bring it back at the right moment. The work arrived as a buy-vs-build decision — adopt mem0's managed service, or run mem0's open-source logic in-house — and I was asked to compare the two. That comparison immediately exposed the real problem: **there was no way to measure memory quality at all**, so before any decision could be made, evaluation itself had to be built.  
+  
 
-- **RAG system**
-    - Participated in developing RAG system for better performance on questions about “wrtn company” and “book recommendation”
-    - Conducted experiments to find best chunking strategy on Elasticsearch with the result of 23% better performance compare to existing strategy
-    - Achieved 75% accuracy on implicit question answering by applying key expansion and search planner optimization.
-    - Built production FastAPI microservice with RESTful endpoints, enabling document updates through internal tooling integration (Retool)
+**Constraint:**  
+- **No usable benchmark.** I surveyed the memory-evaluation literature and analyzed LongMemEval in depth, but its dataset didn't fit a Korean-language production assistant. The only thing that transferred was the core idea: measure **recall** — given a question, did the system retrieve the right memory?
+- **The evaluation had to come from real data.** Wrtn's strongest asset was real user conversation logs, but turning them into a test set required cross-functional work with data-labeling specialists — question authoring and review couldn't be automated away.
+- **Korean-language reality.** The memory extraction prompts and embedding defaults were tuned for English; memory items came out in inconsistent shapes, and retrieval quality suffered accordingly.
+- **A live production system.** Improvements had to be verified against the metric before shipping, and memories already written in wrong formats were sitting in production — fixing the pipeline forward wasn't enough; the stored data had to be repaired too.
+  
+  
+**Approach:**  
+**1. Built the evaluation pipeline first** (with data-labeling specialists):
+- Sample a statistically diverse set of users from production data
+- Ingest each user's full utterance history into the memory system
+- Test with questions authored and reviewed by question inspectors
+- Score recall: for each question, whether the system retrieved a correct memory
 
-    <details>
-    <summary>Examples</summary>
+**2. Ran the POC — and the baseline killed the "buy" option.** The in-house system retrieved at least one correct memory for only **23 of 100** questions (0.23). mem0's managed service did worse: **0.10**. The managed-service option was dropped with evidence, and the work pivoted to improving the in-house system.
 
-    - Before vs After the work (translated, question: “tell me about yourself”)
-        - Answer before:
+**3. First improvement round — memory format and embeddings (0.23 → 0.51).** Documented the root causes: no Korean-grounded examples in the extraction prompts, no enforced memory shape, and an unoptimized embedding setup. Fixes:
+- **Standardized 4-part memory format** — key sentence / keywords / time metadata in natural language / expanded memory that spells out inferable context — enforced through Korean-based few-shot examples
+- **Task-specific embeddings via Vertex AI** — separate query-side and storage-side embeddings instead of one shared embedding
 
-            ![Screenshot 2025-06-18 at 10.09.58 PM (1).png](/assets/portfolio/screenshot-2025-06-18-at-10-09-58-pm-1.png)
+**4. Second improvement round — three controlled retrieval experiments on Elasticsearch (0.51 → 0.71):**
+- **Embedding size comparison** — recall vs. embedding dimension at document-indexing time
+- **Hybrid search weighting** — tuning the balance between term search and vector search in Elasticsearch hybrid queries
+- **Search context length** — how many of the user's recent messages to use as the retrieval query
 
-        - Answer after:
+**5. Repaired production data.** Memory items already stored in wrong formats — including duplicates traced to an async/await bug in mem0's open-source logic — were fixed by backfill batches built on **AWS Batch and Argo Workflows, monitored with Datadog**. The duplication root cause was fixed upstream as well: my [mem0 contribution](https://github.com/mem0ai/mem0/issues/2578) resolving the memory duplication issue (see *Open source contribution — Mem0*).
 
-            ![Screenshot 2025-06-18 at 10.08.55 PM (1).png](/assets/portfolio/screenshot-2025-06-18-at-10-08-55-pm-1.png)
+**6. Documented the next steps** as the internship closed: a graph-memory design doc (what a graph DB buys for memory storage and how to structure it) and an evaluation-set improvement guide (clearer questions, more diverse scenarios).
+  
 
-    - Retool interface for update document (translated)
+**Result:**  
+- **Memory recall accuracy 0.23 → 0.71 (~3×)** on the real-user evaluation set, through two documented, metric-verified improvement rounds
+- **Buy-vs-build settled with evidence** — the managed service scored 0.10 vs. the in-house 0.23 baseline, ending the POC decisively
+- **Production data repaired, root cause fixed upstream** — backfill batches corrected wrong-format and duplicated memories, and the duplication fix landed in mem0 itself (58k-star open-source project)
+- The memory feature shipped as **the core of the Wrtn 3.0 release** — covered by AI Times: "Memory is the core of wrtn 3.0"
+  
 
-        ![Screenshot 2025-06-19 at 9.07.30 PM (1).png](/assets/portfolio/screenshot-2025-06-19-at-9-07-30-pm-1.png)
+<details>
+<summary>Details</summary>
+News Article: "Memory is the core of wrtn 3.0 release"
 
-        ![Screenshot 2025-06-19 at 9.08.23 PM (1).png](/assets/portfolio/screenshot-2025-06-19-at-9-08-23-pm-1.png)
-    </details>
+![Screenshot 2025-09-12 at 5.24.07 PM.png](/assets/portfolio/screenshot-2025-09-12-at-5-24-07-pm.png)
+
+[https://www.aitimes.com/news/articleView.html?idxno=169537](https://www.aitimes.com/news/articleView.html?idxno=169537)
+
+**Standardized memory format** (translated example):
+
+```
+{key sentence}
+{keywords}
+{time metadata, natural language}
+{expanded memory}
+```
+
+```
+The user has been a member of UAENA, IU's fan cafe, since 2024.
+IU, UAENA, fan cafe, member, since 2024
+since 2024
+The user has been a member of UAENA, IU's fan cafe, since 2024. IU is a Korean female K-Pop solo artist, which signals the user's musical taste. IU is also an active actress, so reflecting this in media recommendations would help the conversation.
+```
+
+**Before / after on a real failure case** (translated, sanitized): a crypto-trading user had repeatedly told the assistant they do **not** buy Bitcoin — they trade Ethereum, Dogecoin, and Ripple — yet every regenerated trading script came back hardcoded to Bitcoin, and the user's frustration escalated across the session. With the improved memory in place, the new response stopped assuming Bitcoin and preserved the user's stated trading rules — the kind of repeated-preference failure long-term memory exists to prevent.
+
+</details>
+</details>
+  
+
+#### RAG System
+<details>
+<summary>Built the RAG pipeline that lets Wrtn's AI assistant answer questions about Wrtn itself — settled the index structure through controlled experiments, added LLM enrichment on both the document and query side, and reached 75% accuracy on implicit questions; shipped with the Wrtn 3.0 release.</summary>
+
+**Goal:** For the Wrtn 3.0 launch, the AI assistant had to answer questions about Wrtn itself — its features, plans, policies — from the internal user guide, a single Notion document that was the source of truth about the service. The baseline failed at the most basic level: asked *"tell me about yourself"*, the assistant didn't recognize that Wrtn was the subject — **even with search forced on**, nothing relevant came back. Two OKRs framed the work:
+- **The documented data must be searchable** — with a structure that converts 100% reliably every time the document changes
+- **≥70% search performance on implicit queries** — questions that never explicitly say "Wrtn"
+  
+
+**Constraint:**
+- **No given structure.** Wrtn 1's user guide had been clean question–answer pairs; the new guide was a free-form Notion document — headings, nested lists, deep hierarchy. Retrieval structure had to be *derived* from it, and the derivation had to survive every future revision of the doc.
+- **Implicit queries were the real workload.** Actual users ask *"tell me about yourself"*, *"can I set your name?"* — utterances with no lexical or semantic anchor to a company document. Plain similarity search over raw chunks misses them.
+- **No automated quality metric.** Answer quality was end-to-end and qualitative, so evaluation had to be built: an 88-question set of real-style Korean user questions, each candidate answer judged side-by-side against a reference good answer (+1 good / 0 neutral / −1 wrong or irrelevant), scored across the full retrieval → search planner → LLM chain — with token cost and search latency tracked alongside quality for every candidate.
+- **The document churned.** Startup reality: the user guide changed frequently, and updates couldn't stay a manual developer task.
+  
+
+**Approach:** Fix the index structure with controlled experiments first, then enrich both sides of the search, then productize the pipeline.
+
+**1. Three controlled experiments settled the Elasticsearch structure** (each judged on the 88-question set, with cost and latency tracked):
+- **Chunking: sliding window vs. semantic segmentation.** Sliding window (2,500 chars, 500 overlap) against parsing the Notion document's headings and list structure into a tree and indexing each node as *category + content*. Score: **−9 vs. +12** — a 21-point swing on the 88-question set — at equal token cost and slightly *better* latency. Semantic segmentation won decisively (scoring was stopped at 19 questions because the gap was already conclusive).
+- **Tree depth.** How deep into the category tree to segment: depths 2–5 scored **13 / 11 / 9 / 8** — depth 2 won, at no meaningful cost difference.
+- **Hybrid search weighting.** Embedding-search weight between the category and content fields: 0.2/0.8, 0.5/0.5, 0.8/0.2 scored **12 / 6 / 1** — content-heavy won.
+
+**2. Document-side enrichment — key expansion.** For every indexed node, an LLM (GPT-4o-mini) generates a **summary, keywords, and expected questions**, indexed alongside the category and content. This is what gives implicit questions something to hit: *"tell me about yourself"* matches an expected question even though it never mentions Wrtn.
+
+**3. Query-side enrichment — search planner.** Reworked how the planner extracts search queries from the user's utterance: query expansion that emits **category keywords** from the guide's tree (e.g. *"tell me about wrtn"* → a fan of category-grounded query texts like "wrtn user guide", "service introduction", "wrtn features"), plus intent-classification prompt engineering so the planner routes Wrtn-related utterances to the guide index at all.
+
+**4. Productized the update pipeline.** The initial pipeline was Notion doc → tree parsing → chunking → enrichment → embedding → Elasticsearch upload. I then replaced the brittle Notion-parsing stage with a **FastAPI REST endpoint accepting tree-structured documents directly**, wired into **Retool** so non-engineers ship guide updates end-to-end — async batch indexing under the hood, multilingual index mapping (Korean nori / English / Japanese kuromoji analyzers), and a schema unified with the platform's newer collections so future search features could span both.
+  
+
+**Result:**
+- **75% accuracy on implicit question answering** — measured by the internal data-labeling team against the 70% OKR target
+- **Index structure decided with evidence, not convention** — semantic segmentation beat sliding-window chunking by 21 points (−9 → +12) on the 88-question human-judged set, at equal cost and latency; depth and hybrid weights settled the same way
+- **The assistant now knows what it is** — *"tell me about yourself"* retrieves the user guide and answers with Wrtn's actual features (before/after below); *"how can a marketer use wrtn"* went from generic AI-assistant advice to Wrtn-specific tool recommendations
+- **Document updates became self-serve** — the Retool + REST pipeline removed engineers from the update loop entirely
+- Shipped as part of the **Wrtn 3.0 release**
+  
+
+<details>
+<summary>Details</summary>
+
+**Evaluation method:** 88 real-style Korean user questions. For each experiment, every candidate configuration answered all questions end-to-end (Elasticsearch → search planner → LLM); answers were placed side-by-side against a reference good answer and human-judged +1 / 0 / −1, only marking meaningful differences. Token usage and search latency were recorded per candidate so quality wins couldn't hide cost regressions.
+
+**Experiment 1 — chunking structure:**
+
+|  | Sliding window | Semantic segmentation |
+| --- | --- | --- |
+| Quality score | −9 | **+12** |
+| Token usage (avg) | 142 | 130 |
+| Search latency (avg, s) | 2.64 | 2.28 |
+
+**Experiment 2 — tree depth:**
+
+|  | depth-2 | depth-3 | depth-4 | depth-5 |
+| --- | --- | --- | --- | --- |
+| Quality score | **13** | 11 | 9 | 8 |
+
+**Experiment 3 — hybrid search weights (category / content):**
+
+|  | 0.2 / 0.8 | 0.5 / 0.5 | 0.8 / 0.2 |
+| --- | --- | --- | --- |
+| Quality score | **12** | 6 | 1 |
+
+**Enriched document format** (indexed per tree node):
+
+```markdown
+## Summary
+{summary}
+
+## Keywords
+{keywords}
+
+## Expected Questions
+{expected_questions}
+
+## Category
+{user_guide.category}
+
+## Content
+{user_guide.content}
+```
+
+**Query expansion example** (translated):
+- User utterance: *"tell me about wrtn"*
+- Planner query texts: *"wrtn user guide, wrtn, service introduction wrtn features, wrtn service URL, about wrtn, features and services"*
+
+**Before vs. after** (translated, question: *"tell me about yourself"*) — before, the assistant failed to recognize Wrtn as the subject even with forced search; after, the user guide is retrieved and grounds the answer:
+
+![Screenshot 2025-06-18 at 10.09.58 PM (1).png](/assets/portfolio/screenshot-2025-06-18-at-10-09-58-pm-1.png)
+
+![Screenshot 2025-06-18 at 10.08.55 PM (1).png](/assets/portfolio/screenshot-2025-06-18-at-10-08-55-pm-1.png)
+
+**Before vs. after** (translated, question: *"how can a marketer use wrtn well?"*) — before, generic advice about using an AI assistant; after, Wrtn's own tool features:
+
+![Screenshot 2025-06-18 at 9.57.43 PM.png](/assets/portfolio/screenshot-2025-06-18-at-9-57-43-pm.png)
+
+![Screenshot 2025-06-18 at 10.00.40 PM.png](/assets/portfolio/screenshot-2025-06-18-at-10-00-40-pm.png)
+
+**Retool interface for document updates** (translated):
+
+![Screenshot 2025-06-19 at 9.07.30 PM (1).png](/assets/portfolio/screenshot-2025-06-19-at-9-07-30-pm-1.png)
+
+![Screenshot 2025-06-19 at 9.08.23 PM (1).png](/assets/portfolio/screenshot-2025-06-19-at-9-08-23-pm-1.png)
+
+</details>
+</details>
 
 
-- **Long Term Memory Module**
-    - Participated in developing and operating Long Term Memory module of AI assistant using Elasticsearch
-    - Built comprehensive evaluation pipeline through cross-functional collaboration with data labeling specialists and conducted POC evaluation of third-party memory service
-    - Improved memory recall accuracy from 23% to 71% through experiments on memory format, embedding strategies and Elasticsearch query
-    - Fixed wrong production memory item formats by backfill batches using AWS Batch, Argo Workflows, and Datadog.
+#### Data pipelines
+<details>
+<summary>Details</summary>
+- Developed data pipelines to be used in RAG system leveraging Airflow, BigQuery, Aws Batch, and Elasticsearch
+- Developed deal price crawling pipeline extracting structured data from 20+ e-commerce sites leveraging Vision Language Model (gpt 4o mini)
+</details>
+  
 
-    <details>
-    <summary>Details</summary>
+#### AI Quality Assurance & Automation
+<details>
+<summary>Details</summary>
+- Developed automated quality evaluation system using LLM-powered validation to reduce manual data labeling workload and improve development velocity
+- Deployed production-ready evaluation API with FastAPI and Retool integration for real-time quality assessment workflows
 
-    News Article: “Memory is the core of wrtn 3.0 release”
+**Example:**  
+Retool interface of evaluation result (translated)
 
-    ![Screenshot 2025-09-12 at 5.24.07 PM.png](/assets/portfolio/screenshot-2025-09-12-at-5-24-07-pm.png)
-
-    [https://www.aitimes.com/news/articleView.html?idxno=169537](https://www.aitimes.com/news/articleView.html?idxno=169537)
-
-    </details>
-
-
-- **AI Quality Assurance & Automation**
-    - Developed automated quality evaluation system using LLM-powered validation to reduce manual data labeling workload and improve development velocity
-    - Deployed production-ready evaluation API with FastAPI and Retool integration for real-time quality assessment workflows
-
-    <details>
-    <summary>Example</summary>
-
-    Retool interface of evaluation result (translated)
-
-    ![retool_answer_eval.png](/assets/portfolio/retool-answer-eval.png)
-    </details>
+![retool_answer_eval.png](/assets/portfolio/retool-answer-eval.png)
+</details>
   
   
 ---
