@@ -649,8 +649,9 @@ Retool interface of evaluation result (translated)
 
 ### Mem0 AI Assistant Memory System
 
- https://github.com/mem0ai/mem0 is an open source AI assistant memory system which received over **58k stars** on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.
-
+<details>
+<summary>mem0 is an open source AI assistant memory system which received over 58k stars on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
+  
 - Github: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
     - Contributed to redesigning embedding modules to support task-specific actions
@@ -658,21 +659,18 @@ Retool interface of evaluation result (translated)
     - Contributed to enabling customization on Elasticsearch query
     - Contributed to fixing [memory duplication issue](https://github.com/mem0ai/mem0/issues/2578) by implementing proper async/await pattern
 
-    <details>
-    <summary>Details</summary>
+**Screenshot of PRs**
+![image.png](/assets/portfolio/image.png)
 
-    **Screenshot of PRs**
-
-    ![image.png](/assets/portfolio/image.png)
-
-    </details>
+</details>
 
 ### Terraform Libvirt Provider
-
-Terraform provider to provision infrastructure with Linux's KVM using libvirt. I contributed to the project by fixing mismatched support for libvirt volume import
-
+<details>
+<summary>Terraform provider to provision infrastructure with Linux's KVM using libvirt. I contributed to the project by fixing mismatched support for libvirt volume import</summary>  
+  
 - Github: [dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 - Contributions: [Pull Requests](https://github.com/dmacvicar/terraform-provider-libvirt/pulls?q=is%3Apr+is%3Aclosed+author%3Arst0070)
+</details>
   
   
 ---
@@ -680,13 +678,15 @@ Terraform provider to provision infrastructure with Linux's KVM using libvirt. I
 ## Personal Projects
 
 ### Tiny Graph Extractor — Sub-1B LLM for Knowledge Graph Extraction (in progress)
+<details>
+<summary>Fine-tuned Qwen3.5-0.8B with GRPO to extract entities and (head, relation, tail) triplets from text — replacing the frontier-LLM API calls in the knowledge graph management system built for the Moodmate project with a model that trains and runs on a single consumer GPU (RTX 4060 Ti, 16GB).</summary>  
+  
 
 Github: [rst0070/tiny-graph-extractor](https://github.com/rst0070/tiny-graph-extractor)
-QLoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora](https://huggingface.co/rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora)
+QLoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora](https://huggingface.co/rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora)  
 
-Fine-tuned Qwen3.5-0.8B with GRPO to extract entities and (head, relation, tail) triplets from text — replacing the frontier-LLM API calls in the [knowledge graph management system](https://github.com/rst0070/knowledge-base) built for the Moodmate project with a model that trains and runs on a single consumer GPU (RTX 4060 Ti, 16GB).
 
-- **Purpose:** The knowledge-graph pipeline made multiple frontier-LLM structured-output calls per ingested document (entity extraction, edge extraction, knowledge checking) — per-call cost scaling linearly with document volume. Extraction is a narrow, structured task; the goal was to replace it with a sub-1B fine-tuned model, trading recurring API cost for a one-time training cost, and closing the quality gap to a hosted API baseline (Gemini 2.5 Flash Lite).
+- **Purpose:** The [knowledge-graph pipeline](https://github.com/rst0070/knowledge-base) made multiple frontier-LLM structured-output calls per ingested document (entity extraction, edge extraction, knowledge checking) — per-call cost scaling linearly with document volume. Extraction is a narrow, structured task; the goal was to replace it with a sub-1B fine-tuned model, trading recurring API cost for a one-time training cost, and closing the quality gap to a hosted API baseline (Gemini 2.5 Flash Lite).
 
 - **Constraint — no definition of what a "good" knowledge graph is:** Open extraction has no single correct answer, which broke every reference-based approach I tried first:
     * A token-matching supervised loss (initial SFT attempt) mostly measured *output structure*, not content quality — the model earned low loss by reproducing formatting, giving no signal about whether the extracted knowledge was right.
@@ -768,12 +768,16 @@ flowchart TD
 gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all clearly-false mass < 0.28, but 35% of gold below the naive 0.5 threshold. The acceptance ramp [0.20, 0.50] sits in the measured gap, giving borderline triplets a gradient instead of a per-rollout coin flip.
 
 </details>
+</details>
+  
 
 ### **OffNote AI — On-Device Note AI (iOS, released at 26.04.28)**
+<details>
+<summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — running fully on-device with no cloud calls, no analytics, and no account required.</summary>  
+  
+[apps.apple.com/us/app/offnote-ai/id6762131607](https://apps.apple.com/us/app/offnote-ai/id6762131607)
 
-https://apps.apple.com/us/app/offnote-ai/id6762131607
 
-A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — running fully on-device with no cloud calls, no analytics, and no account required.
 
 - **Constraint**: Targeted a 0.8B quantized LLM (Qwen 3.5, Q4) and a 137M embedding model (Nomic Embed v1.5, Q8) running through llama.cpp on phones with limited RAM and a small context window — too small to expect normal LLM workflow
 - Designed an on-device fact extraction pipeline after empirically ruling out knowledge-graph extraction across 5 self-built test scripts: grammar-constrained JSON collapsed the small model's output, nested entity/relation schemas exceeded its capacity, and an LLM-as-judge verifier proved no smarter than the extractor itself.
@@ -790,20 +794,14 @@ A privacy-first note-taking app that extracts facts from user memos and uses the
 <video controls preload="metadata" src="/assets/portfolio/offnote-ai-preview.mp4"></video>
 
 </details>
+</details>
+  
+  
+### Earlier Projects
+<details>
+<summary>Projects</summary>
 
-### Currency Converter — Multi-Currency iOS App (~30 downloads on App Store)
-
-https://apps.apple.com/us/app/currency-converter-multi-save/id6759523149
-
-A calculator-first currency converter built around three product principles: ad-free, no tracking, no account required.
-
-- Shipped a calculator-style input (expressions like `1000 + 500` evaluate and convert in real-time), a bookmark feature for saving frequent currency sets, and a multi-currency view that converts one amount across several targets at once — prioritizing input speed over visual polish.
-- Designed a server-less rate-distribution pipeline to keep operating cost near zero: a GitHub Actions workflow fetches rates from exchangerate-api.com on a fixed schedule and pushes a JSON snapshot to Cloudflare R2, and each mobile client fetches from R2 and caches locally — replacing a backend service with object storage as a read-only API.
-- Implemented offline-first behavior with cached rates and a "last updated" timestamp, so the app remains usable without network access and degrades gracefully if the upstream feed is unreachable.
-- Made deliberate product trade-offs: no ads, no analytics, no account required — accepting reduced monetization and observability in exchange for a faster, more trustworthy experience for the target user.
-- Tools used: React Native, TypeScript, GitHub Actions, Cloudflare R2, exchangerate-api.com
-
-### World Headlines - Full-Stack News Aggregation Platform
+#### World Headlines - Full-Stack News Aggregation Platform
 
 Production web application ([world-headlines.rst0070.com](http://world-headlines.rst0070.com/)) providing global news perspectives through automated content aggregation and translation.
 
@@ -835,7 +833,7 @@ I constructed the kubernetes cluster on multi virtual machines leveraging Ubuntu
 
 </details>
 
-### Moodmate - AI-Powered Interactive Diary
+#### Moodmate - AI-Powered Interactive Diary
 
 AI-driven diary application that analyzes user emotions and provides intelligent interactions through LLM integration and graph-based knowledge management.
 
@@ -863,7 +861,7 @@ AI-driven diary application that analyzes user emotions and provides intelligent
 
 </details>
 
-### Connect seoul book - Library Information Platform
+#### Connect seoul book - Library Information Platform
 
 Web application ([uos-hackathon-static.vercel.app](https://uos-hackathon-static.vercel.app/), static web now) providing unified library information across Seoul. The project was submitted to UOS hackathon 2024.
 
@@ -883,6 +881,7 @@ Web application ([uos-hackathon-static.vercel.app](https://uos-hackathon-static.
 
 ![image.png](/assets/portfolio/image-8.png)
 
+</details>
 </details>
 
 ---
