@@ -8,7 +8,7 @@ import { ReadingProgress } from '@/app/notes/[slug]/components/reading-progress'
 import { baseUrl } from '@/app/sitemap'
 import type { Metadata } from 'next'
 
-const title = 'Portfolio'
+const title = 'Wonbin Kim - AI Engineer | Portfolio'
 const description =
   'Portfolio of Wonbin Kim — AI Engineer with production experience across the full LLM agent stack: agent orchestration, sandboxed agent governance, evaluation pipelines, multimodal RAG, and conversation memory.'
 const url = `${baseUrl}/portfolio`

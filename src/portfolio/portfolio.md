@@ -8,13 +8,13 @@ Taipei · open to relocation to Singapore
 
 ## Summary
 
-AI Engineer with production experience across the full LLM agent — stack agent orchestration, tool design, sandboxed agent governance (prompt-injection blocking, PII redaction, output moderation), evaluation pipelines, multimodal RAG, and conversation memory. 
+AI Engineer with production experience across the full LLM agent stack — agent orchestration, tool design, sandboxed agent governance (prompt-injection blocking, PII redaction, output moderation), evaluation pipelines, multimodal RAG, and conversation memory. 
 
-Hands-on with RL fine-tuning, knowledge graph, and AWS/Kubernetes infrastructure.
+Hands-on with RL fine-tuning, knowledge graphs, and AWS/Kubernetes infrastructure.
 
-Contributor to Mem0 (Over 58k stars AI memory system)
+Contributor to Mem0 (an AI memory system with over 58k stars)
 
-1st author paper on speaker verification
+First-author paper on speaker verification
   
 
 ---  
@@ -33,11 +33,11 @@ Contributor to Mem0 (Over 58k stars AI memory system)
 
 ## Work Experience
 
-### MaiAgent(AI Engineer, 2025.12 - , Taipei)
+### MaiAgent (AI Engineer, 2025.12 - , Taipei)
 
 AI Agent platform for Enterprise [maiagent.ai](https://maiagent.ai/en/about)
 
-Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex codebase - designing within the constraints of the existing system, across AI pipeline, backend, and frontend.
+Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex codebase — designing within the constraints of the existing system, across AI pipeline, backend, and frontend.
 
 #### Agent Middleware
 <details>
@@ -52,7 +52,7 @@ flowchart LR
 
 **Goal:** Every message rule on the platform — "reply in Traditional Chinese", "never mention competitors", PII masking — relied on prompting, which fails ~5% of the time, or on hardcoded backend logic, which can't scale per-customer in multi-tenant SaaS. The goal was a 100% deterministic interception layer before and after the AI agent, where per-tenant rules ship with no deployment.
 
-**Constraint:** The realistic demand was ~one new custom hook per week — per-customer, written by non-engineers, changing often — which rules out git-tracked, deploy-gated code and forces untrusted code onto the hot path of every message. The design had to give that code application context without internal access, isolate hooks from different authors sharing one chain, and stream in real time without ever flashing unredacted PII.
+**Constraint:** The realistic demand was ~one new custom hook per week — per-customer, written by non-engineers, changing often — which ruled out git-tracked, deploy-gated code and forced untrusted code onto the hot path of every message. The design had to give that code application context without internal access, isolate hooks from different authors sharing one chain, and stream in real time without ever flashing unredacted PII.
 
 **Approach:** Designed and delivered end-to-end a middleware hook system where hook code lives in the database and executes in a gVisor-sandboxed container — one container per trigger point (input / output streaming / output final), with a JSON protocol over a single docker-exec socket as the only integration surface.
 
@@ -257,7 +257,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 - **Existing stack only, no migration:** 
     The memory pipeline is built on LlamaIndex's `Memory` abstraction over a shared Elasticsearch index, and conversations live in the production message table. Improvements had to be surgical extensions of the existing classes — no new index, no schema migration, no replacement framework.
 - **The LLM is an untrusted caller:** 
-    Any search tool exposed to the agent receives  LLM-generated input on a hot path — a malformed or malicious regex hits the production database, and a hallucinated ID could cross conversation boundaries in a multi-tenant system. The tools had to be safe against bad input by construction, not by prompting.
+    Any search tool exposed to the agent receives LLM-generated input on a hot path — a malformed or malicious regex hits the production database, and a hallucinated ID could cross conversation boundaries in a multi-tenant system. The tools had to be safe against bad input by construction, not by prompting.
   
 
 **Approach:** One mechanism per goal — repair the passive vector memory so it recalls reliably on its own, and give the agent tools to actively recall what embeddings structurally cannot.  
@@ -321,7 +321,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 **Result:**  
 - **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 107 active organizations, scheduled execution went from nonexistent to a continuously running workload.
 - **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
-- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failure surface as queryable records, not silent gaps or customer complaints.
+- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
 - Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
 
 <details>
@@ -376,7 +376,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 <summary>Tiered pass/fail semantics over DeepEval metrics and an LLM-generated improvement playbook — evaluation results non-technical enterprise users can actually act on</summary>
 
 - **Constraint:** The existing evaluation pipeline used DeepEval’s raw metric pass/fail output directly — non-technical enterprise users received 8+ individual metric scores with no guidance on which failures mattered or what to do about them, making evaluation results effectively unactionable.
-- Redesigned the pass/fail determination by designing a **tiered metric priority system** based on studying DeepEval’s metric semantics to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
+- Redesigned the pass/fail determination as a **tiered metric priority system**, derived from studying DeepEval’s metric semantics, to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
 
     <details>
     <summary>Details</summary>
@@ -419,8 +419,8 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 
     </details>
 
-- Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO events broadcasting
-- Decoupled the evaluation pipeline from OpenAI by a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
+- Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO event broadcasting
+- Decoupled the evaluation pipeline from OpenAI behind a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
 </details>
   
   
@@ -434,9 +434,9 @@ Shipped end-to-end (backend + frontend) alongside the AI feature work:
 - **Resumable LLM streaming:** Streamed responses were lost on any mid-generation disconnect (page refresh, network switch), forcing full regeneration. Added a Redis-backed catch-up cache that replays the stream to reconnecting clients — **recovery without re-triggering the LLM call**.
 </details>
 
-### Wrtn Technologies(Data Engineer Intern, 2024.12 - 2025.06, Seoul)
+### Wrtn Technologies (Data Engineer Intern, 2024.12 - 2025.06, Seoul)
 
-AI-search platform serving 5 millions of monthly active users https://wrtn.ai/
+AI-search platform serving 5 million monthly active users [wrtn.ai](https://wrtn.ai/)  
 
 I had the opportunity to experience data infrastructure and AI systems in a fast-paced startup environment through daily scrums and cross-functional collaboration.
 
@@ -539,7 +539,7 @@ The user has been a member of UAENA, IU's fan cafe, since 2024. IU is a Korean f
 
 **2. Document-side enrichment — key expansion.** For every indexed node, an LLM (GPT-4o-mini) generates a **summary, keywords, and expected questions**, indexed alongside the category and content. This is what gives implicit questions something to hit: *"tell me about yourself"* matches an expected question even though it never mentions Wrtn.
 
-**3. Query-side enrichment — search planner.** Reworked how the planner extracts search queries from the user's utterance: query expansion that emits **category keywords** from the guide's tree (e.g. *"tell me about wrtn"* → a fan of category-grounded query texts like "wrtn user guide", "service introduction", "wrtn features"), plus intent-classification prompt engineering so the planner routes Wrtn-related utterances to the guide index at all.
+**3. Query-side enrichment — search planner.** Reworked how the planner extracts search queries from the user's utterance: query expansion that emits **category keywords** from the guide's tree (e.g. *"tell me about wrtn"* → a fan-out of category-grounded query texts like "wrtn user guide", "service introduction", "wrtn features"), plus intent-classification prompt engineering so the planner routes Wrtn-related utterances to the guide index at all.
 
 **4. Productized the update pipeline.** The initial pipeline was Notion doc → tree parsing → chunking → enrichment → embedding → Elasticsearch upload. I then replaced the brittle Notion-parsing stage with a **FastAPI REST endpoint accepting tree-structured documents directly**, wired into **Retool** so non-engineers ship guide updates end-to-end — async batch indexing under the hood, multilingual index mapping (Korean nori / English / Japanese kuromoji analyzers), and a schema unified with the platform's newer collections so future search features could span both.
   
@@ -625,8 +625,8 @@ The user has been a member of UAENA, IU's fan cafe, since 2024. IU is a Korean f
 #### Data pipelines
 <details>
 <summary>Details</summary>
-- Developed data pipelines to be used in RAG system leveraging Airflow, BigQuery, Aws Batch, and Elasticsearch
-- Developed deal price crawling pipeline extracting structured data from 20+ e-commerce sites leveraging Vision Language Model (gpt 4o mini)
+- Developed data pipelines used in the RAG system, leveraging Airflow, BigQuery, AWS Batch, and Elasticsearch
+- Developed a deal-price crawling pipeline extracting structured data from 20+ e-commerce sites, leveraging a vision language model (GPT-4o mini)
 </details>
   
 
@@ -650,9 +650,9 @@ Retool interface of evaluation result (translated)
 ### Mem0 AI Assistant Memory System
 
 <details>
-<summary>mem0 is an open source AI assistant memory system which received over 58k stars on Github. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
+<summary>mem0 is an open source AI assistant memory system that has received over 58k stars on GitHub. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
   
-- Github: [mem0ai/mem0](https://github.com/mem0ai/mem0)
+- GitHub: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
     - Contributed to redesigning embedding modules to support task-specific actions
     - Contributed to enabling customization on memory action prompt and related documents
@@ -666,9 +666,9 @@ Retool interface of evaluation result (translated)
 
 ### Terraform Libvirt Provider
 <details>
-<summary>Terraform provider to provision infrastructure with Linux's KVM using libvirt. I contributed to the project by fixing mismatched support for libvirt volume import</summary>  
+<summary>A Terraform provider to provision infrastructure with Linux's KVM using libvirt. I contributed to the project by fixing mismatched support for libvirt volume import.</summary>  
   
-- Github: [dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
+- GitHub: [dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 - Contributions: [Pull Requests](https://github.com/dmacvicar/terraform-provider-libvirt/pulls?q=is%3Apr+is%3Aclosed+author%3Arst0070)
 </details>
   
@@ -677,12 +677,12 @@ Retool interface of evaluation result (translated)
 
 ## Personal Projects
 
-### Tiny Graph Extractor — Sub-1B LLM for Knowledge Graph Extraction (in progress)
+### Tiny Graph Extractor — Sub-1B LLM for Knowledge Graph Extraction
 <details>
 <summary>Fine-tuned Qwen3.5-0.8B with GRPO to extract entities and (head, relation, tail) triplets from text — replacing the frontier-LLM API calls in the knowledge graph management system built for the Moodmate project with a model that trains and runs on a single consumer GPU (RTX 4060 Ti, 16GB).</summary>  
   
 
-Github: [rst0070/tiny-graph-extractor](https://github.com/rst0070/tiny-graph-extractor)
+GitHub: [rst0070/tiny-graph-extractor](https://github.com/rst0070/tiny-graph-extractor)
 QLoRA adapter(huggingface): [rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora](https://huggingface.co/rst0070/tiny-graph-extractor-qwen3.5-0.8b-qlora)  
 
 
@@ -771,7 +771,7 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 </details>
   
 
-### **OffNote AI — On-Device Note AI (iOS, released at 26.04.28)**
+### **OffNote AI — On-Device Note AI (iOS)**
 <details>
 <summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — running fully on-device with no cloud calls, no analytics, and no account required.</summary>  
   
@@ -779,7 +779,7 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 
 
 
-- **Constraint**: Targeted a 0.8B quantized LLM (Qwen 3.5, Q4) and a 137M embedding model (Nomic Embed v1.5, Q8) running through llama.cpp on phones with limited RAM and a small context window — too small to expect normal LLM workflow
+- **Constraint**: Targeted a 0.8B quantized LLM (Qwen 3.5, Q4) and a 137M embedding model (Nomic Embed v1.5, Q8) running through llama.cpp on phones with limited RAM and a small context window — too small for a normal LLM workflow
 - Designed an on-device fact extraction pipeline after empirically ruling out knowledge-graph extraction across 5 self-built test scripts: grammar-constrained JSON collapsed the small model's output, nested entity/relation schemas exceeded its capacity, and an LLM-as-judge verifier proved no smarter than the extractor itself.
 - Settled on a sliding-window approach (3 sentences with 1-sentence overlap) with two-shot prompting and a deterministic token-overlap grounding filter that drops hallucinated facts at zero LLM cost — replacing the failed LLM-judge pattern with a heuristic that is dumber but more reliable for sub-1B models.
 - Designed a priority queue with preemption in front of the single shared llama.cpp completion context so background fact extraction cannot block the user-facing chat: a high-priority chat request stops the in-flight low-priority extraction, the preempted job is re-enqueued at the front of the low-priority queue, and the original caller's promise stays pending until the retry completes — preventing the chat UI from freezing during background indexing.
@@ -805,9 +805,9 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 
 Production web application ([world-headlines.rst0070.com](http://world-headlines.rst0070.com/)) providing global news perspectives through automated content aggregation and translation.
 
-- Github: [rst0070/world-headlines](https://github.com/rst0070/world-headlines)
+- GitHub: [rst0070/world-headlines](https://github.com/rst0070/world-headlines)
 - Built data pipeline for multi-source news crawling, translation, and keyword extraction using Playwright, ArgoWorkflows, and LLM integration
-- Developed and deployed full-stack application with Spring Boot backend, React frontend, and PostgreSQL database on self-managed( Libvirt + Terraform ) k3s cluster
+- Developed and deployed full-stack application with Spring Boot backend, React frontend, and PostgreSQL database on a self-managed (Libvirt + Terraform) k3s cluster
 - Tools used: Libvirt, Terraform, Kubernetes & helm, ArgoWorkflows, PostgreSQL, React, Spring boot, Playwright Python, LLM APIs
 
 <details>
@@ -815,19 +815,19 @@ Production web application ([world-headlines.rst0070.com](http://world-headlines
 
 **Screenshot** 
 
-This is screenshot of the web application. It provides users to choose language between English and Original language of the news.
+This is a screenshot of the web application. It lets users choose between English and the original language of the news.
 
 ![image.png](/assets/portfolio/image-1.png)
 
 **Architecture**
 
-This is overview of the architecture on kubernetes cluster including workflow(crawling & translation pipeline), Spring Boot Backend, React Frontend, and Self Hosted PostgreSQL.
+This is an overview of the architecture on the Kubernetes cluster, including the workflow (crawling & translation pipeline), Spring Boot backend, React frontend, and self-hosted PostgreSQL.
 
 ![image.png](/assets/portfolio/image-2.png)
 
 **Infrastructure**
 
-I constructed the kubernetes cluster on multi virtual machines leveraging Ubuntu, KVM, Terraform
+I constructed the Kubernetes cluster across multiple virtual machines leveraging Ubuntu, KVM, and Terraform.
 
 ![image.png](/assets/portfolio/image-3.png)
 
@@ -837,10 +837,10 @@ I constructed the kubernetes cluster on multi virtual machines leveraging Ubuntu
 
 AI-driven diary application that analyzes user emotions and provides intelligent interactions through LLM integration and graph-based knowledge management.
 
-- Github: [moodmate-ai/moodmate](https://github.com/moodmate-ai/moodmate)
+- GitHub: [moodmate-ai/moodmate](https://github.com/moodmate-ai/moodmate)
 - Led full-stack development as Technical Lead, architecting REST APIs, React frontend integration, and resolving critical production issues
 - Built graph-based knowledge management system using Neo4j with producer-consumer pattern to decouple heavy LLM operations from real-time API responses
-    - Knowledge Base Github: [rst0070/knowledge-base](https://github.com/rst0070/knowledge-base)
+    - Knowledge Base GitHub: [rst0070/knowledge-base](https://github.com/rst0070/knowledge-base)
 - Implemented infrastructure with Infisical secrets management, Harbor registry, and automated CI/CD pipelines via GitHub Actions
 - Tools used: Aws EKS, Infisical, Harbor, React, Spring Boot, FastAPI, Neo4j, Kafka, Gemini api, Embedding
 
@@ -865,8 +865,8 @@ AI-driven diary application that analyzes user emotions and provides intelligent
 
 Web application ([uos-hackathon-static.vercel.app](https://uos-hackathon-static.vercel.app/), static web now) providing unified library information across Seoul. The project was submitted to UOS hackathon 2024.
 
-- Github: [UOSHackathon2024/connect_seoul_book](https://github.com/UOSHackathon2024/connect_seoul_book)
-- Built ETL pipeline using Airflow to scrape, transform, and load library data from government providing data source
+- GitHub: [UOSHackathon2024/connect_seoul_book](https://github.com/UOSHackathon2024/connect_seoul_book)
+- Built ETL pipeline using Airflow to scrape, transform, and load library data from a government-provided data source
 - Deployed backend infrastructure and ETL pipeline with Docker Compose
 - Tools used: Docker compose, Airflow, MySQL, Playwright
 
@@ -893,7 +893,7 @@ Web application ([uos-hackathon-static.vercel.app](https://uos-hackathon-static.
 As an undergraduate researcher, I had the opportunity to research Speaker Verification and Deepfake Audio Detection utilizing deep learning models.
 
 - **PAS: Partial Additive Speech Data Augmentation Method for Noise Robust Speaker Verification**
-    - As 1st author, proposed a data augmentation strategy for enhancing performance of Speaker Verification models in noisy environments
+    - As 1st author, proposed a data augmentation strategy for enhancing the performance of Speaker Verification models in noisy environments
     - [https://arxiv.org/abs/2307.10628](https://arxiv.org/abs/2307.10628)
     - https://github.com/rst0070/Partial_Additive_Speech
 
@@ -907,14 +907,14 @@ As an undergraduate researcher, I had the opportunity to research Speaker Verifi
     </details>
 
 - **HM-Conformer**
-    - As 5th author, implemented Deepfake Audio Detection environment and closed-source model, named Rawformer
+    - As 5th author, implemented a Deepfake Audio Detection environment and a closed-source model named Rawformer
     - https://ieeexplore.ieee.org/abstract/document/10448453
     - https://github.com/rst0070/Rawformer-implementation-anti-spoofing
 
     <details>
     <summary>Details</summary>
 
-    The source code of Rawformer is shared on Github(32 stars), and It is used various research such as followings
+    The source code of Rawformer is shared on GitHub (32 stars), and it is used in various research such as the following:
 
     - [https://arxiv.org/pdf/2404.13914](https://arxiv.org/pdf/2404.13914)
     - [https://arxiv.org/html/2404.13914v1](https://arxiv.org/html/2404.13914v1)
