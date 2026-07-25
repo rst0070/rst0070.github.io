@@ -771,3 +771,15 @@ As an undergraduate researcher, I had the opportunity to research Speaker Verifi
     - [https://arxiv.org/html/2404.13914v1](https://arxiv.org/html/2404.13914v1)
 
     </details>
+  
+---
+  
+## Education
+
+### B.S. in Computer Science, University of Seoul (2019.03 - 2025.08)
+
+Bachelor of Science in Computer Science, University of Seoul, South Korea.
+
+### Exchange Student, University of Warsaw (2023.10 - 2024.02)
+
+Studied at the Faculty of Mathematics, Informatics, and Mechanics (MIM), University of Warsaw, Poland, as an exchange student.
