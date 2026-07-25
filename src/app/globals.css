@@ -206,6 +206,10 @@ html {
   @apply list-decimal pl-6;
 }
 
+.prose hr {
+  @apply my-12 border-neutral-200 dark:border-neutral-800;
+}
+
 .prose > :first-child {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;

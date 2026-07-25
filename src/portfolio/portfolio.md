@@ -8,13 +8,7 @@ Taipei · open to relocation to Singapore
 
 ## Summary
 
-AI Engineer with production experience across the full LLM agent stack — agent orchestration, tool design, sandboxed agent governance (prompt-injection blocking, PII redaction, output moderation), evaluation pipelines, multimodal RAG, and conversation memory. 
-
-Hands-on with RL fine-tuning, knowledge graphs, and AWS/Kubernetes infrastructure.
-
-Contributor to Mem0 (an AI memory system with over 58k stars)
-
-First-author paper on speaker verification
+AI Engineer with production experience across the full LLM agent stack — agent orchestration, tool design, sandboxed agent governance (prompt-injection blocking, PII redaction, output moderation), evaluation pipelines, multimodal RAG, and conversation memory.  
   
 
 ---  
@@ -26,6 +20,19 @@ First-author paper on speaker verification
 - **Training / ML:** PyTorch, GRPO, QLoRA, LLM fine-tuning, Speaker Verification
 - **Infra:** AWS, GCP, Kubernetes, Docker, Terraform, Airflow, Argo Workflows, Elasticsearch, Redis, Kafka, Neo4J
 - **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring)
+  
+  
+---
+  
+
+## Highlights
+
+- **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): **77k executions/week across 10 enterprise orgs**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
+- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (58k★)**; published the [mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test) benchmark.
+- **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
+- **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
+- **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor--sub-1b-llm-for-knowledge-graph-extraction-in-progress)
+- **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
   
 
 ---  
