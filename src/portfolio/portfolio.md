@@ -28,10 +28,10 @@ AI Engineer with production experience across the full LLM agent stack — agent
 ## Highlights
 
 - **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): **77k executions/week across 10 enterprise orgs**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
-- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (58k★)**; published the [mem-test](https://huggingface.co/datasets/wonbin-tw/mem-test) benchmark.
+- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (58k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
 - **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
-- **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor--sub-1b-llm-for-knowledge-graph-extraction-in-progress)
+- **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
   
 
