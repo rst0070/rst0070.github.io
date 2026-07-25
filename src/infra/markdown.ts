@@ -95,11 +95,28 @@ function stripBlankLinesInMermaidFences(markdown: string): string {
     });
 }
 
+// Mirrors `baseUrl` in src/app/sitemap.ts. Kept local so this infra module
+// doesn't import from the app layer (which imports back into infra).
+const SITE_ORIGIN = "https://rst0070.github.io";
+
+const VIDEO_RE = /<video\b[^>]*\bsrc="([^"]+)"[^>]*><\/video>/g;
+
+// A <video> is dead weight in print and in the generated PDF. Pair each one
+// with a print-only link to the same asset, absolute so it stays clickable
+// once the PDF leaves the site.
+function pairVideosWithPrintLink(html: string): string {
+    return html.replace(VIDEO_RE, (video, src: string) => {
+        const href = src.startsWith("/") ? `${SITE_ORIGIN}${src}` : src;
+        return `<figure class="video-block">${video}<a class="print-only" href="${href}">▶ Video: ${href}</a></figure>`;
+    });
+}
+
 export async function parseMarkdownToHtml(markdown: string): Promise<string> {
     const prepared = stripBlankLinesInMermaidFences(markdown);
     const html = converter.makeHtml(prepared);
     const unwrapped = unwrapDetailsParagraphs(html);
-    return highlightCodeBlocks(unwrapped);
+    const withVideoLinks = pairVideosWithPrintLink(unwrapped);
+    return highlightCodeBlocks(withVideoLinks);
 }
 
 export type TocItem = {

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run build:pdf",
+    "build:pdf": "node scripts/generate-pdf.mjs",
     "start": "next start",
     "lint": "next lint"
   },
@@ -23,6 +24,7 @@
     "@types/node": "20.17.28",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "puppeteer": "^25.3.0",
     "typescript": "5.8.2"
   }
 }

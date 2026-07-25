@@ -658,3 +658,185 @@ html {
 .prev-next-spacer {
   display: block;
 }
+
+/* PDF download button */
+
+.pdf-download-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pdf-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 0.82rem;
+  color: rgb(82, 82, 82);
+  text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.pdf-download:hover {
+  color: var(--foreground);
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .pdf-download {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgb(180, 180, 180);
+}
+
+[data-theme="dark"] .pdf-download:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- Print / PDF ---------- */
+
+/* Revealed only by the print stylesheet below. */
+.print-only {
+  display: none;
+}
+
+/* Chrome's print engine also renders out/portfolio.pdf at build time
+   (scripts/generate-pdf.mjs), so everything here shapes both outputs. */
+@media print {
+  /* The dark palette prints as a black brick — force light. The generator
+     pins the light theme too, so this only matters for a reader hitting
+     Ctrl+P while in dark mode. */
+  [data-theme="dark"] {
+    --background: #ffffff;
+    --foreground: #171717;
+    --code-bg: #f5f5f5;
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] .prose,
+  [data-theme="dark"] .prose * {
+    color: #171717 !important;
+  }
+
+  [data-theme="dark"] .shiki,
+  [data-theme="dark"] .shiki span {
+    color: var(--shiki-light) !important;
+    background-color: var(--shiki-light-bg) !important;
+  }
+
+  html,
+  body {
+    max-width: none;
+    min-width: 0;
+    overflow: visible;
+    background: #ffffff;
+  }
+
+  /* Site chrome and interactive affordances mean nothing on paper. */
+  header,
+  footer,
+  .reading-progress,
+  .post-toc-wrapper,
+  .code-copy,
+  .mermaid-fullscreen,
+  .pdf-download-row,
+  .prose .anchor {
+    display: none !important;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  .post-layout {
+    display: block;
+    max-width: none;
+    gap: 0;
+  }
+
+  .post-article {
+    max-width: none;
+    margin: 0;
+  }
+
+  .print-only {
+    display: block;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .prose video {
+    display: none;
+  }
+
+  /* Expand every <details>: collapsed content is simply unreachable on paper. */
+  .prose details::details-content {
+    content-visibility: visible !important;
+    block-size: auto !important;
+  }
+
+  .prose details {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .prose details > summary {
+    color: inherit;
+    font-weight: 600;
+  }
+
+  .prose details > summary::before {
+    content: none;
+  }
+
+  /* Keep headings with what they introduce, and atomic blocks whole. */
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    break-after: avoid;
+    break-inside: avoid;
+  }
+
+  .prose p,
+  .prose li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .prose figure,
+  .prose img,
+  .prose table,
+  .code-block,
+  .mermaid-block {
+    break-inside: avoid;
+  }
+
+  /* A full-height screenshot would otherwise straddle a page boundary. */
+  .prose img {
+    max-height: 60vh;
+  }
+
+  .mermaid-block svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* On screen wide tables scroll sideways; paper has no sideways. */
+  table,
+  .prose table {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+  }
+
+  pre,
+  .code-block pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
