@@ -113,18 +113,18 @@ Design write-ups with the full thought process:
 
     ```mermaid
     flowchart TB
-        subgraph ING["Ingestion — existing document pipeline + image capability"]
+        subgraph "Ingestion — existing document pipeline + image capability"
             direction LR
             UP["Upload<br/>documents (PDF, Office, …)<br/>or standalone images"] --> RD["Existing document parsers<br/>(unchanged)"]
             RD --> TXT["text chunks<br/>indexed as before"]
-            RD --> G1{"does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"}
+            RD --> G1["does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"]
             G1 -- yes --> IMG["images stored as tagged entries<br/>with image embeddings"]
             G1 -- no --> NOP["images skipped —<br/>text ingestion unaffected"]
             TXT --> VI[("one shared vector index<br/>text & images in the same<br/>embedding space")]
             IMG --> VI
         end
 
-        subgraph QRY["Inference — RAG mode & AGENT mode"]
+        subgraph "Inference — RAG mode & AGENT mode"
             direction TB
             Q["User message<br/>text and/or images"] --> RET["existing retrieval logic<br/>4 cross-modal search modes:<br/>text→text · text→image · image→text · image→image"]
             RET --> G2{"any images involved?<br/>(retrieved or attached)"}
@@ -138,14 +138,6 @@ Design write-ups with the full thought process:
         end
 
         VI --> RET
-
-        style ING fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
-        style QRY fill:#0f172a,stroke:#f472b6,color:#e2e8f0
-        style G1 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-        style G2 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-        style G3 fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-        style VI fill:#581c87,stroke:#c084fc,color:#e2e8f0
-        style LLM fill:#9f1239,stroke:#fb7185,color:#fff
     ```
 
 </details>
@@ -206,7 +198,6 @@ sequenceDiagram
 
     User->>Orch: User query
 
-    rect rgb(30, 41, 59)
     Note over Orch,DR: Phase 1 — Planning (status: started)
     Orch->>DR: arun(status=started)
     DR->>DR: Create research plan
@@ -217,7 +208,6 @@ sequenceDiagram
     DR-->>Orch: interrupt(RUN_RESEARCH)
     end
 
-    rect rgb(15, 23, 42)
     Note over Orch,EA: Phase 2 — Research (status: running)
     Orch->>DR: Command(resume="Start research")
 
@@ -366,12 +356,6 @@ Demo: the agent recovering the exact wording of the first message in a long conv
         end
 
         Delivery --> Audit[Execution Audit Record\nstatus / token usage / errors]
-
-        style Trigger fill:#1e293b,stroke:#60a5fa,color:#e2e8f0
-        style Guards fill:#1e293b,stroke:#f59e0b,color:#e2e8f0
-        style Execution fill:#0f172a,stroke:#818cf8,color:#e2e8f0
-        style Delivery fill:#1e293b,stroke:#34d399,color:#e2e8f0
-        style Audit fill:#581c87,stroke:#c084fc,color:#e2e8f0
     ```
 
 </details>
