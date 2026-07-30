@@ -113,18 +113,18 @@ Design write-ups with the full thought process:
 
     ```mermaid
     flowchart TB
-        subgraph "Ingestion — existing document pipeline + image capability"
+        subgraph ING["Ingestion — existing document pipeline + image capability"]
             direction LR
             UP["Upload<br/>documents (PDF, Office, …)<br/>or standalone images"] --> RD["Existing document parsers<br/>(unchanged)"]
             RD --> TXT["text chunks<br/>indexed as before"]
-            RD --> G1["does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"]
+            RD --> G1{"does this knowledge base's<br/>embedding model support images?<br/>(checked when connected, not hardcoded)"}
             G1 -- yes --> IMG["images stored as tagged entries<br/>with image embeddings"]
             G1 -- no --> NOP["images skipped —<br/>text ingestion unaffected"]
             TXT --> VI[("one shared vector index<br/>text & images in the same<br/>embedding space")]
             IMG --> VI
         end
 
-        subgraph "Inference — RAG mode & AGENT mode"
+        subgraph QRY["Inference — RAG mode & AGENT mode"]
             direction TB
             Q["User message<br/>text and/or images"] --> RET["existing retrieval logic<br/>4 cross-modal search modes:<br/>text→text · text→image · image→text · image→image"]
             RET --> G2{"any images involved?<br/>(retrieved or attached)"}
