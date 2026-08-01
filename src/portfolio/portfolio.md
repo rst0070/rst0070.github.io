@@ -193,11 +193,12 @@ side of the line.
 sequenceDiagram
     participant User
     participant Orch as Orchestrator<br/>(Django)
-    participant DR as Deep Research Agent<br/>(LangChain / LangGraph)
+    participant DR as Deep Research Agent<br/>(LangChain, LangGraph)
     participant EA as Existing Agent<br/>(LlamaIndex)
 
     User->>Orch: User query
 
+    rect rgba(0, 0, 0, 0.2)
     Note over Orch,DR: Phase 1 — Planning (status: started)
     Orch->>DR: arun(status=started)
     DR->>DR: Create research plan
@@ -208,6 +209,7 @@ sequenceDiagram
     DR-->>Orch: interrupt(RUN_RESEARCH)
     end
 
+    rect rgba(0, 0, 0, 0.2)
     Note over Orch,EA: Phase 2 — Research (status: running)
     Orch->>DR: Command(resume="Start research")
 
