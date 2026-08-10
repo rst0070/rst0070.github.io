@@ -615,11 +615,125 @@ The user has been a member of UAENA, IU's fan cafe, since 2024. IU is a Korean f
 </details>
 
 
-#### Data pipelines
+#### Hot Deal Search Pipeline
+<details>
+<summary>Pipeline behind the assistant's hot-deal search — extracts prices from 20+ structurally different e-commerce sites by reading page screenshots with a VLM instead of parsing HTML.</summary>
+
+**Goal:** The assistant needed to answer hot-deal queries with real, current data: the deal price, the original price, the discount rate, and the community's reaction. That meant collecting deal posts from Korean deal-community boards and enriching each one with structured price information pulled from the seller's own site.
+
+**Constraint:** Deal posts link out to whichever seller happens to run the promotion — 20+ e-commerce sites, each with different HTML. Selector-based extraction would have meant maintaining a parser per site, and every site redesign would silently break one.
+
+**Approach:** A three-stage pipeline — crawling → refining → indexing — scheduled as an Airflow DAG running on EKS with KubernetesPodOperator:
+
+- **Crawling** — deal posts collected from three Korean deal-community boards via ZenRows-proxied requests, parsed with an async producer–consumer pattern and batch-saved to a BigQuery warehouse table.
+- **Refining — extract prices from pixels, not HTML.** HTML structure varies per seller, but every seller displays the price prominently *for the human eye*. So instead of parsing HTML: Playwright visits the seller URL and takes a screenshot, and a vision language model (GPT-4o-mini) reads the original and discounted price off the image; the discount rate is computed from those. One extraction method covers every site and survives redesigns.
+- **Data hygiene** — refined deals older than 7 days are deleted, newer crawls of the same product URL replace older ones, and only recently crawled posts are fed to the expensive screenshot + VLM step.
+- **Indexing** — an AWS Batch job syncs the refined BigQuery mart table into Elasticsearch with embeddings, making deals searchable by the assistant.
+  
+
+<details>
+<summary>Architecture</summary>
+
+```mermaid
+flowchart TD
+    src1["deal board A"]
+    src2["deal board B"]
+    src3["deal board C"]
+    wh[("BigQuery warehouse")]
+    mart[("BigQuery mart")]
+    es[("Elasticsearch")]
+
+    subgraph crawling
+        direction TB
+        src1 -->|"ZenRows + async crawl"| wh
+        src2 -->|"ZenRows + async crawl"| wh
+        src3 -->|"ZenRows + async crawl"| wh
+    end
+
+    subgraph refining
+        direction TB
+        shot["Playwright screenshot of seller page"]
+        vlm["VLM reads original / discounted price"]
+        shot -->|"image"| vlm
+    end
+
+    subgraph indexing
+        direction TB
+        job["AWS Batch job"]
+    end
+
+    wh -->|"recent deal posts"| shot
+    vlm -->|"upsert / dedup / 7-day retention"| mart
+    mart -->|"read"| job
+    job -->|"index + embeddings"| es
+```
+</details>
+</details>
+  
+
+#### Book Search Pipeline
+<details>
+<summary>Book-question answering built end to end — a 7-stage async ETL crawling Korea's largest bookstore into Elasticsearch, plus the planner prompt, search tool, and generation prompt that wire it into the assistant.</summary>
+
+**Goal:** The assistant answered general questions well but did poorly on book-related ones — asked *"recommend a bestseller published this year"*, it produced generic suggestions with no grounding in real, current books. The fix needed both halves: a pipeline that keeps fresh book data crawled and indexed, and a search path that actually routes book questions to it.
+
+**Approach — data pipeline:** A 7-stage asyncio ETL over Korea's largest bookstore, with stages connected by asyncio queues and the whole run triggered by a scheduled Airflow DAG:
+
+- **Hybrid extraction** — XML sitemap parsing discovers recommended-book categories, the REST API (aiohttp) pulls book lists and details in bulk, and Playwright scrapes review and collection data that only renders in the web UI.
+- **Per-stage worker scaling** — each stage gets a worker count matched to its own bottleneck: a single sitemap extractor, a few category workers (API rate limits), 30 concurrent workers for the high-throughput extraction and transform stages, and a single batch loader in front of BigQuery — around 100 concurrent workers in total.
+- **Resilience** — a worker supervisor retries failed items with exponential backoff while preserving the original item's metadata, a stop signal propagates through the queue chain for graceful shutdown, and structured logs ship to Loki.
+- **Load & index** — batched writes into a day-partitioned BigQuery table, then an AWS Batch job indexes the data into Elasticsearch with embeddings.
+
+**Approach — retrieval:** Wired the crawled data into the assistant's answer flow:
+- Updated the **planning prompt** so book-related questions are recognized and routed to book search
+- Added a **search tool** that takes the request and searches the Elasticsearch book index
+- Refined the **generation prompt** for how retrieved book data is formatted into the answer
+
+**Result:** Book questions are grounded in crawled, current book data — before vs. after comparison in Details below.
+  
+
 <details>
 <summary>Details</summary>
-- Developed data pipelines used in the RAG system, leveraging Airflow, BigQuery, AWS Batch, and Elasticsearch
-- Developed a deal-price crawling pipeline extracting structured data from 20+ e-commerce sites, leveraging a vision language model (GPT-4o mini)
+
+```mermaid
+flowchart TD
+    src_api[("bookstore sitemap + API")]
+    src_ui[("bookstore web UI")]
+    bq[("BigQuery")]
+    es[("Elasticsearch")]
+
+    subgraph extract
+        direction TB
+        s1["extract sitemap"] -->|"recommended-book URLs"| s2["extract category codes"]
+        s2 -->|"category codes"| s3["extract book lists"]
+    end
+
+    subgraph transform
+        direction TB
+        s4["transform book detail"] -->|"base book info"| s5["transform reviews"]
+        s5 -->|"review info"| s6["transform searchable collection"]
+    end
+
+    subgraph load
+        direction TB
+        s7["load book batches"]
+    end
+
+    extract <-->|"aiohttp"| src_api
+    transform <-->|"playwright"| src_ui
+    s3 -->|"book identifiers"| s4
+    s6 -->|"searchable documents"| s7
+    s7 -->|"save"| bq
+    bq -->|"read"| s8["AWS Batch job"]
+    s8 -->|"index + embeddings"| es
+```
+
+**Before vs. after** on *"recommend a bestseller published this year"* (Korean) — before, generic suggestions with no grounding; after, real books from the crawled index:
+
+![book-search-before.png](/assets/portfolio/book-search-before.png)
+
+![book-search-after.png](/assets/portfolio/book-search-after.png)
+</details>
 </details>
   
 
