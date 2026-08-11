@@ -117,6 +117,16 @@ export function Footer() {
             <a
               className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
               target="_blank"
+              href="https://www.linkedin.com/in/wonbin-kim-7263a7184/"
+            >
+              <ArrowIcon />
+              <p className="ml-2 h-7">LinkedIn</p>
+            </a>
+          </li>
+          <li>
+            <a
+              className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+              target="_blank"
               href="mailto:kwb0711@gmail.com"
             >
               <ArrowIcon />
