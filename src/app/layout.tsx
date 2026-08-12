@@ -36,6 +36,13 @@ export const metadata: Metadata = {
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();`;
 
+const gaMeasurementId = "G-CDVVPEEMR0";
+
+const gaInitScript = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaMeasurementId}');`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,6 +52,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+        />
+        <script dangerouslySetInnerHTML={{ __html: gaInitScript }} />
       </head>
       <body>
         <ThemeProvider>
