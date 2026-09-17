@@ -1,7 +1,8 @@
-# Sample workflow for building and deploying a Next.js site to GitHub Pages
+# Builds the site (apps/web) and deploys it to GitHub Pages.
 #
-# To get started with Next.js see: https://nextjs.org/docs/getting-started
-#
+# Path filtering is per job, not in `on:`, so the workflow always reports a
+# status on a pull request: a workflow that never starts leaves a required
+# check waiting forever.
 name: Deploy Next.js site to Pages
 
 on:
@@ -31,8 +32,34 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    # Whether this event touched the site at all. The Worker (apps/ai-backend)
+    # has its own workflow and does not need a site build.
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.classify.outputs.web }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Classify changed files
+        id: classify
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          changed=$(.github/scripts/changed-files.sh)
+          web=true
+          if [ "$changed" != ALL ] && ! grep -qE '^(apps/web/|packages/content/|content/|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.github/(workflows/deploy-web\.yaml|scripts/))' <<< "$changed"; then
+              web=false
+          fi
+          echo "web=$web" >> "$GITHUB_OUTPUT"
+          echo "web=$web" >> "$GITHUB_STEP_SUMMARY"
+
   # Build job
   build:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -96,8 +123,9 @@ jobs:
         env:
           # The chat widget's backend (apps/ai-backend), inlined into the
           # client bundle. Public by design; the Worker holds no secrets the
-          # browser can reach. Without it the widget is not rendered.
-          NEXT_PUBLIC_AI_API_URL: https://rst0070-ai-backend.kwb0711.workers.dev
+          # browser can reach. Without it the widget is not rendered, so the
+          # deployed URL is the fallback until the repository variable is set.
+          NEXT_PUBLIC_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
