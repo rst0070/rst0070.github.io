@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Installs the pnpm version pinned by "packageManager" in package.json.
+      # Installs the pnpm version pinned by "packageManager" in the root package.json.
       # Must run before setup-node, whose pnpm cache calls `pnpm store path`.
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -46,21 +46,17 @@ jobs:
         with:
           node-version: "24"
           cache: pnpm
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
+      # No actions/configure-pages step: it can only inject into a .js/.cjs/.mjs
+      # Next config. apps/web/next.config.ts already sets `output: 'export'`,
+      # basePath stays empty for this user site (rst0070.github.io), and
+      # images.unoptimized is moot because next/image is not used.
       - name: Restore cache
         uses: actions/cache@v4
         with:
           path: |
-            .next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+            apps/web/.next/cache
+          # Generate a new cache whenever packages, source files or content change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.[jt]s', 'apps/web/**/*.[jt]sx', 'content/**') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
@@ -80,15 +76,17 @@ jobs:
       # ~/.cache/puppeteer is a separate cache that can miss on its own. This
       # step is a no-op when Chrome is present and downloads it otherwise.
       - name: Ensure Chrome for Puppeteer
-        run: pnpm exec puppeteer browsers install chrome
-      # `pnpm run build` rather than `next build` directly: the build script also
-      # renders out/portfolio.pdf, which ships in the Pages artifact.
+        # Run inside @rst0070/web: puppeteer is its dependency, and with pnpm's
+        # isolated node_modules it is not resolvable from the workspace root.
+        run: pnpm --filter @rst0070/web exec puppeteer browsers install chrome
+      # The package's `build` script rather than `next build` directly: it also
+      # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
       - name: Build with Next.js
-        run: pnpm run build
+        run: pnpm --filter @rst0070/web build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./apps/web/out
 
   # Deployment job
   deploy:
