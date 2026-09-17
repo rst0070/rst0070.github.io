@@ -1,0 +1,24 @@
+{
+    "$schema": "./node_modules/wrangler/config-schema.json",
+    "name": "rst0070-ai-backend",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-09-17",
+    // Workers AI and Vectorize have no local simulator, so `wrangler dev` uses
+    // the real services through remote bindings (and spends real Neurons).
+    "ai": {
+        "binding": "AI",
+        "remote": true
+    },
+    "vectorize": [
+        {
+            "binding": "VECTORIZE",
+            "index_name": "rst0070-content",
+            "remote": true
+        }
+    ],
+    // Declared so `wrangler types` puts it in Env without reading .dev.vars.
+    // Locally it comes from .dev.vars; deployed, from `wrangler secret put`.
+    "secrets": {
+        "required": ["REINDEX_SECRET"]
+    }
+}

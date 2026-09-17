@@ -38,6 +38,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# wrangler (apps/ai-backend): local secrets and dev state
+.dev.vars
+.wrangler/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

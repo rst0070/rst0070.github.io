@@ -1,0 +1,9 @@
+{
+  // Node entry points (script/) and tool configs, with Node types and without
+  // the Worker's runtime types.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["script/**/*.ts", "*.config.ts"]
+}
