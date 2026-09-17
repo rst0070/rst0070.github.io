@@ -1,0 +1,3 @@
+# Copy to .dev.vars (gitignored). `wrangler dev` gives these to the Worker, and
+# `pnpm reindex` reads REINDEX_SECRET from here too.
+REINDEX_SECRET=change-me-to-a-long-random-string

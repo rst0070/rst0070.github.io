@@ -68,8 +68,11 @@ jobs:
         with:
           path: ~/.cache/puppeteer
           key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/pnpm-lock.yaml') }}
+      # Only the site and what it depends on (@rst0070/content), so the build
+      # does not install wrangler and workerd for apps/ai-backend, which is
+      # checked by ai-backend.yaml.
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --filter @rst0070/web...
       # puppeteer's postinstall (allowed in pnpm-workspace.yaml) normally
       # downloads Chrome during install. But pnpm's side-effects cache lives in
       # the store that setup-node restores, and a hit there can mark

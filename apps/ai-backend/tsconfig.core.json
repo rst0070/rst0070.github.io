@@ -1,0 +1,10 @@
+{
+  // src/core must run unchanged in workerd (the Worker) and Node (scripts,
+  // tests), so it may use only what ECMAScript itself guarantees. With no
+  // ambient types and only the ES2022 lib, any fetch, Request, crypto,
+  // TextEncoder, console or process in core, or in anything it imports, is a
+  // type error. Tests are excluded: they run on Node under vitest.
+  "extends": "./tsconfig.json",
+  "include": ["src/core/**/*.ts"],
+  "exclude": ["src/core/**/__tests__/**"]
+}

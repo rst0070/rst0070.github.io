@@ -1,4 +1,5 @@
 packages:
+  - apps/ai-backend
   - apps/web
   - packages/content
 
@@ -15,7 +16,20 @@ packages:
 #
 # sharp is an optional dependency of next, used only for image optimization.
 # The site is a static export with unoptimized images, so its native build is
-# never needed.
+# never needed. miniflare (under wrangler) also depends on it, only for the
+# local Images binding, which apps/ai-backend does not use.
+#
+# workerd and esbuild are dependencies of wrangler (apps/ai-backend): workerd
+# is the local Workers runtime behind `wrangler dev`, and esbuild bundles the
+# Worker. Their postinstalls check the platform binary and fetch it if the
+# optional platform package is missing.
+#
+# unrs-resolver (under eslint-import-resolver-typescript) also ships its native
+# binding as optional platform packages, which pnpm installs, so its fallback
+# postinstall is not needed.
 allowBuilds:
+  esbuild: true
   puppeteer: true
   sharp: false
+  unrs-resolver: false
+  workerd: true

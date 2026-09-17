@@ -1,0 +1,51 @@
+# Checks apps/ai-backend (the chat Worker): generated types, typecheck, lint
+# and tests. Nothing is deployed from CI yet.
+name: ai-backend
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/ai-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Installs the pnpm version pinned by "packageManager" in the root package.json.
+      # Must run before setup-node, whose pnpm cache calls `pnpm store path`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+      # Only this package and what it depends on (@rst0070/content): not the
+      # site's Next.js and puppeteer.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter @rst0070/ai-backend...
+      # worker-configuration.d.ts is generated from wrangler.jsonc and
+      # src/index.ts; fails if it was not regenerated after changing them.
+      - name: Check generated Worker types
+        run: pnpm types:check
+      # Also checks src/core with only the ES2022 lib and no ambient types.
+      - name: Typecheck
+        run: pnpm typecheck
+      # Includes the layer rules in ARCHITECTURE.md.
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
