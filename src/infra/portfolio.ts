@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { CONTENT_ROOT } from './content'
 
 /**
  * Read the raw portfolio markdown source. Unlike notes, the portfolio is a
@@ -7,9 +8,7 @@ import path from 'path'
  */
 export function readPortfolio(): string {
     const portfolioPath = path.join(
-        process.cwd(),
-        'src',
-        'portfolio',
+        CONTENT_ROOT,
         'portfolio.md'
     )
     return fs.readFileSync(portfolioPath, 'utf-8')

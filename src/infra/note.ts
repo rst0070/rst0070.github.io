@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import { Note, NoteMetadata } from '../core/entities'
+import { CONTENT_ROOT } from './content'
 
 function findAllNotePaths(): string[] {
     let noteDirPath = path.join(
-        process.cwd(),
-        'src',
+        CONTENT_ROOT,
         'notes'
     )
     const notePaths = fs.readdirSync(
@@ -52,8 +52,7 @@ function noteSlugToPath(slug: string): string {
     let noteName = slug.replace(noteYear + '-', '')
 
     return path.join(
-        process.cwd(),
-        'src', 
+        CONTENT_ROOT,
         'notes',
         noteYear,
         `${noteName}.md`
