@@ -1,3 +1,6 @@
 # Copy to .dev.vars (gitignored). `wrangler dev` gives these to the Worker, and
 # `pnpm reindex` reads REINDEX_SECRET from here too.
 REINDEX_SECRET=change-me-to-a-long-random-string
+# Overrides the deployed value in wrangler.jsonc so `next dev` can call
+# `wrangler dev`.
+ALLOWED_ORIGINS=https://rst0070.github.io,http://localhost:3000

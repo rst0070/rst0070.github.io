@@ -7,7 +7,9 @@ export default {
         const container = new DiContainer({
             ai: env.AI,
             vectorize: env.VECTORIZE,
+            chatRateLimiter: env.CHAT_RATE_LIMITER,
             reindexSecret: env.REINDEX_SECRET,
+            allowedOrigins: env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim()).filter((origin) => origin !== ''),
         })
         return route(request, container)
     },

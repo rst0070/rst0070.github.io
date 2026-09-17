@@ -1,13 +1,17 @@
-import { CompletionParams, CompletionResult } from '../entity/llm'
+import { CompletionParams } from '../entity/llm'
 import { LlmPort } from '../port/llm'
 
+/** Streams `deltas` one by one, and records every call. */
 export class FakeLlm implements LlmPort {
     readonly calls: CompletionParams[] = []
 
-    constructor(private readonly text = 'fake answer') {}
+    constructor(private readonly deltas: string[] = ['fake ', 'answer']) {}
 
-    async complete(params: CompletionParams): Promise<CompletionResult> {
+    async stream(params: CompletionParams): Promise<AsyncIterable<string>> {
         this.calls.push(params)
-        return { text: this.text }
+        const deltas = this.deltas
+        return (async function* () {
+            yield* deltas
+        })()
     }
 }

@@ -16,17 +16,24 @@ export function json(body: unknown, status = 200): Response {
 
 /** Maps any thrown value to a JSON error response: `{ error: code }`. */
 export function errorResponse(error: unknown): Response {
+    const { status, code } = describeError(error)
     if (error instanceof HttpError) {
-        return json({ error: error.code, message: error.message }, error.status)
+        return json({ error: code, message: error.message }, status)
     }
+    return json({ error: code }, status)
+}
+
+/** The status and error code for any thrown value. Logs failures that are not the client's. */
+export function describeError(error: unknown): { status: number, code: string } {
+    if (error instanceof HttpError) return { status: error.status, code: error.code }
     if (error instanceof ChatError) {
-        return json({ error: error.code }, error.code === 'no-source' ? 404 : 400)
+        return { status: error.code === 'no-source' ? 404 : 400, code: error.code }
     }
     if (error instanceof ModelError) {
         console.error(error)
         const status = { 'quota-exhausted': 503, 'rate-limited': 429, 'unknown': 502 }[error.code]
-        return json({ error: error.code }, status)
+        return { status, code: error.code }
     }
     console.error(error)
-    return json({ error: 'internal' }, 500)
+    return { status: 500, code: 'internal' }
 }

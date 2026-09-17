@@ -10,18 +10,26 @@ Keep this document current when layers, rules or contracts change.
 
 | Endpoint | Auth | Request | Response |
 |---|---|---|---|
-| `POST /chat` | public | `{ messages: { role: 'user' \| 'assistant', content: string }[], slug?: string }` | `{ message: { role: 'assistant', content: string }, citations: { slug, title, url }[] }` |
+| `POST /chat` | public, rate limited | `{ messages: { role: 'user' \| 'assistant', content: string }[], slug?: string }` | `{ message: { role: 'assistant', content: string }, citations: { slug, title, url }[] }`, or a stream with `Accept: text/event-stream` |
 | `POST /admin/reindex` | `Authorization: Bearer <REINDEX_SECRET>` | `{ chunks: Chunk[] }` (at most 200) | `{ upserted: number }` |
 
 - The Worker is stateless. The client holds the conversation and sends it every turn.
 - `system` is not an accepted role. The system prompt is always built on the server.
 - Citations are not sent back. Every turn retrieves again. Citation `n` is source `[n + 1]` in the answer.
 - On a note page, the client sends that note's `slug` every turn and retrieval is limited to it.
+- **Streaming.** With `Accept: text/event-stream`, `/chat` answers with server-sent events:
+  - `citations` `{ citations }`, once, before any text
+  - `delta` `{ text }`, repeated
+  - `done` `{}`; or `error` `{ error: code }` if generation fails after the stream has started
+  Anything that refuses the turn earlier (bad request, rate limit, `ChatError`, a model refusing the call) is an ordinary JSON error. A client that disconnects stops generation.
+- **CORS.** `/chat` answers preflights and adds `Access-Control-Allow-Origin` (errors included) for origins in `ALLOWED_ORIGINS`. It is not access control: non-browser clients ignore it. `/admin/reindex` has no CORS.
+- **Rate limit.** `/chat` counts requests per `CF-Connecting-IP` with the `CHAT_RATE_LIMITER` binding (5 a minute), before reading the body. The count is per Cloudflare location and eventually consistent; the Free plan's daily Neuron allocation is the hard ceiling.
 - Errors are `{ error: code }` with these statuses:
   - Request shape: 400.
   - `ChatError`: 400, except `no-source`, which is 404.
   - `ModelError`: `quota-exhausted` is 503, `rate-limited` is 429, `unknown` is 502.
   - Auth: 401.
+  - Rate limit (`too-many-requests`): 429.
   - Unknown path: 404. Wrong method: 405.
   - Anything else: 500.
 
@@ -33,7 +41,7 @@ Cloudflare-specific is delivered to it through constructors.
 ```
 index.ts          Worker entry: env → bindings + secret → DiContainer → route
   ↓
-http/             routing, auth, parsing, status mapping (consumes usecases only)
+http/             routing, auth, CORS, rate limit, parsing, event streams, status mapping (consumes usecases only)
   ↓ usecase instances, received as deps
 core/             entity, port, repository, usecase, service, error, config (pure)
   ↓ interfaces (core/port, core/repository)
@@ -58,7 +66,7 @@ src/
     config.ts              CHAT_POLICY, LLM_PRESETS, CHUNKING_POLICY
   adapter/                 WorkersAiEmbeddingAdapter, WorkersAiLlmAdapter, Workers AI error mapping
   repositories/            VectorizeChunkRepository
-  http/                    router, auth, request parsing, respond, route/{chat,reindex}
+  http/                    router, auth, cors, request parsing, respond, eventStream, route/{chat,reindex}
 script/                    Node entry points run with tsx: reindex.ts, ask.ts
 ```
 
@@ -75,7 +83,7 @@ script/                    Node entry points run with tsx: reindex.ts, ask.ts
 5. **Vendor details stop at the adapter.** Request and response shapes, batch sizes and error codes live in `adapter/`. Model ids come from `modelCatalog.ts` through the container.
 6. **Core throws core's types.** Adapters map platform failures to `ModelError`. `http/respond.ts` maps core errors to statuses.
 7. **Adapters and repositories import only `core/entity`, `core/port`, `core/repository` and `core/error`.**
-8. **`http/` consumes usecases only**, plus core entities and errors. It never imports adapters, repositories, ports or services. Each route declares a `*Deps` interface, and `DiContainer` implements them all.
+8. **`http/` consumes usecases only**, plus core entities and errors. It never imports adapters, repositories, ports or services. Each route declares a `*Deps` interface, and `DiContainer` implements them all. HTTP-only concerns (the rate limiter, allowed origins) are declared in `http/` too and handed through the container; core never sees them.
 9. **Usecases are classes whose dependencies arrive in the constructor.** Dep-free policy is a module-level export beside its usecase.
 10. **Dependencies are delivered, never fetched.** Only `index.ts` reads `env`. `import { env } from 'cloudflare:workers'` is banned everywhere else.
 11. **One container per request, no module-level mutable state.** An isolate serves many visitors.
@@ -89,7 +97,7 @@ Enforcement:
 
 ## Chat turn
 
-`ChatUsecase.reply`, with values from `CHAT_POLICY` and `LLM_PRESETS`:
+`ChatUsecase.start`, with values from `CHAT_POLICY` and `LLM_PRESETS`:
 
 1. **Validate** with `assertChattable`. There must be at least one message, the last one must be a non-blank user message, and every message must be ≤ `maxMessageLength`.
 2. **Take the context window** with `contextWindow`: the last 6 messages. Assistant messages left at the front by the cut are dropped.
@@ -99,8 +107,10 @@ Enforcement:
    - grounding and language rules
    - the sources numbered one per note, each with its title and URL
    - when `slug` is set, the page the reader is on
-6. **Complete** with `[system, ...window]`.
-7. **Reply** with the answer and `citationsFrom(chunks)`: one citation per slug, in rank order.
+6. **Start the completion** with `[system, ...window]`. `ChatUsecase.start` resolves once the model has accepted the call, with `citationsFrom(chunks)` (one citation per slug, in rank order) and the answer's text as an async iterable, so every refusal above happens before any text.
+7. **Reply.** `/chat` streams the text as events, or `ChatUsecase.reply` collects it into one message.
+
+`LlmPort.stream` is the only completion call. `WorkersAiLlmAdapter` requests `stream: true`, reads the Workers AI event stream (Chat Completions chunks; reasoning deltas are skipped), and fails with `ModelError('unknown')` if the stream ends without answer text, which is also what happens when reasoning uses up `maxTokens`.
 
 ## Indexing
 
@@ -126,7 +136,7 @@ pnpm --filter @rst0070/ai-backend exec wrangler login
 # index exists are not filterable by slug.
 pnpm --filter @rst0070/ai-backend exec wrangler vectorize create rst0070-content --dimensions=1024 --metric=cosine
 pnpm --filter @rst0070/ai-backend exec wrangler vectorize create-metadata-index rst0070-content --propertyName=slug --type=string
-cp apps/ai-backend/.dev.vars.example apps/ai-backend/.dev.vars   # then set REINDEX_SECRET
+cp apps/ai-backend/.dev.vars.example apps/ai-backend/.dev.vars   # then set REINDEX_SECRET; it also allows localhost:3000
 ```
 
 Every run, from `apps/ai-backend`:

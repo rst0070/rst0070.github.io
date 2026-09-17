@@ -1,4 +1,4 @@
-import { ChatInput, ChatReply, Message } from '../entity/chat'
+import { ChatInput, ChatReply, ChatReplyStream, Message } from '../entity/chat'
 import { ChatError } from '../error/chat'
 import { EmbeddingPort } from '../port/embedding'
 import { LlmPort } from '../port/llm'
@@ -14,7 +14,12 @@ export class ChatUsecase {
         private readonly llm: LlmPort,
     ) {}
 
-    async reply(input: ChatInput): Promise<ChatReply> {
+    /**
+     * Validates, retrieves and starts the completion. Everything that can
+     * refuse the turn (ChatError, a ModelError from embedding or from starting
+     * the completion) rejects here, before any text is produced.
+     */
+    async start(input: ChatInput): Promise<ChatReplyStream> {
         assertChattable(input.messages, CHAT_POLICY)
         const window = contextWindow(input.messages, CHAT_POLICY.contextWindow)
 
@@ -22,14 +27,19 @@ export class ChatUsecase {
         const sources = await this.chunkRepository.searchByVector(vector, CHAT_POLICY.topK, { slug: input.slug })
         if (sources.length === 0) throw new ChatError('no-source')
 
-        const result = await this.llm.complete({
+        const deltas = await this.llm.stream({
             messages: [{ role: 'system', content: buildSystemPrompt(sources, { slug: input.slug }) }, ...window],
             ...LLM_PRESETS.chat,
         })
-        return {
-            message: { role: 'assistant', content: result.text },
-            citations: citationsFrom(sources),
-        }
+        return { citations: citationsFrom(sources), deltas }
+    }
+
+    /** The whole reply at once: `start`, with the text collected. */
+    async reply(input: ChatInput): Promise<ChatReply> {
+        const { citations, deltas } = await this.start(input)
+        let content = ''
+        for await (const delta of deltas) content += delta
+        return { message: { role: 'assistant', content: content.trim() }, citations }
     }
 }
 

@@ -8,7 +8,3 @@ export interface CompletionParams {
     maxTokens: number
     temperature: number
 }
-
-export interface CompletionResult {
-    text: string
-}

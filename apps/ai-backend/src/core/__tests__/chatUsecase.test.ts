@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { Message } from '../entity/chat'
 import { ChatError } from '../error/chat'
+import { ModelError } from '../error/model'
 import { CHAT_POLICY } from '../config'
 import { ChatUsecase } from '../usecase/chat'
 import { FakeChunkRepository, makeChunk } from './fakeChunkRepository'
@@ -13,9 +14,30 @@ const assistant = (content: string): Message => ({ role: 'assistant', content })
 function setup(results = [makeChunk('24-a', 0), makeChunk('24-b', 3), makeChunk('24-a', 1)]) {
     const repository = new FakeChunkRepository(results)
     const embedding = new FakeEmbedding()
-    const llm = new FakeLlm('the answer')
+    const llm = new FakeLlm([' the ', 'answer '])
     return { repository, embedding, llm, usecase: new ChatUsecase(repository, embedding, llm) }
 }
+
+describe('ChatUsecase.start', () => {
+    it('returns citations and the completion\'s text as it streams', async () => {
+        const { usecase } = setup()
+
+        const reply = await usecase.start({ messages: [user('question')] })
+        const deltas: string[] = []
+        for await (const delta of reply.deltas) deltas.push(delta)
+
+        expect(reply.citations.map((citation) => citation.slug)).toEqual(['24-a', '24-b'])
+        expect(deltas).toEqual([' the ', 'answer '])
+    })
+
+    it('rejects before streaming when the model refuses the call', async () => {
+        const { repository, embedding } = setup()
+        const refusing = { stream: async () => { throw new ModelError('quota-exhausted') } }
+        const usecase = new ChatUsecase(repository, embedding, refusing)
+
+        await expect(usecase.start({ messages: [user('question')] })).rejects.toEqual(new ModelError('quota-exhausted'))
+    })
+})
 
 describe('ChatUsecase.reply', () => {
     it('sends exactly one system message, first, followed by the window unchanged', async () => {
@@ -54,7 +76,7 @@ describe('ChatUsecase.reply', () => {
         expect(embedding.calls).toHaveLength(0)
     })
 
-    it('returns the completion and citations deduped by slug in rank order', async () => {
+    it('returns the collected, trimmed completion and citations deduped by slug in rank order', async () => {
         const { usecase } = setup()
 
         const reply = await usecase.reply({ messages: [user('question')] })
