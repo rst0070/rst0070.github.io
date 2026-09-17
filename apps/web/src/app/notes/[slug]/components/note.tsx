@@ -1,4 +1,4 @@
-import { Note } from "@/core/entities";
+import { Note } from "@rst0070/content";
 import { parseMarkdownToHtml, extractToc, estimateReadingMinutes } from "@/infra/markdown";
 import { findAdjacentNotes } from "@/infra/note";
 import { PostHeader } from "./post-header";

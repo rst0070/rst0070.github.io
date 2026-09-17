@@ -9,6 +9,10 @@ on:
   push:
     branches: ["main"]
 
+  # Builds pull requests (any base branch, so stacked PRs are checked too)
+  # without deploying them
+  pull_request:
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -20,9 +24,11 @@ permissions:
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Pull request runs get their own per-PR group so they never queue behind or block a deployment,
+# and a newer push to the same PR cancels the older run.
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('{0}-pr-{1}', github.workflow, github.event.pull_request.number) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   # Build job
@@ -31,68 +37,66 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
+      # Installs the pnpm version pinned by "packageManager" in the root package.json.
+      # Must run before setup-node, whose pnpm cache calls `pnpm store path`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
+          cache: pnpm
+      # No actions/configure-pages step: it can only inject into a .js/.cjs/.mjs
+      # Next config. apps/web/next.config.ts already sets `output: 'export'`,
+      # basePath stays empty for this user site (rst0070.github.io), and
+      # images.unoptimized is moot because next/image is not used.
       - name: Restore cache
         uses: actions/cache@v4
         with:
           path: |
-            .next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+            apps/web/.next/cache
+          # Generate a new cache whenever packages, source files or content change.
+          # packages/content is TypeScript source compiled into the app's build.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.[jt]s', 'apps/web/**/*.[jt]sx', 'packages/content/**', 'content/**') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       # Puppeteer downloads Chromium on install; cache it so only lockfile
       # changes pay the ~150MB download.
       - name: Cache Puppeteer browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/puppeteer
-          key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-puppeteer-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      # `npm run build` rather than `next build` directly: the build script also
-      # renders out/portfolio.pdf, which ships in the Pages artifact.
+        run: pnpm install --frozen-lockfile
+      # puppeteer's postinstall (allowed in pnpm-workspace.yaml) normally
+      # downloads Chrome during install. But pnpm's side-effects cache lives in
+      # the store that setup-node restores, and a hit there can mark
+      # puppeteer as already built and skip its postinstall, while
+      # ~/.cache/puppeteer is a separate cache that can miss on its own. This
+      # step is a no-op when Chrome is present and downloads it otherwise.
+      - name: Ensure Chrome for Puppeteer
+        # Run inside @rst0070/web: puppeteer is its dependency, and with pnpm's
+        # isolated node_modules it is not resolvable from the workspace root.
+        run: pnpm --filter @rst0070/web exec puppeteer browsers install chrome
+      # Also proves the pure `@rst0070/content` entry is Worker-safe: it is
+      # checked without Node types, so any fs/path/process use fails here.
+      - name: Typecheck @rst0070/content
+        run: pnpm --filter @rst0070/content typecheck
+      # The package's `build` script rather than `next build` directly: it also
+      # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
       - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.manager }} run build
-      #- name: Static HTML export with Next.js
-      #  run: ${{ steps.detect-package-manager.outputs.runner }} next export
+        run: pnpm --filter @rst0070/web build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./apps/web/out
 
   # Deployment job
   deploy:
+    # Pull requests only build; deploy on push to main or manual dispatch
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

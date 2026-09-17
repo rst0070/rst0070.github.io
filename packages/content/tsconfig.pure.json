@@ -1,0 +1,11 @@
+{
+  // The pure entry (`@rst0070/content`) must run in a Cloudflare Worker, which
+  // has no fs and, without nodejs_compat, no path or process. Checking it from
+  // src/index.ts with no ambient types and only the ECMAScript lib makes any
+  // Node import or global in it, or in anything it imports, a type error.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": []
+  },
+  "include": ["src/index.ts"]
+}

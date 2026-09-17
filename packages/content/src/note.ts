@@ -1,39 +1,31 @@
-import fs from 'fs'
-import path from 'path'
-import { Note, NoteMetadata } from '../core/entities'
+import { Note, NoteMetadata } from './entities'
 
-function findAllNotePaths(): string[] {
-    let noteDirPath = path.join(
-        process.cwd(),
-        'src',
-        'notes'
-    )
-    const notePaths = fs.readdirSync(
-            noteDirPath,
-            {
-                recursive: true,
-                withFileTypes: true
-            }
-        ).filter(
-            (note) => note.isFile() && note.name.endsWith('.md') && !note.name.startsWith('_')
-        )
-
-    return notePaths.map(
-        note => path.join(
-            note.parentPath, note.name
-        )
-    )
-}
+// Pure note rules shared by every consumer (site, Worker, indexer). Nothing in
+// this file may use Node APIs (fs, path, process, ...): it is part of the
+// Worker-safe `@rst0070/content` entry, and `pnpm typecheck` checks it without
+// Node types.
 
 /**
  * Convert note path to slug
- * @param notePath - note path: will be like ".../note/2025/test.md"
+ *
+ * Only the last two segments of the path are used: `<year>/<name>.md` becomes
+ * `<year>-<name>`, and any leading directories are ignored. So a path relative
+ * to the notes directory ("24/06-24-LSH-example.md"), relative to the content
+ * root ("notes/24/06-24-LSH-example.md") or absolute all give the same slug.
+ *
+ * Only the first ".md" in the file name is removed. The path is not
+ * normalized ("." / ".." segments are not resolved), so pass a normalized one.
+ *
+ * @param notePath - normalized POSIX note path (`/` separators): will be like "2025/test.md"
  * @returns slug: will be like "2025-test"
  */
-function notePathToSlug(notePath: string): string {
+export function notePathToSlug(notePath: string): string {
 
-    let resolvedPath = path.resolve(notePath)
-    let slugs = resolvedPath.split('/')
+    let slugs = notePath.split('/')
+
+    if (slugs.length < 2) {
+        throw new Error(`Note path must end with "<year>/<name>.md": ${notePath}`)
+    }
 
     let noteName = slugs.pop()!
     let noteYear = slugs.pop()!
@@ -43,24 +35,23 @@ function notePathToSlug(notePath: string): string {
 
 /**
  * Convert slug to note path
+ *
+ * Splits the slug at its first "-": the part before it is the year folder, the
+ * rest is the file name. The result is not normalized, so resolve it against
+ * the notes directory with `path.join` (as `@rst0070/content/node` does).
+ *
  * @param slug - slug: will be like "2025-test"
- * @returns note path: will be like ".../note/2025/test.md"
+ * @returns POSIX note path relative to the notes directory: will be like "2025/test.md"
  */
-function noteSlugToPath(slug: string): string {
+export function noteSlugToPath(slug: string): string {
     let splittedSlug = slug.split('-')
     let noteYear = splittedSlug.shift()!
     let noteName = slug.replace(noteYear + '-', '')
 
-    return path.join(
-        process.cwd(),
-        'src', 
-        'notes',
-        noteYear,
-        `${noteName}.md`
-    )
+    return `${noteYear}/${noteName}.md`
 }
 
-function parseNoteRawData(noteRawData: string): {metadata: NoteMetadata, content: string} {
+export function parseNoteRawData(noteRawData: string): {metadata: NoteMetadata, content: string} {
     let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
     let match = frontmatterRegex.exec(noteRawData)
     let frontMatterBlock = match![1]
@@ -78,28 +69,11 @@ function parseNoteRawData(noteRawData: string): {metadata: NoteMetadata, content
     return { metadata: metadata as NoteMetadata, content }
 }
 
-function readNote(notePath: string): Note {
-    const noteRawData = fs.readFileSync(notePath, 'utf-8')
-    const { metadata, content } = parseNoteRawData(noteRawData)
-    return { metadata, content, slug: notePathToSlug(notePath) }
-}
-
-export function findAllNoteSlugs(): string[] {
-    const notePaths = findAllNotePaths()
-    return notePaths.map(notePath => notePathToSlug(notePath))
-}
-
-export function findNoteBySlug(slug: string): Note {
-    const notePath = noteSlugToPath(slug)
-    return readNote(notePath)
-}
-
-export function findAllNotes(): Note[] {
-    const notePaths = findAllNotePaths()
-    return notePaths.map(readNote)
-}
-
-function sortNotesByDateDesc(notes: Note[]): Note[] {
+/**
+ * Newest first by frontmatter `date` (compared as strings). Returns a new
+ * array and leaves the input untouched.
+ */
+export function sortNotesByDateDesc(notes: Note[]): Note[] {
     return [...notes].sort((a, b) => {
         if (a.metadata.date && b.metadata.date) {
             return b.metadata.date.localeCompare(a.metadata.date)
@@ -138,13 +112,18 @@ export function getNoteDescription(note: Note): string {
     return excerptFromContent(note.content)
 }
 
-export function findAdjacentNotes(slug: string): { older: Note | null; newer: Note | null } {
-    const notes = sortNotesByDateDesc(findAllNotes())
-    const idx = notes.findIndex(n => n.slug === slug)
+/**
+ * The notes directly before and after `slug` when `notes` is sorted newest
+ * first (see `sortNotesByDateDesc`). Pass every note to get the site's
+ * prev/next links.
+ */
+export function findAdjacentNotes(notes: Note[], slug: string): { older: Note | null; newer: Note | null } {
+    const sortedNotes = sortNotesByDateDesc(notes)
+    const idx = sortedNotes.findIndex(n => n.slug === slug)
     if (idx < 0) return { older: null, newer: null }
     // List is newer-first: index+1 is older, index-1 is newer
     return {
-        older: idx + 1 < notes.length ? notes[idx + 1] : null,
-        newer: idx - 1 >= 0 ? notes[idx - 1] : null,
+        older: idx + 1 < sortedNotes.length ? sortedNotes[idx + 1] : null,
+        newer: idx - 1 >= 0 ? sortedNotes[idx - 1] : null,
     }
 }

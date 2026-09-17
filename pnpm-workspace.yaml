@@ -1,0 +1,21 @@
+packages:
+  - apps/web
+  - packages/content
+
+# pnpm blocks dependency build scripts by default, and fails the install
+# (strictDepBuilds) while any of them is unreviewed.
+#
+# pnpm 11 reads this policy only from `allowBuilds`. The older
+# onlyBuiltDependencies / ignoredBuiltDependencies keys were removed in pnpm 11
+# and are silently ignored, so they are not listed here.
+#
+# puppeteer's postinstall downloads Chrome into ~/.cache/puppeteer. Without it,
+# `build:pdf` cannot launch a browser and the build fails before
+# out/portfolio.pdf is written.
+#
+# sharp is an optional dependency of next, used only for image optimization.
+# The site is a static export with unoptimized images, so its native build is
+# never needed.
+allowBuilds:
+  puppeteer: true
+  sharp: false

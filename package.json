@@ -1,30 +1,9 @@
 {
   "name": "rst0070.github.io",
-  "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && npm run build:pdf",
-    "build:pdf": "node scripts/generate-pdf.mjs",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@tailwindcss/postcss": "4.0.17",
-    "@types/showdown": "2.0.6",
-    "next": "16.2.6",
-    "postcss": "8.5.12",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "shiki": "4.0.2",
-    "showdown": "2.1.0",
-    "tailwindcss": "4.0.17"
-  },
-  "devDependencies": {
-    "@types/node": "20.17.28",
-    "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4",
-    "puppeteer": "^25.3.0",
-    "typescript": "5.8.2"
+    "dev": "pnpm --filter @rst0070/web dev",
+    "build": "pnpm --filter @rst0070/web build"
   }
 }

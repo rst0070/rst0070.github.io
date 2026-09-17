@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Tailwind scans the package directory (apps/web) for class names by default.
+   Also scan the markdown content at the repository root, as it was scanned
+   before the app moved into apps/web, so the generated CSS stays the same. */
+@source "../../../../content";
+
 /* Drive Tailwind's `dark:` utilities off the `data-theme` attribute that the
    theme toggle sets on <html>, instead of the OS `prefers-color-scheme`. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
