@@ -56,7 +56,8 @@ jobs:
           path: |
             apps/web/.next/cache
           # Generate a new cache whenever packages, source files or content change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.[jt]s', 'apps/web/**/*.[jt]sx', 'content/**') }}
+          # packages/content is TypeScript source compiled into the app's build.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.[jt]s', 'apps/web/**/*.[jt]sx', 'packages/content/**', 'content/**') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
@@ -79,6 +80,10 @@ jobs:
         # Run inside @rst0070/web: puppeteer is its dependency, and with pnpm's
         # isolated node_modules it is not resolvable from the workspace root.
         run: pnpm --filter @rst0070/web exec puppeteer browsers install chrome
+      # Also proves the pure `@rst0070/content` entry is Worker-safe: it is
+      # checked without Node types, so any fs/path/process use fails here.
+      - name: Typecheck @rst0070/content
+        run: pnpm --filter @rst0070/content typecheck
       # The package's `build` script rather than `next build` directly: it also
       # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
       - name: Build with Next.js
