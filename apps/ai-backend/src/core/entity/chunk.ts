@@ -14,3 +14,12 @@ export interface Chunk {
     /** Embedded and shown to the model; starts with "title > heading path". */
     text: string
 }
+
+/**
+ * How many chunks a document keeps, counted from index 0. `keep: 0` means the
+ * document is gone from the content and keeps nothing.
+ */
+export interface DocumentExtent {
+    slug: string
+    keep: number
+}
