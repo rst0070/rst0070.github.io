@@ -54,6 +54,15 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  packages/content:
+    devDependencies:
+      '@types/node':
+        specifier: 20.17.28
+        version: 20.17.28
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

@@ -1,5 +1,6 @@
 packages:
   - apps/web
+  - packages/content
 
 # pnpm blocks dependency build scripts by default, and fails the install
 # (strictDepBuilds) while any of them is unreviewed.
