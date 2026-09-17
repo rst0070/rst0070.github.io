@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Note } from '@/core/entities';
+import { Note } from '@rst0070/content';
 
 export function PrevNext({ older, newer }: { older: Note | null; newer: Note | null }) {
     if (!older && !newer) return null;

@@ -10,6 +10,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@rst0070/content':
+        specifier: workspace:*
+        version: link:../../packages/content
       '@tailwindcss/postcss':
         specifier: 4.0.17
         version: 4.0.17

@@ -1,5 +1,4 @@
-import fs from 'fs'
-import path from 'path'
+import { readPortfolio as readPortfolioIn } from '@rst0070/content/node'
 import { CONTENT_ROOT } from './content'
 
 /**
@@ -7,9 +6,5 @@ import { CONTENT_ROOT } from './content'
  * single document with no frontmatter, so this simply returns its content.
  */
 export function readPortfolio(): string {
-    const portfolioPath = path.join(
-        CONTENT_ROOT,
-        'portfolio.md'
-    )
-    return fs.readFileSync(portfolioPath, 'utf-8')
+    return readPortfolioIn(CONTENT_ROOT)
 }
