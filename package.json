@@ -1,0 +1,9 @@
+{
+  "name": "rst0070.github.io",
+  "private": true,
+  "packageManager": "pnpm@11.18.0",
+  "scripts": {
+    "dev": "pnpm --filter @rst0070/web dev",
+    "build": "pnpm --filter @rst0070/web build"
+  }
+}
