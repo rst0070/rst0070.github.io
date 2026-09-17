@@ -121,7 +121,7 @@ jobs:
 
   deploy:
     needs: [check, changes]
-    if: needs.changes.outputs.worker == 'true'
+    if: github.event_name != 'pull_request' && needs.changes.outputs.worker == 'true'
     runs-on: ubuntu-latest
     environment: cloudflare
     steps:
@@ -146,9 +146,11 @@ jobs:
 
   index:
     # `needs: deploy` only for the ordering: a skipped deploy (a content-only
-    # push) must not stop the index from being updated.
+    # push) must not stop the index from being updated. Which is why the
+    # condition tests `index` for what it should be: a skipped `changes` job
+    # leaves the output empty, and `!= 'none'` would then let this run.
     needs: [check, changes, deploy]
-    if: ${{ !failure() && !cancelled() && needs.changes.outputs.index != 'none' }}
+    if: ${{ github.event_name != 'pull_request' && !failure() && !cancelled() && (needs.changes.outputs.index == 'all' || needs.changes.outputs.index == 'changed') }}
     runs-on: ubuntu-latest
     environment: cloudflare
     steps:
