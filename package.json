@@ -2,9 +2,10 @@
   "name": "rst0070.github.io",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run build:pdf",
+    "build": "next build && pnpm run build:pdf",
     "build:pdf": "node scripts/generate-pdf.mjs",
     "start": "next start",
     "lint": "next lint"
