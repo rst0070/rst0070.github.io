@@ -9,6 +9,10 @@ on:
   push:
     branches: ["main"]
 
+  # Builds pull requests (any base branch, so stacked PRs are checked too)
+  # without deploying them
+  pull_request:
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -20,9 +24,11 @@ permissions:
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Pull request runs get their own per-PR group so they never queue behind or block a deployment,
+# and a newer push to the same PR cancels the older run.
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('{0}-pr-{1}', github.workflow, github.event.pull_request.number) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   # Build job
@@ -93,6 +99,8 @@ jobs:
 
   # Deployment job
   deploy:
+    # Pull requests only build; deploy on push to main or manual dispatch
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
