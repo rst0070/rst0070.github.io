@@ -87,10 +87,17 @@ jobs:
       # checked without Node types, so any fs/path/process use fails here.
       - name: Typecheck @rst0070/content
         run: pnpm --filter @rst0070/content typecheck
+      - name: Test @rst0070/web
+        run: pnpm --filter @rst0070/web test
       # The package's `build` script rather than `next build` directly: it also
       # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
       - name: Build with Next.js
         run: pnpm --filter @rst0070/web build
+        env:
+          # The chat widget's backend (apps/ai-backend), inlined into the
+          # client bundle. Public by design; the Worker holds no secrets the
+          # browser can reach. Without it the widget is not rendered.
+          NEXT_PUBLIC_AI_API_URL: https://rst0070-ai-backend.kwb0711.workers.dev
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

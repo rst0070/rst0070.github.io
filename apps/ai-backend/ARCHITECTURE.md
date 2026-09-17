@@ -147,6 +147,13 @@ pnpm reindex                              # chunk content and POST it to localho
 pnpm ask script/questions.example.json    # run conversations against /chat
 ```
 
+To try the site's chat widget (`apps/web/src/app/_chat`) against it, run the
+site with the Worker's URL (the widget is not rendered without it):
+
+```sh
+NEXT_PUBLIC_AI_API_URL=http://localhost:8787 pnpm --filter @rst0070/web dev
+```
+
 `wrangler dev` uses the real Workers AI and Vectorize, and spends the same daily
 Neurons as production. New vectors take a few seconds to become searchable.
 

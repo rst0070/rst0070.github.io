@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header, Footer } from "./components";
 import { ThemeProvider } from "./theme-provider";
+import { ChatWidget } from "./_chat/chat-widget";
 import { baseUrl } from "./sitemap";
 
 const siteName = "rst0070 - notes";
@@ -66,6 +67,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ChatWidget />
         </ThemeProvider>
       </body>
     </html>
