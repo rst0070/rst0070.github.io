@@ -8,6 +8,7 @@ import { VectorizeBinding } from '../repositories/chunkRepository'
 // bindings are faked.
 
 const SECRET = 'test-secret'
+const SITE = 'https://site.example'
 
 type ModelHandler = (model: string, inputs: Record<string, unknown>) => unknown
 
@@ -27,7 +28,25 @@ function defaultModels(model: string, inputs: Record<string, unknown>): unknown 
         const texts = inputs.text as string[]
         return { shape: [texts.length, EMBEDDING_MODEL.dimensions], data: texts.map(() => new Array(EMBEDDING_MODEL.dimensions).fill(0.5)) }
     }
-    return { choices: [{ message: { role: 'assistant', content: 'From the note [1].' } }] }
+    return sseStream(['From the ', 'note [1].'])
+}
+
+/** A Workers AI chat stream (Chat Completions chunks) answering with `deltas`. */
+function sseStream(deltas: string[], end = 'data: [DONE]\n\n'): ReadableStream<Uint8Array> {
+    const events = deltas.map((content) => `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`)
+    return new Response([...events, end].join('')).body!
+}
+
+/** Allows `limit` requests per key, then refuses. */
+class FakeRateLimiter {
+    readonly keys: string[] = []
+
+    constructor(private readonly limitPerKey = Infinity) {}
+
+    async limit({ key }: { key: string }): Promise<{ success: boolean }> {
+        this.keys.push(key)
+        return { success: this.keys.filter((k) => k === key).length <= this.limitPerKey }
+    }
 }
 
 /** Keeps upserted vectors and returns all of them (filtered by slug) for any query. */
@@ -49,18 +68,34 @@ class InMemoryVectorize implements VectorizeBinding {
     }
 }
 
-function setup(ai = new FakeAi()) {
+function setup(ai = new FakeAi(), rateLimiter = new FakeRateLimiter()) {
     const vectorize = new InMemoryVectorize()
-    const bindings: Bindings = { ai: ai as unknown as Ai, vectorize, reindexSecret: SECRET }
-    const send = async (path: string, body: unknown, init: { method?: string, headers?: Record<string, string> } = {}) => {
-        const response = await route(new Request(`https://ai.example${path}`, {
+    const bindings: Bindings = {
+        ai: ai as unknown as Ai,
+        vectorize,
+        chatRateLimiter: rateLimiter,
+        reindexSecret: SECRET,
+        allowedOrigins: [SITE],
+    }
+    const fetchRaw = (path: string, body: unknown, init: { method?: string, headers?: Record<string, string> } = {}) =>
+        route(new Request(`https://ai.example${path}`, {
             method: init.method ?? 'POST',
             headers: { 'Content-Type': 'application/json', ...init.headers },
-            ...(init.method === 'GET' ? {} : { body: typeof body === 'string' ? body : JSON.stringify(body) }),
+            ...(init.method === 'GET' || init.method === 'OPTIONS' ? {} : { body: typeof body === 'string' ? body : JSON.stringify(body) }),
         }), new DiContainer(bindings))
+    const send = async (path: string, body: unknown, init: { method?: string, headers?: Record<string, string> } = {}) => {
+        const response = await fetchRaw(path, body, init)
         return { status: response.status, body: await response.json() as Record<string, unknown> }
     }
-    return { ai, vectorize, send }
+    return { ai, vectorize, rateLimiter, fetchRaw, send }
+}
+
+/** `event: name` / `data: json` pairs of a server-sent event body. */
+function parseEvents(text: string): { event: string, data: unknown }[] {
+    return text.trim().split('\n\n').map((block) => {
+        const [eventLine, dataLine] = block.split('\n')
+        return { event: eventLine.replace('event: ', ''), data: JSON.parse(dataLine.replace('data: ', '')) }
+    })
 }
 
 const chunks = [
@@ -130,6 +165,61 @@ describe('POST /chat', () => {
         expect(response.body.citations).toEqual([{ slug: '24-b', title: 'Note B', url: '/notes/24-b' }])
     })
 
+    it('streams citations, deltas and done as server-sent events', async () => {
+        const { fetchRaw, send } = setup()
+        await send('/admin/reindex', { chunks }, authorized)
+
+        const response = await fetchRaw('/chat', { messages: [{ role: 'user', content: 'What is a?' }] }, { headers: { Accept: 'text/event-stream' } })
+
+        expect(response.status).toBe(200)
+        expect(response.headers.get('Content-Type')).toBe('text/event-stream; charset=utf-8')
+        expect(parseEvents(await response.text())).toEqual([
+            { event: 'citations', data: { citations: [
+                { slug: '24-a', title: 'Note A', url: '/notes/24-a' },
+                { slug: '24-b', title: 'Note B', url: '/notes/24-b' },
+            ] } },
+            { event: 'delta', data: { text: 'From the ' } },
+            { event: 'delta', data: { text: 'note [1].' } },
+            { event: 'done', data: {} },
+        ])
+    })
+
+    it('ends the stream with an error event when generation fails midway', async () => {
+        const failing = new FakeAi((model, inputs) => model === EMBEDDING_MODEL.id
+            ? defaultModels(model, inputs)
+            : sseStream(['Partial'], 'data: {"errors":[{"message":"boom"}]}\n\n'))
+        const { fetchRaw, send } = setup(failing)
+        await send('/admin/reindex', { chunks }, authorized)
+
+        const response = await fetchRaw('/chat', { messages: [{ role: 'user', content: 'hi' }] }, { headers: { Accept: 'text/event-stream' } })
+
+        expect(parseEvents(await response.text()).slice(1)).toEqual([
+            { event: 'delta', data: { text: 'Partial' } },
+            { event: 'error', data: { error: 'unknown' } },
+        ])
+    })
+
+    it('uses a JSON error, not a stream, when the turn is refused before generating', async () => {
+        const { fetchRaw } = setup()
+
+        const response = await fetchRaw('/chat', { messages: [{ role: 'user', content: 'hi' }] }, { headers: { Accept: 'text/event-stream' } })
+
+        expect(response.status).toBe(404)
+        expect(await response.json()).toEqual({ error: 'no-source' })
+    })
+
+    it('rate limits by client IP before doing any work', async () => {
+        const { ai, rateLimiter, send } = setup(new FakeAi(), new FakeRateLimiter(1))
+        const from = (ip: string) => ({ headers: { 'CF-Connecting-IP': ip } })
+        const body = { messages: [{ role: 'user', content: 'hi' }] }
+
+        expect((await send('/chat', body, from('192.0.2.1'))).status).toBe(404)
+        expect(await send('/chat', body, from('192.0.2.1'))).toEqual({ status: 429, body: { error: 'too-many-requests', message: 'too-many-requests' } })
+        expect((await send('/chat', body, from('192.0.2.2'))).status).toBe(404)
+        expect(rateLimiter.keys).toEqual(['192.0.2.1', '192.0.2.1', '192.0.2.2'])
+        expect(ai.calls).toHaveLength(2)
+    })
+
     it('maps request and core errors to 400 and 404', async () => {
         const { send } = setup()
 
@@ -156,6 +246,34 @@ describe('POST /chat', () => {
         await send('/admin/reindex', { chunks }, authorized)
 
         expect(await send('/chat', { messages: [{ role: 'user', content: 'hi' }] })).toEqual({ status: 502, body: { error: 'unknown' } })
+    })
+})
+
+describe('CORS', () => {
+    it('answers a preflight for /chat and lets the allowed origin read responses, errors included', async () => {
+        const { fetchRaw } = setup()
+
+        const preflight = await fetchRaw('/chat', undefined, { method: 'OPTIONS', headers: { Origin: SITE } })
+        expect(preflight.status).toBe(204)
+        expect(preflight.headers.get('Access-Control-Allow-Origin')).toBe(SITE)
+        expect(preflight.headers.get('Access-Control-Allow-Methods')).toBe('POST')
+        expect(preflight.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type')
+
+        const error = await fetchRaw('/chat', { messages: [] }, { headers: { Origin: SITE } })
+        expect(error.status).toBe(400)
+        expect(error.headers.get('Access-Control-Allow-Origin')).toBe(SITE)
+        expect(error.headers.get('Vary')).toBe('Origin')
+    })
+
+    it('gives other origins and the admin route no CORS headers', async () => {
+        const { fetchRaw } = setup()
+
+        const other = await fetchRaw('/chat', undefined, { method: 'OPTIONS', headers: { Origin: 'https://evil.example' } })
+        expect(other.headers.get('Access-Control-Allow-Origin')).toBeNull()
+
+        const admin = await fetchRaw('/admin/reindex', undefined, { method: 'OPTIONS', headers: { Origin: SITE } })
+        expect(admin.status).toBe(405)
+        expect(admin.headers.get('Access-Control-Allow-Origin')).toBeNull()
     })
 })
 

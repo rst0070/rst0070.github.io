@@ -23,3 +23,12 @@ export interface ChatReply {
     /** In source order: citation n is source [n + 1] in the system prompt. */
     citations: Citation[]
 }
+
+/**
+ * A reply being generated. Citations are known once retrieval is done, before
+ * any text; `deltas` yields the assistant message's text piece by piece.
+ */
+export interface ChatReplyStream {
+    citations: Citation[]
+    deltas: AsyncIterable<string>
+}

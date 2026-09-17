@@ -1,10 +1,18 @@
 import { ChatInput, Message } from '../../core/entity/chat'
 import { ChatUsecase } from '../../core/usecase/chat'
+import { acceptsEventStream, eventStreamResponse } from '../eventStream'
 import { badRequest, isRecord, readJson } from '../request'
-import { json } from '../respond'
+import { HttpError, json } from '../respond'
+
+/** A counter per key over a fixed period, like the Workers Rate Limiting binding. */
+export interface RateLimiter {
+    limit(options: { key: string }): Promise<{ success: boolean }>
+}
 
 export interface ChatRouteDeps {
-    readonly chatUsecase: Pick<ChatUsecase, 'reply'>
+    readonly chatUsecase: Pick<ChatUsecase, 'start' | 'reply'>
+    /** Keyed by client IP. */
+    readonly chatRateLimiter: RateLimiter
 }
 
 // Wire limits, checked before core runs, so parsing work stays bounded even if
@@ -14,9 +22,14 @@ const MAX_MESSAGES = 50
 const MAX_SLUG_LENGTH = 200
 
 export async function handleChat(request: Request, deps: ChatRouteDeps): Promise<Response> {
+    // Cloudflare sets CF-Connecting-IP on every request that reaches a Worker.
+    const key = request.headers.get('CF-Connecting-IP') ?? 'unknown'
+    const { success } = await deps.chatRateLimiter.limit({ key })
+    if (!success) throw new HttpError(429, 'too-many-requests')
+
     const input = parseChatInput(await readJson(request, MAX_BODY_BYTES))
-    const reply = await deps.chatUsecase.reply(input)
-    return json(reply)
+    if (acceptsEventStream(request)) return eventStreamResponse(await deps.chatUsecase.start(input))
+    return json(await deps.chatUsecase.reply(input))
 }
 
 function parseChatInput(body: unknown): ChatInput {

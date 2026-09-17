@@ -16,6 +16,25 @@
             "remote": true
         }
     ],
+    // /chat allows 5 requests a minute per client IP. Counted per Cloudflare
+    // location and eventually consistent, so it is a brake, not a quota; the
+    // Free plan's daily Neuron allocation is the hard ceiling.
+    "ratelimits": [
+        {
+            "name": "CHAT_RATE_LIMITER",
+            // Any positive integer, unique among rate limiters in the account.
+            "namespace_id": "1001",
+            "simple": {
+                "limit": 5,
+                "period": 60
+            }
+        }
+    ],
+    "vars": {
+        // Comma-separated origins whose pages may read /chat responses (CORS).
+        // For the local site, override in .dev.vars (see .dev.vars.example).
+        "ALLOWED_ORIGINS": "https://rst0070.github.io"
+    },
     // Declared so `wrangler types` puts it in Env without reading .dev.vars.
     // Locally it comes from .dev.vars; deployed, from `wrangler secret put`.
     "secrets": {
