@@ -12,6 +12,7 @@ Keep this document current when layers, rules or contracts change.
 |---|---|---|---|
 | `POST /chat` | public, rate limited | `{ messages: { role: 'user' \| 'assistant', content: string }[], slug?: string }` | `{ message: { role: 'assistant', content: string }, citations: { slug, title, url }[] }`, or a stream with `Accept: text/event-stream` |
 | `POST /admin/reindex` | `Authorization: Bearer <REINDEX_SECRET>` | `{ chunks: Chunk[] }` (at most 200) | `{ upserted: number }` |
+| `POST /admin/reindex/prune` | `Authorization: Bearer <REINDEX_SECRET>` | `{ documents: { slug: string, keep: number }[] }` (at most 20) | `{ deleted: number }` |
 
 - The Worker is stateless. The client holds the conversation and sends it every turn.
 - `system` is not an accepted role. The system prompt is always built on the server.
@@ -23,6 +24,7 @@ Keep this document current when layers, rules or contracts change.
   - `done` `{}`; or `error` `{ error: code }` if generation fails after the stream has started
   Anything that refuses the turn earlier (bad request, rate limit, `ChatError`, a model refusing the call) is an ordinary JSON error. A client that disconnects stops generation.
 - **CORS.** `/chat` answers preflights and adds `Access-Control-Allow-Origin` (errors included) for origins in `ALLOWED_ORIGINS`. It is not access control: non-browser clients ignore it. `/admin/reindex` has no CORS.
+- **Pruning.** `keep` is how many chunks the document has now, so `/admin/reindex/prune` removes its chunks from that index onwards; `keep: 0` removes a document the content no longer has. The indexer prunes a document before upserting it.
 - **Rate limit.** `/chat` counts requests per `CF-Connecting-IP` with the `CHAT_RATE_LIMITER` binding (5 a minute), before reading the body. The count is per Cloudflare location and eventually consistent; the Free plan's daily Neuron allocation is the hard ceiling.
 - Errors are `{ error: code }` with these statuses:
   - Request shape: 400.
@@ -78,7 +80,8 @@ script/                    Node entry points run with tsx: reindex.ts, ask.ts
 4. **Storage details stop at the repository.** Core identifies a chunk by `(slug, index)`. These live only in `VectorizeChunkRepository`:
    - the vector ID (hex SHA-256, 64 bytes)
    - metadata keys and filter syntax
-   - `topK` and upsert batch limits
+   - `topK`, upsert and delete batch limits
+   - how leftover chunks are found, since Vectorize cannot list an index
    - `crypto.subtle`
 5. **Vendor details stop at the adapter.** Request and response shapes, batch sizes and error codes live in `adapter/`. Model ids come from `modelCatalog.ts` through the container.
 6. **Core throws core's types.** Adapters map platform failures to `ModelError`. `http/respond.ts` maps core errors to statuses.
@@ -124,7 +127,21 @@ Chunking runs in `script/reindex.ts`, not the Worker, because the Free plan's CP
 - **Byte cap.** The text is capped at `maxTextBytes` of UTF-8, because it is stored in Vectorize metadata (10 KiB limit).
 - **Slugs and URLs.** Notes use `/notes/<slug>`. The portfolio uses slug `portfolio`, URL `/portfolio`, and has no date.
 
-`ReindexUsecase` embeds the chunk texts and upserts them. It only upserts: vectors for deleted or shortened notes stay in the index until stale-vector deletion exists (Phase 3).
+`ReindexUsecase.reindex` embeds the chunk texts and upserts them.
+`ReindexUsecase.prune` removes what a document no longer has, so the index
+follows deletions, renames, unpublished drafts and shortened notes:
+
+- Core says only how many chunks each document keeps (`DocumentExtent`).
+- `VectorizeChunkRepository.truncate` finds the leftovers by probing. Vectorize
+  has no list operation, but a chunk's ID follows from `(slug, index)`, so it
+  looks up `PROBE_BLOCK_SIZE` consecutive indexes at a time from `keep`
+  onwards, deletes whatever came back, and stops at the first block holding
+  nothing (or at `MAX_DOCUMENT_CHUNKS`).
+- The indexer prunes each document before upserting its chunks, so probing
+  never races the same run's writes, which Vectorize applies asynchronously.
+- Pruning cannot discover a *deleted* document by itself: something has to name
+  the slug. `script/reindex.ts` derives it from the content paths it is given
+  (`--paths`), which in CI come from the push's diff.
 
 ## Running
 
@@ -143,7 +160,10 @@ Every run, from `apps/ai-backend`:
 
 ```sh
 pnpm dev                                  # wrangler dev; AI and Vectorize are remote bindings
-pnpm reindex                              # chunk content and POST it to localhost:8787
+pnpm reindex                              # chunk all content and POST it to localhost:8787
+pnpm reindex --paths content/notes/26/06-02-x.md   # only these content paths
+pnpm reindex --remove 26-06-02-x          # drop a slug the index should not hold
+pnpm reindex --dry-run                    # print the plan, send nothing
 pnpm ask script/questions.example.json    # run conversations against /chat
 ```
 

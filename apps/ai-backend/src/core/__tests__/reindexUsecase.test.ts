@@ -27,4 +27,22 @@ describe('ReindexUsecase', () => {
         expect(await new ReindexUsecase(repository, embedding).reindex([])).toEqual({ upserted: 0 })
         expect(embedding.calls).toHaveLength(0)
     })
+
+    it('prunes what the documents no longer keep', async () => {
+        const stored = [makeChunk('24-a', 0), makeChunk('24-a', 1), makeChunk('24-b', 0)]
+        const repository = new FakeChunkRepository(stored)
+        const documents = [{ slug: '24-a', keep: 1 }, { slug: '24-b', keep: 0 }]
+
+        const result = await new ReindexUsecase(repository, new FakeEmbedding()).prune(documents)
+
+        expect(result).toEqual({ deleted: 2 })
+        expect(repository.truncated).toEqual([documents])
+    })
+
+    it('does not touch storage for no documents', async () => {
+        const repository = new FakeChunkRepository([makeChunk('24-a', 0)])
+
+        expect(await new ReindexUsecase(repository, new FakeEmbedding()).prune([])).toEqual({ deleted: 0 })
+        expect(repository.truncated).toHaveLength(0)
+    })
 })
