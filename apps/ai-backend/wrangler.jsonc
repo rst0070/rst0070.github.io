@@ -30,6 +30,11 @@
             }
         }
     ],
+    // Without this, a 500 from the Worker logs its cause to nowhere: the
+    // message is only visible to a `wrangler tail` running at the time.
+    "observability": {
+        "enabled": true
+    },
     "vars": {
         // Comma-separated origins whose pages may read /chat responses (CORS).
         // For the local site, override in .dev.vars (see .dev.vars.example).
