@@ -15,8 +15,18 @@ export const UPSERT_BATCH_SIZE = 1000
 /** topK limit when metadata is returned. */
 const MAX_TOP_K_WITH_METADATA = 50
 
-/** Consecutive chunk indexes looked up per probe while searching for leftovers. */
-export const PROBE_BLOCK_SIZE = 32
+/**
+ * IDs per `getByIds` call. More than this is rejected by Vectorize with
+ * VECTOR_GET_ERROR (code = 40007), "too many ids in payload".
+ */
+export const MAX_GET_BY_IDS = 20
+
+/**
+ * Consecutive chunk indexes looked up per probe while searching for leftovers.
+ * At most MAX_GET_BY_IDS, and a divisor of MAX_DOCUMENT_CHUNKS so the last
+ * probe ends exactly on it.
+ */
+export const PROBE_BLOCK_SIZE = 16
 
 /**
  * Highest chunk index a document can have. Probing stops here, so a document
