@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { Chunk } from '../../core/entity/chunk'
 import {
     MAX_DOCUMENT_CHUNKS,
+    MAX_GET_BY_IDS,
     PROBE_BLOCK_SIZE,
     UPSERT_BATCH_SIZE,
     VectorizeBinding,
@@ -31,6 +32,11 @@ class FakeVectorize implements VectorizeBinding {
     }
 
     async getByIds(ids: string[]): Promise<VectorizeVector[]> {
+        // The real binding rejects a bigger payload, so a probe that outgrew
+        // the limit must fail here rather than only against Vectorize.
+        if (ids.length > MAX_GET_BY_IDS) {
+            throw new Error(`too many ids in payload; max id count is ${MAX_GET_BY_IDS}, got ${ids.length}`)
+        }
         this.lookups.push(ids)
         return ids.filter((id) => this.stored.has(id)).map((id) => ({ id, values: [] }))
     }
