@@ -1,7 +1,7 @@
 import { CorsDeps, preflightResponse, withCors } from './cors'
 import { errorResponse, HttpError } from './respond'
 import { ChatRouteDeps, handleChat } from './route/chat'
-import { handleReindex, ReindexRouteDeps } from './route/reindex'
+import { handlePrune, handleReindex, ReindexRouteDeps } from './route/reindex'
 
 export type RouteDeps = ChatRouteDeps & ReindexRouteDeps & CorsDeps
 
@@ -14,6 +14,7 @@ interface Route {
 const ROUTES = new Map<string, Route>([
     ['/chat', { handler: handleChat, cors: true }],
     ['/admin/reindex', { handler: handleReindex, cors: false }],
+    ['/admin/reindex/prune', { handler: handlePrune, cors: false }],
 ])
 
 export async function route(request: Request, deps: RouteDeps): Promise<Response> {

@@ -1,5 +1,12 @@
-# Checks apps/ai-backend (the chat Worker): generated types, typecheck, lint
-# and tests. Nothing is deployed from CI yet.
+# Checks apps/ai-backend (the chat Worker) on every pull request and push, and
+# on main deploys it and updates its Vectorize index.
+#
+# Deploy and index are one workflow so that a push touching both the Worker and
+# the content deploys before it indexes.
+#
+# Both need the `cloudflare` environment (main only), which holds the secrets
+# CLOUDFLARE_API_TOKEN and REINDEX_SECRET, plus the repository variables
+# CLOUDFLARE_ACCOUNT_ID and AI_BACKEND_URL.
 name: ai-backend
 
 on:
@@ -7,11 +14,19 @@ on:
     branches: ["main"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      reindex:
+        description: "Documents to index after deploying"
+        type: choice
+        options: ["all", "none"]
+        default: "all"
 
 permissions:
   contents: read
 
 concurrency:
+  # Pushes queue instead of cancelling: a half-applied deploy or index is worse
+  # than a slow one. Pull request runs still cancel their older run.
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
@@ -49,3 +64,128 @@ jobs:
         run: pnpm lint
       - name: Test
         run: pnpm test
+      # Chunks the whole corpus without sending anything: catches content or
+      # chunking changes that would fail during indexing, and prints the chunk
+      # count, token estimate and the largest chunk's byte size.
+      - name: Chunk content (dry run)
+        run: pnpm reindex --dry-run
+
+  changes:
+    # What the push touched, which decides whether to deploy and what to index.
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      worker: ${{ steps.classify.outputs.worker }}
+      # all | changed | none
+      index: ${{ steps.classify.outputs.index }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Classify changed files
+        id: classify
+        env:
+          BEFORE: ${{ github.event.before }}
+          REINDEX: ${{ inputs.reindex }}
+        run: |
+          changed=$(.github/scripts/changed-files.sh)
+          worker=false
+          index=none
+
+          if [ "$changed" = ALL ]; then
+              worker=true
+              index=all
+          else
+              if grep -qE '^(apps/ai-backend/|packages/content/|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.github/workflows/ai-backend\.yaml)' <<< "$changed"; then
+                  worker=true
+              fi
+              # Chunking, the embedding model and the indexer decide what every
+              # stored chunk looks like, so a change there re-indexes all of it.
+              if grep -qE '^(apps/ai-backend/src/core/(service/chunking|config)\.ts|apps/ai-backend/src/modelCatalog\.ts|apps/ai-backend/script/reindex\.ts|packages/content/)' <<< "$changed"; then
+                  index=all
+              elif grep -q '^content/' <<< "$changed"; then
+                  index=changed
+              fi
+          fi
+
+          # A manual run always deploys, and indexes what it was asked to.
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+              worker=true
+              index=$REINDEX
+          fi
+
+          echo "worker=$worker" >> "$GITHUB_OUTPUT"
+          echo "index=$index" >> "$GITHUB_OUTPUT"
+          echo "worker=$worker index=$index" >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: [check, changes]
+    if: github.event_name != 'pull_request' && needs.changes.outputs.worker == 'true'
+    runs-on: ubuntu-latest
+    environment: cloudflare
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter @rst0070/ai-backend...
+      # The wrangler version the lockfile pins, the same one that generated
+      # worker-configuration.d.ts.
+      - name: Deploy Worker
+        run: pnpm --filter @rst0070/ai-backend exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
+  index:
+    # `needs: deploy` only for the ordering: a skipped deploy (a content-only
+    # push) must not stop the index from being updated. Which is why the
+    # condition tests `index` for what it should be: a skipped `changes` job
+    # leaves the output empty, and `!= 'none'` would then let this run.
+    needs: [check, changes, deploy]
+    if: ${{ github.event_name != 'pull_request' && !failure() && !cancelled() && (needs.changes.outputs.index == 'all' || needs.changes.outputs.index == 'changed') }}
+    runs-on: ubuntu-latest
+    environment: cloudflare
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter @rst0070/ai-backend...
+      # With "changed", the indexer is given the content paths of the push: it
+      # indexes the ones that are published and prunes the rest, which is how a
+      # deleted, renamed or unpublished document leaves the index.
+      - name: Select documents
+        id: select
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "${{ needs.changes.outputs.index }}" = all ]; then
+              echo "args=" >> "$GITHUB_OUTPUT"
+              exit 0
+          fi
+          .github/scripts/changed-files.sh | { grep '^content/' || true; } > "$RUNNER_TEMP/changed.txt"
+          cat "$RUNNER_TEMP/changed.txt"
+          echo "args=--paths-from $RUNNER_TEMP/changed.txt" >> "$GITHUB_OUTPUT"
+      - name: Index content
+        run: |
+          test -n "$AI_BACKEND_URL" || { echo "Set the AI_BACKEND_URL repository variable"; exit 1; }
+          pnpm --filter @rst0070/ai-backend reindex ${{ steps.select.outputs.args }}
+        env:
+          AI_BACKEND_URL: ${{ vars.AI_BACKEND_URL }}
+          REINDEX_SECRET: ${{ secrets.REINDEX_SECRET }}

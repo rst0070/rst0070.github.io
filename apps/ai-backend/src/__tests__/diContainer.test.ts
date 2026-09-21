@@ -66,6 +66,18 @@ class InMemoryVectorize implements VectorizeBinding {
         for (const vector of vectors) this.vectors.set(vector.id, vector)
         return { mutationId: 'm' }
     }
+
+    async getByIds(ids: string[]): Promise<VectorizeVector[]> {
+        return ids.flatMap((id) => {
+            const vector = this.vectors.get(id)
+            return vector === undefined ? [] : [vector]
+        })
+    }
+
+    async deleteByIds(ids: string[]): Promise<unknown> {
+        for (const id of ids) this.vectors.delete(id)
+        return { mutationId: 'm' }
+    }
 }
 
 function setup(ai = new FakeAi(), rateLimiter = new FakeRateLimiter()) {
@@ -130,6 +142,41 @@ describe('POST /admin/reindex', () => {
         const response = await send('/admin/reindex', { chunks: [{ slug: 'x' }] }, authorized)
 
         expect(response.status).toBe(400)
+    })
+})
+
+describe('POST /admin/reindex/prune', () => {
+    it('removes the stored chunks a document no longer keeps', async () => {
+        const { vectorize, send } = setup()
+        await send('/admin/reindex', { chunks }, authorized)
+
+        const response = await send('/admin/reindex/prune', { documents: [{ slug: '24-a', keep: 0 }] }, authorized)
+
+        expect(response).toEqual({ status: 200, body: { deleted: 1 } })
+        expect([...vectorize.vectors.values()].map((vector) => vector.metadata?.slug)).toEqual(['24-b'])
+    })
+
+    it('leaves the chunks a document still keeps', async () => {
+        const { vectorize, send } = setup()
+        await send('/admin/reindex', { chunks }, authorized)
+
+        const response = await send('/admin/reindex/prune', {
+            documents: [{ slug: '24-a', keep: 1 }, { slug: '24-b', keep: 1 }],
+        }, authorized)
+
+        expect(response).toEqual({ status: 200, body: { deleted: 0 } })
+        expect(vectorize.vectors.size).toBe(2)
+    })
+
+    it('rejects a missing secret with 401 and an empty or malformed list with 400', async () => {
+        const { vectorize, send } = setup()
+        await send('/admin/reindex', { chunks }, authorized)
+
+        expect((await send('/admin/reindex/prune', { documents: [{ slug: '24-a', keep: 0 }] })).status).toBe(401)
+        expect((await send('/admin/reindex/prune', { documents: [] }, authorized)).status).toBe(400)
+        expect((await send('/admin/reindex/prune', { documents: [{ slug: '24-a' }] }, authorized)).status).toBe(400)
+        expect((await send('/admin/reindex/prune', { documents: [{ slug: '24-a', keep: -1 }] }, authorized)).status).toBe(400)
+        expect(vectorize.vectors.size).toBe(2)
     })
 })
 
