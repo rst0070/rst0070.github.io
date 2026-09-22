@@ -7,13 +7,11 @@
     "build": "next build && pnpm run build:pdf",
     "build:pdf": "node scripts/generate-pdf.mjs",
     "start": "next start",
-    "lint": "next lint",
     "test": "vitest run"
   },
   "dependencies": {
     "@rst0070/content": "workspace:*",
     "@tailwindcss/postcss": "4.0.17",
-    "@types/showdown": "2.0.6",
     "next": "16.2.6",
     "postcss": "8.5.12",
     "react": "19.1.0",
@@ -28,6 +26,7 @@
     "@types/node": "22.20.3",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "@types/showdown": "2.0.6",
     "puppeteer": "^25.3.0",
     "typescript": "5.8.2",
     "vitest": "5.0.1"
