@@ -74,8 +74,41 @@ function startServer() {
         res.end('Not found')
         return
       }
+      const contentType = MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream'
+      const { size } = await stat(file)
+
+      // Chrome probes media with a Range request. Answering one with a 200 and
+      // the whole body makes it pull an entire video just to read the metadata
+      // `preload` asked for, and waitForNetworkIdle below then blocks on that
+      // transfer. Serve the range that was actually requested.
+      const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '')
+      if (range) {
+        const [, rawStart, rawEnd] = range
+        // An empty start means a suffix range: `bytes=-500` is the trailing 500
+        // bytes, not "up to byte 500".
+        const start = rawStart === '' ? size - Number(rawEnd) : Number(rawStart)
+        const end = rawStart === '' || rawEnd === '' ? size - 1 : Math.min(Number(rawEnd), size - 1)
+
+        if (!(start >= 0 && start <= end)) {
+          res.writeHead(416, { 'content-range': `bytes */${size}` })
+          res.end()
+          return
+        }
+
+        res.writeHead(206, {
+          'content-type': contentType,
+          'content-range': `bytes ${start}-${end}/${size}`,
+          'content-length': end - start + 1,
+          'accept-ranges': 'bytes',
+        })
+        createReadStream(file, { start, end }).pipe(res)
+        return
+      }
+
       res.writeHead(200, {
-        'content-type': MIME[path.extname(file).toLowerCase()] ?? 'application/octet-stream',
+        'content-type': contentType,
+        'content-length': size,
+        'accept-ranges': 'bytes',
       })
       createReadStream(file).pipe(res)
     } catch (error) {
