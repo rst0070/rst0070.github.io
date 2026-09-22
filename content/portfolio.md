@@ -239,7 +239,7 @@ sequenceDiagram
 <summary>Diagnosed and fixed silently-failing long-term vector memory (0/4 → 4/4 recall across 8,000+ turns) and added agentic conversation-search tools — zero added LLM cost, zero migration</summary>
   
 Demo: the agent recovering the exact wording of the first message in a long conversation — an exact-quote recall that pure vector similarity cannot do.  
-<video controls preload="metadata" src="/assets/portfolio/conversation-search-tool.mp4"></video>  
+<video controls preload="none" width="1600" height="1130" poster="/assets/portfolio/conversation-search-tool-poster.webp" src="/assets/portfolio/conversation-search-tool.mp4"></video>  
   
 **Goal:** The assignment arrived deliberately open-ended — "find any issues in our memory system, or points to enhance it" — with a single hint: the agent's recall of prior conversation felt unreliable in production. There was no bug report, no benchmark, no metric; whether memory was even broken was itself the first question to answer. After investigation I scoped it into a two-part goal:
 1. **Fix the passive path**
