@@ -50,9 +50,6 @@ importers:
       '@tailwindcss/postcss':
         specifier: 4.0.17
         version: 4.0.17
-      '@types/showdown':
-        specifier: 2.0.6
-        version: 2.0.6
       next:
         specifier: 16.2.6
         version: 16.2.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -90,6 +87,9 @@ importers:
       '@types/react-dom':
         specifier: 19.0.4
         version: 19.0.4(@types/react@19.0.12)
+      '@types/showdown':
+        specifier: 2.0.6
+        version: 2.0.6
       puppeteer:
         specifier: ^25.3.0
         version: 25.3.0
