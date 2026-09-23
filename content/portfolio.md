@@ -892,37 +892,44 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 - Settled on a sliding-window approach (3 sentences with 1-sentence overlap) with two-shot prompting and a deterministic token-overlap grounding filter that drops hallucinated facts at zero LLM cost — replacing the failed LLM-judge pattern with a heuristic that is dumber but more reliable for sub-1B models.
 - Designed a priority queue with preemption in front of the single shared llama.cpp completion context so background fact extraction cannot block the user-facing chat: a high-priority chat request stops the in-flight low-priority extraction, the preempted job is re-enqueued at the front of the low-priority queue, and the original caller's promise stays pending until the retry completes — preventing the chat UI from freezing during background indexing.
 - Implemented a dual-retrieval storage layer in op-sqlite: on-device embedding search (via the on-device Nomic embedder) for chat-time RAG, and SQLite FTS for instant keyword search across the user's memo list — picking the right tool per surface instead of forcing one mechanism to do both.
+- Designed an end-to-end encrypted sync layer (Supabase backend, plus a React web client sharing the phone app's core) so memos move between devices without the server ever reading them: a one-way client-side key chain (PBKDF2 600k → encryption key → sign-in credential, with a random item key wrapped under the password and a 160-bit recovery code), AES-256-GCM envelopes bound to the memo id, and last-write-wins arbitration in Postgres triggers on a timestamp the server can read and content it cannot — driven by a single-flight `pull → sweep → push` cycle whose applies are idempotent, whose cursor advances only after every page drains, and whose purge log is terminal so a deleted memo can never be resurrected by a device that was offline. Web client live at [offnoteai.app](https://offnoteai.app); iOS release carrying sync in progress.
 - Delivered end-to-end as a React Native app: model download/lifecycle management, on-device LLM and embedding contexts, ingestion pipeline, chat with RAG, memo CRUD, and onboarding — and, in the second phase below, a Supabase backend and a React + Vite web client sharing the same core.
 - Documented the full extraction journey (5 attempts, what failed and why) as a public engineering writeup intended to be useful to others working with sub-1B on-device models — https://rst0070.github.io/notes/26-04-28-utilize-slm
 - Tools used: React Native, llama.cpp (llama.rn), Qwen 3.5 0.8B, Nomic Embed Text v1.5, op-sqlite (FTS + vector), TypeScript, Supabase (Postgres, RLS, triggers, RPC), WebCrypto, React + Vite, Vitest, Maestro, Cloudflare
 
-#### End-to-End Encrypted Sync (2026.08 – 2026.09)
-
-Optional, local-first sync of memos between the iPhone app and a new web client at [offnoteai.app](https://offnoteai.app). The web client is live; the iOS release carrying sync is in progress.
-
-**Goal:** Let users keep memos on more than one device and read or edit them in a browser, without giving up the app's privacy promise: the server must store memos it cannot read, and a user who never creates an account must see no change at all.
-
-**Constraint:**
-- **The password is the key.** No reset link can exist. "We cannot read or recover your notes" had to be literally true, including for the operator, while keeping password change cheap for a large account.
-- **The server still has to arbitrate.** Two devices edit the same memo offline; deletions must replicate and stay deleted; all of it decided by a server that sees only ciphertext.
-- **Two clients, one core.** The phone has SQLite, the OS keychain, and the on-device AI; the browser has none of those and must never write key material to storage. Both had to produce byte-identical keys and ciphertext.
-- **Nothing local may be lost.** Trial expiry, sign-out, signing in on a device that already holds notes, a killed app mid-sync, and a known libSQL bug that committed partial batches all had to leave the user's notes intact.
-
-**Approach:**
-- **One-way key chain, entirely client-side:** PBKDF2-SHA256 (600,000 iterations) turns the password into an encryption key; the sign-in credential is derived *from* that key with a single iteration, so the server only ever sees a value it cannot walk back to the password. A random per-account item key encrypts every memo and is wrapped twice — under the password-derived key and under a 32-character recovery code (160 bits, shown once). Password change and recovery are re-wraps of the item key, so no memo is ever re-uploaded.
-- **Envelope design:** each memo is one AES-256-GCM blob with the memo id as additional authenticated data, so the server cannot serve one memo's ciphertext under another id. Trash state lives *inside* the envelope, where the server cannot see it; only the edit timestamp lives outside, because it is the only thing the server arbitrates on.
-- **Content-blind arbitration in Postgres:** a `BEFORE` trigger applies last-write-wins on the timestamp. Purge is a terminal log that a later edit cannot resurrect, enforced by a security-definer trigger so clients hold no `DELETE` grant; purge rows are never garbage-collected, with a written correctness argument (drop one and a device offline across the gap re-pushes its copy and wins). Row-level security scopes every table to its owner.
-- **A sync engine built around invariants:** a single-flight `pull → sweep → push` cycle with idempotent applies; the cursor is written once, after every table drains; paging reads "at or after" the cursor so a page-edge tie is never skipped, with stuck detection instead of an infinite loop; an atomic-batch wrapper around the libSQL bug. Trial expiry is pull-only, an update gate reads a minimum sync version and fails open, and local data is never destroyed without an explicit, twice-confirmed choice.
-- **Web client on the same core:** the key chain and sync engine are the same source files as the phone app's; crypto runs on WebCrypto with no library; keys and session live in tab memory only and nothing touches browser storage; with no server-side index, search runs locally over the decrypted corpus.
-- **Verified before shipping:** a shared reference implementation pins key-derivation and ciphertext bytes across both clients; each PR opened on a red commit holding only its seam tests; 12 Maestro end-to-end flows cover sign-up, the recovery code, and the encrypted round trip against a local Supabase stack.
-
-**Result:**
-- Memos sync end-to-end encrypted between iPhone and browser. What the operator can see — email, memo count, edit times — and cannot see — titles, content, password, recovery code — is stated plainly in the privacy policy.
-- A 2,500-memo backlog converges on a second device in one sync cycle.
-- The no-account path is unchanged: the only network calls remain the one-time model download and a version check.
 
 <details>
 <summary>Details</summary>
+
+Sync logic — what the device holds, what the server sees, and how a push is arbitrated:
+
+```mermaid
+flowchart TB
+    subgraph Device["Device (iPhone app or browser) — holds every key"]
+        direction TB
+        PW["password"] -->|"PBKDF2-SHA256 · 600k iterations"| EK["encKey"]
+        EK -->|"PBKDF2 · 1 iteration"| AK["authKey = sign-in credential"]
+        RC["recovery code (160 bit, shown once)"] -->|"wraps"| IK
+        EK -->|"wraps"| IK["itemKey (random, per account)"]
+        IK -->|"AES-256-GCM · aad = memo id"| ENV["envelope: title, content, createdAt, trashedAt"]
+        ENV -->|"sealed memo + updated_at"| CYC["sync cycle: pull → sweep → push<br/>single-flight · idempotent applies · cursor written after every page drains"]
+    end
+
+    subgraph Server["Supabase (Postgres + RLS) — sees ciphertext only"]
+        direction TB
+        AUTH["auth: salted hash of authKey"]
+        TRIG{"BEFORE trigger on push"}
+        TRIG -->|"id in purged_memos"| REJ["reject: purge is terminal"]
+        TRIG -->|"updated_at strictly newer"| MEM[("memos: id, ciphertext, nonce, updated_at")]
+        TRIG -->|"equal or older"| KEEP["keep stored row"]
+        PUR[("purged_memos — never garbage-collected")] -->|"security-definer trigger deletes the memo row"| MEM
+    end
+
+    AK -.->|"sign in"| AUTH
+    CYC -->|"push"| TRIG
+    MEM -->|"pull: rows at or after cursor"| CYC
+    CYC -->|"purge: INSERT only, no DELETE grant"| PUR
+```
 
 <video controls preload="metadata" src="/assets/portfolio/offnote-ai-preview.mp4"></video>
 
