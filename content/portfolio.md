@@ -32,7 +32,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
-- **Zero-knowledge sync** — designed and built end-to-end encrypted sync for OffNote AI across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
+- **End-to-end encrypted application** — designed and built OffNote AI's encrypted sync across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
   
 
