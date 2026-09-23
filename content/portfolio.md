@@ -19,7 +19,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **LLM / Agents:** LlamaIndex, LangChain, LangGraph, RAG (multimodal), agent tools, MCP-style protocols, vLLM, structured outputs, evaluation (DeepEval)
 - **Training / ML:** PyTorch, GRPO, QLoRA, LLM fine-tuning, Speaker Verification
 - **Infra:** AWS, GCP, Kubernetes, Docker, Terraform, Airflow, Argo Workflows, Elasticsearch, Redis, Kafka, Neo4J
-- **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring)
+- **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring), Supabase (Postgres, RLS, triggers), WebCrypto (AES-GCM, PBKDF2)
   
   
 ---
@@ -32,6 +32,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
+- **End-to-end encrypted application** — designed and built OffNote AI's encrypted sync across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
   
 
@@ -878,11 +879,11 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 </details>
   
 
-### **OffNote AI — On-Device Note AI (iOS)**
+### OffNote AI — On-Device Note AI with End-to-End Encrypted Sync (iOS, Web)
 <details>
-<summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — running fully on-device with no cloud calls, no analytics, and no account required.</summary>  
+<summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — the AI runs fully on-device, no account is required, and the optional sync between devices is end-to-end encrypted so the server stores memos it cannot read.</summary>  
   
-[apps.apple.com/us/app/offnote-ai/id6762131607](https://apps.apple.com/us/app/offnote-ai/id6762131607)
+[apps.apple.com/us/app/offnote-ai/id6762131607](https://apps.apple.com/us/app/offnote-ai/id6762131607) · web client: [offnoteai.app](https://offnoteai.app)
 
 
 
@@ -891,12 +892,44 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 - Settled on a sliding-window approach (3 sentences with 1-sentence overlap) with two-shot prompting and a deterministic token-overlap grounding filter that drops hallucinated facts at zero LLM cost — replacing the failed LLM-judge pattern with a heuristic that is dumber but more reliable for sub-1B models.
 - Designed a priority queue with preemption in front of the single shared llama.cpp completion context so background fact extraction cannot block the user-facing chat: a high-priority chat request stops the in-flight low-priority extraction, the preempted job is re-enqueued at the front of the low-priority queue, and the original caller's promise stays pending until the retry completes — preventing the chat UI from freezing during background indexing.
 - Implemented a dual-retrieval storage layer in op-sqlite: on-device embedding search (via the on-device Nomic embedder) for chat-time RAG, and SQLite FTS for instant keyword search across the user's memo list — picking the right tool per surface instead of forcing one mechanism to do both.
-- Delivered end-to-end as a React Native app: model download/lifecycle management, on-device LLM and embedding contexts, ingestion pipeline, chat with RAG, memo CRUD, and onboarding.
+- Designed an end-to-end encrypted sync layer (Supabase backend, plus a React web client sharing the phone app's core) so memos move between devices without the server ever reading them: a one-way client-side key chain (password → encryption key → sign-in credential, with a random item key wrapped under the password and a recovery code), AES-GCM envelopes bound to the memo id, and last-write-wins arbitration in Postgres triggers on a timestamp the server can read and content it cannot — driven by a single-flight `pull → sweep → push` cycle whose applies are idempotent, whose cursor advances only after every page drains, and whose purge log is terminal so a deleted memo can never be resurrected by a device that was offline. Web client live at [offnoteai.app](https://offnoteai.app); iOS release carrying sync in progress.
+- Delivered end-to-end as a React Native app: model download/lifecycle management, on-device LLM and embedding contexts, ingestion pipeline, chat with RAG, memo CRUD, and onboarding — and, in the second phase below, a Supabase backend and a React + Vite web client sharing the same core.
 - Documented the full extraction journey (5 attempts, what failed and why) as a public engineering writeup intended to be useful to others working with sub-1B on-device models — https://rst0070.github.io/notes/26-04-28-utilize-slm
-- Tools used: React Native, llama.cpp (llama.rn), Qwen 3.5 0.8B, Nomic Embed Text v1.5, op-sqlite (FTS + vector), TypeScript
+- Tools used: React Native, llama.cpp (llama.rn), Qwen 3.5 0.8B, Nomic Embed Text v1.5, op-sqlite (FTS + vector), TypeScript, Supabase (Postgres, RLS, triggers, RPC), WebCrypto, React + Vite, Vitest, Maestro, Cloudflare
+
 
 <details>
 <summary>Details</summary>
+
+Sync logic — what the device holds, what the server sees, and how a push is arbitrated:
+
+```mermaid
+flowchart TB
+    subgraph Device["Device (iPhone app or browser) — holds every key"]
+        direction TB
+        PW["password"] -->|"slow key derivation"| EK["encKey"]
+        EK -->|"derive"| AK["authKey = sign-in credential"]
+        RC["recovery code (shown once)"] -->|"wraps"| IK
+        EK -->|"wraps"| IK["itemKey (random, per account)"]
+        IK -->|"AES-GCM, bound to the memo id"| ENV["envelope: title, content, createdAt, trashedAt"]
+        ENV -->|"sealed memo + updated_at"| CYC["sync cycle: pull → sweep → push<br/>single-flight · idempotent applies · cursor written after every page drains"]
+    end
+
+    subgraph Server["Supabase (Postgres + RLS) — sees ciphertext only"]
+        direction TB
+        AUTH["auth: salted hash of authKey"]
+        TRIG{"BEFORE trigger on push"}
+        TRIG -->|"id in purged_memos"| REJ["reject: purge is terminal"]
+        TRIG -->|"updated_at strictly newer"| MEM[("memos: id, ciphertext, nonce, updated_at")]
+        TRIG -->|"equal or older"| KEEP["keep stored row"]
+        PUR[("purged_memos — never garbage-collected")] -->|"security-definer trigger deletes the memo row"| MEM
+    end
+
+    AK -.->|"sign in"| AUTH
+    CYC -->|"push"| TRIG
+    MEM -->|"pull: rows at or after cursor"| CYC
+    CYC -->|"purge: INSERT only, no DELETE grant"| PUR
+```
 
 <video controls preload="metadata" src="/assets/portfolio/offnote-ai-preview.mp4"></video>
 
