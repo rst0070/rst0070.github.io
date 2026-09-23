@@ -19,7 +19,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **LLM / Agents:** LlamaIndex, LangChain, LangGraph, RAG (multimodal), agent tools, MCP-style protocols, vLLM, structured outputs, evaluation (DeepEval)
 - **Training / ML:** PyTorch, GRPO, QLoRA, LLM fine-tuning, Speaker Verification
 - **Infra:** AWS, GCP, Kubernetes, Docker, Terraform, Airflow, Argo Workflows, Elasticsearch, Redis, Kafka, Neo4J
-- **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring)
+- **Backend / Full-stack:** Python (Django, FastAPI), React / React Native, TypeScript, Java (Spring), Supabase (Postgres, RLS, triggers), WebCrypto (AES-GCM, PBKDF2)
   
   
 ---
@@ -32,6 +32,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
+- **Zero-knowledge sync** — designed and built end-to-end encrypted sync for OffNote AI across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
   
 
@@ -878,11 +879,11 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 </details>
   
 
-### **OffNote AI — On-Device Note AI (iOS)**
+### OffNote AI — On-Device Note AI with End-to-End Encrypted Sync (iOS, Web)
 <details>
-<summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — running fully on-device with no cloud calls, no analytics, and no account required.</summary>  
+<summary>A privacy-first note-taking app that extracts facts from user memos and uses them to answer questions in chat — the AI runs fully on-device, no account is required, and the optional sync between devices is end-to-end encrypted so the server stores memos it cannot read.</summary>  
   
-[apps.apple.com/us/app/offnote-ai/id6762131607](https://apps.apple.com/us/app/offnote-ai/id6762131607)
+[apps.apple.com/us/app/offnote-ai/id6762131607](https://apps.apple.com/us/app/offnote-ai/id6762131607) · web client: [offnoteai.app](https://offnoteai.app)
 
 
 
@@ -891,9 +892,34 @@ gold relations vs corrupted triplets scored by the same judge — AUC 0.998, all
 - Settled on a sliding-window approach (3 sentences with 1-sentence overlap) with two-shot prompting and a deterministic token-overlap grounding filter that drops hallucinated facts at zero LLM cost — replacing the failed LLM-judge pattern with a heuristic that is dumber but more reliable for sub-1B models.
 - Designed a priority queue with preemption in front of the single shared llama.cpp completion context so background fact extraction cannot block the user-facing chat: a high-priority chat request stops the in-flight low-priority extraction, the preempted job is re-enqueued at the front of the low-priority queue, and the original caller's promise stays pending until the retry completes — preventing the chat UI from freezing during background indexing.
 - Implemented a dual-retrieval storage layer in op-sqlite: on-device embedding search (via the on-device Nomic embedder) for chat-time RAG, and SQLite FTS for instant keyword search across the user's memo list — picking the right tool per surface instead of forcing one mechanism to do both.
-- Delivered end-to-end as a React Native app: model download/lifecycle management, on-device LLM and embedding contexts, ingestion pipeline, chat with RAG, memo CRUD, and onboarding.
+- Delivered end-to-end as a React Native app: model download/lifecycle management, on-device LLM and embedding contexts, ingestion pipeline, chat with RAG, memo CRUD, and onboarding — and, in the second phase below, a Supabase backend and a React + Vite web client sharing the same core.
 - Documented the full extraction journey (5 attempts, what failed and why) as a public engineering writeup intended to be useful to others working with sub-1B on-device models — https://rst0070.github.io/notes/26-04-28-utilize-slm
-- Tools used: React Native, llama.cpp (llama.rn), Qwen 3.5 0.8B, Nomic Embed Text v1.5, op-sqlite (FTS + vector), TypeScript
+- Tools used: React Native, llama.cpp (llama.rn), Qwen 3.5 0.8B, Nomic Embed Text v1.5, op-sqlite (FTS + vector), TypeScript, Supabase (Postgres, RLS, triggers, RPC), WebCrypto, React + Vite, Vitest, Maestro, Cloudflare
+
+#### End-to-End Encrypted Sync (2026.08 – 2026.09)
+
+Optional, local-first sync of memos between the iPhone app and a new web client at [offnoteai.app](https://offnoteai.app). The web client is live; the iOS release carrying sync is in progress.
+
+**Goal:** Let users keep memos on more than one device and read or edit them in a browser, without giving up the app's privacy promise: the server must store memos it cannot read, and a user who never creates an account must see no change at all.
+
+**Constraint:**
+- **The password is the key.** No reset link can exist. "We cannot read or recover your notes" had to be literally true, including for the operator, while keeping password change cheap for a large account.
+- **The server still has to arbitrate.** Two devices edit the same memo offline; deletions must replicate and stay deleted; all of it decided by a server that sees only ciphertext.
+- **Two clients, one core.** The phone has SQLite, the OS keychain, and the on-device AI; the browser has none of those and must never write key material to storage. Both had to produce byte-identical keys and ciphertext.
+- **Nothing local may be lost.** Trial expiry, sign-out, signing in on a device that already holds notes, a killed app mid-sync, and a known libSQL bug that committed partial batches all had to leave the user's notes intact.
+
+**Approach:**
+- **One-way key chain, entirely client-side:** PBKDF2-SHA256 (600,000 iterations) turns the password into an encryption key; the sign-in credential is derived *from* that key with a single iteration, so the server only ever sees a value it cannot walk back to the password. A random per-account item key encrypts every memo and is wrapped twice — under the password-derived key and under a 32-character recovery code (160 bits, shown once). Password change and recovery are re-wraps of the item key, so no memo is ever re-uploaded.
+- **Envelope design:** each memo is one AES-256-GCM blob with the memo id as additional authenticated data, so the server cannot serve one memo's ciphertext under another id. Trash state lives *inside* the envelope, where the server cannot see it; only the edit timestamp lives outside, because it is the only thing the server arbitrates on.
+- **Content-blind arbitration in Postgres:** a `BEFORE` trigger applies last-write-wins on the timestamp. Purge is a terminal log that a later edit cannot resurrect, enforced by a security-definer trigger so clients hold no `DELETE` grant; purge rows are never garbage-collected, with a written correctness argument (drop one and a device offline across the gap re-pushes its copy and wins). Row-level security scopes every table to its owner.
+- **A sync engine built around invariants:** a single-flight `pull → sweep → push` cycle with idempotent applies; the cursor is written once, after every table drains; paging reads "at or after" the cursor so a page-edge tie is never skipped, with stuck detection instead of an infinite loop; an atomic-batch wrapper around the libSQL bug. Trial expiry is pull-only, an update gate reads a minimum sync version and fails open, and local data is never destroyed without an explicit, twice-confirmed choice.
+- **Web client on the same core:** the key chain and sync engine are the same source files as the phone app's; crypto runs on WebCrypto with no library; keys and session live in tab memory only and nothing touches browser storage; with no server-side index, search runs locally over the decrypted corpus.
+- **Verified before shipping:** a shared reference implementation pins key-derivation and ciphertext bytes across both clients; each PR opened on a red commit holding only its seam tests; 12 Maestro end-to-end flows cover sign-up, the recovery code, and the encrypted round trip against a local Supabase stack.
+
+**Result:**
+- Memos sync end-to-end encrypted between iPhone and browser. What the operator can see — email, memo count, edit times — and cannot see — titles, content, password, recovery code — is stated plainly in the privacy policy.
+- A 2,500-memo backlog converges on a second device in one sync cycle.
+- The no-account path is unchanged: the only network calls remain the one-time model download and a version check.
 
 <details>
 <summary>Details</summary>
