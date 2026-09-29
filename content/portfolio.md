@@ -2,7 +2,7 @@
 
 AI Engineer
 
-Taipei · open to relocation to Singapore
+Taipei · Taiwan ARC holder (standard work-permit transfer) · open to roles anywhere in Taiwan
 
 [kwb0711@gmail.com](mailto:kwb0711@gmail.com) · [GitHub](https://github.com/rst0070) · [LinkedIn](https://www.linkedin.com/in/wonbin-kim-7263a7184/) · [HuggingFace](https://huggingface.co/rst0070) · [blog](https://rst0070.github.io/notes)
 
