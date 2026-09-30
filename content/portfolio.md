@@ -28,7 +28,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 ## Highlights
 
 - **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): **77k executions/week across 10 enterprise orgs**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
-- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (58k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
+- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (64k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
 - **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
@@ -73,7 +73,7 @@ flowchart LR
 **Result:**
 
 - **77k hook executions per week** against 28k agent messages per week — **~2.7 hook runs per message**, showing adopters chain multiple hooks and attach them to both input and output paths.
-- **10 enterprise organizations** (of 107 active on the platform) run custom hooks in production.
+- **10 enterprise organizations** (of 100+ on the platform) run custom hooks in production.
 - Zero-deployment delivery in practice: new per-customer hooks ship through admin, not through the release cycle.
   
 
@@ -319,7 +319,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
   
 
 **Result:**  
-- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 107 active organizations, scheduled execution went from nonexistent to a continuously running workload.
+- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 100+ organizations, scheduled execution went from nonexistent to a continuously running workload.
 - **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
 - **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
 - Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
@@ -474,7 +474,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 **Result:**  
 - **Memory recall accuracy 0.23 → 0.71 (~3×)** on the real-user evaluation set, through two documented, metric-verified improvement rounds
 - **Buy-vs-build settled with evidence** — the managed service scored 0.10 vs. the in-house 0.23 baseline, ending the POC decisively
-- **Production data repaired, root cause fixed upstream** — backfill batches corrected wrong-format and duplicated memories, and the duplication fix landed in mem0 itself (58k-star open-source project)
+- **Production data repaired, root cause fixed upstream** — backfill batches corrected wrong-format and duplicated memories, and the duplication fix landed in mem0 itself (64k-star open-source project)
 - The memory feature shipped as **the core of the Wrtn 3.0 release** — covered by AI Times: "Memory is the core of wrtn 3.0"
   
 
@@ -758,7 +758,7 @@ Retool interface of evaluation result (translated)
 ### Mem0 AI Assistant Memory System
 
 <details>
-<summary>mem0 is an open source AI assistant memory system that has received over 58k stars on GitHub. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
+<summary>mem0 is an open source AI assistant memory system that has received over 64k stars on GitHub. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
   
 - GitHub: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
