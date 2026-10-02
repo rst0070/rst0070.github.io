@@ -41,7 +41,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 
 ## Work Experience
 
-### MaiAgent (AI Engineer, 2025.12 - , Taipei)
+### MaiAgent (AI Agent Engineer, 2025.12 - , Taipei)
 
 AI Agent platform for Enterprise [maiagent.ai](https://maiagent.ai/en/about)
 
