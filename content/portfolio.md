@@ -337,18 +337,56 @@ Demo: the agent recovering the exact wording of the first message in a long conv
   
 #### Agent Evaluation
 <details>
-<summary>Tiered pass/fail semantics over DeepEval metrics and an LLM-generated improvement playbook — evaluation results non-technical enterprise users can actually act on</summary>
+<summary>Proposed and built agent evaluation for non-technical enterprise users, then rebuilt its execution from one 3-hour task into short, resumable batch jobs that survive deploys and crashes — 400+ stranded test cases before, none since</summary>
+  
 
-- **Constraint:** The existing evaluation pipeline used DeepEval’s raw metric pass/fail output directly — non-technical enterprise users received 8+ individual metric scores with no guidance on which failures mattered or what to do about them, making evaluation results effectively unactionable.
-- Redesigned the pass/fail determination as a **tiered metric priority system**, derived from studying DeepEval’s metric semantics, to prevent noisy metrics like Context Relevancy and Tool Correctness from failing test cases that achieved the correct outcome
+**Goal:** Enterprise customers test their agents against their own datasets before going live. In my first weeks the ask was "try the platform and suggest improvements"; this feature was my proposal.  
+  
 
-    <details>
-    <summary>Details</summary>
-    
-    Safety metrics (Bias, Toxicity, Hallucination) take highest priority, followed by Outcome metrics (Answer Relevancy, Task Completion), then Grounding metrics (Context Recall)
-    
-    Algorithm:
-    
+**Phase 1 — Results users can act on**  
+- **Constraint:** the pipeline passed DeepEval's raw output straight through. Non-technical users got 8+ metric scores per case with no sense of which failures mattered or what to change, and noisy metrics like Context Relevancy and Tool Correctness failed cases that had reached the right answer.
+- **Tiered pass/fail:** metrics are ranked by what they mean (safety, then outcome, then grounding), so a noisy low-tier metric cannot fail a case that got the right outcome.
+- **Improvement playbook:** an LLM turns the scores into a plain-language summary, per-metric severity, and prioritized recommendations with rationale, translated on demand.
+- **Provider-agnostic judge models,** so customers can use self-hosted LLMs (vLLM).
+  
+
+**Phase 2 — Runs that always finish**  
+- **Constraint:** runs take hours (a full agent reply plus an LLM judge per case), and the whole run lived in one 3-hour background task. A deploy or crash killed it silently: one customer's run stopped at 110 of 202 cases. Rerunning everything would re-bill answers that had already succeeded.
+- **Short, resumable batch jobs:** progress lives in the database, not in a process. Jobs run in parallel, each on a small locked batch, so a deploy loses at most one batch.
+- **Reaper:** a periodic job returns batches abandoned by crashed jobs and restarts jobs for runs that have none left.
+- **Exactly-once outcomes on at-least-once delivery:** only the last job to finish closes the run, bills it (completed cases only), and notifies the customer.
+- **Evaluate the real agent:** runs go through the same pipeline end users hit, including guardrails and hooks.
+  
+
+**Result:**  
+- **400+ stranded test cases → none in the N weeks since** the rebuild shipped (Sep 2026).
+- A deploy mid-run costs one batch, not a run the customer has to notice and restart.
+- Users get a verdict and a fix list instead of 8+ raw scores.
+
+<details>
+<summary>Details</summary>
+
+- Batch jobs
+
+    ```mermaid
+    flowchart TD
+        Start([Run requested]) --> Plan[Planner<br/>one row per test case<br/>start N workers]
+        Plan --> W[Worker]
+        W --> Claim{Lock a batch}
+        Claim -->|got rows| Run[Answer via production pipeline<br/>+ score with DeepEval]
+        Run --> Next[Queue next batch]
+        Next --> W
+        Claim -->|nothing left| Last{Last worker<br/>to finish?}
+        Last -->|yes| Fin[Close run<br/>bill completed cases<br/>notify]
+        Last -->|no| Exit([Exit])
+
+        Reaper[Reaper, every 5 min] -.->|abandoned batches| Pending[(Back to queue)]
+        Reaper -.->|run with no workers left| Plan
+        Pending -.-> Claim
+    ```
+
+- Tiered pass/fail: safety metrics (Bias, Toxicity, Hallucination) take highest priority, followed by Outcome metrics (Answer Relevancy, Task Completion), then Grounding metrics (Context Recall)
+
     ```mermaid
     flowchart TD
         Fail[success = False]
@@ -369,22 +407,13 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 
         Override -->|Yes<br/>Ignore Others| Pass
         Override -->|No| Fail
-    
     ```
 
-    </details>
+- Improvement playbook: natural-language summary, per-metric severity, and prioritized recommendations with rationale, generated with Structured Outputs
 
-- Built an LLM-powered insight generation layer using Structured Outputs that automatically produces a natural-language summary, per-metric severity classification, and prioritized actionable recommendations with rationale — transforming raw evaluation data into an improvement playbook for non-technical users, with on-demand multilingual translation via Celery async tasks
+    ![Screenshot 2026-04-25 at 11.47.55 AM.png](/assets/portfolio/screenshot-2026-04-25-at-11-47-55-am.png)
 
-    <details>
-    <summary>Details</summary>
-
-    ![Screenshot 2026-04-25 at 11.47.55 AM.png](/assets/portfolio/screenshot-2026-04-25-at-11-47-55-am.png)
-
-    </details>
-
-- Hardened the evaluation pipeline for production reliability: implemented resumable batched execution with per-test-case retry tracking, structured output fallbacks for lower-capability LLMs, and real-time progress tracking via Socket.IO event broadcasting
-- Decoupled the evaluation pipeline from OpenAI behind a provider-agnostic interface, enabling enterprise customers to use self-hosted LLMs via vLLM
+</details>
 </details>
   
   
