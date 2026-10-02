@@ -27,7 +27,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 
 ## Highlights
 
-- **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): **77k executions/week across 10 enterprise orgs**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
+- **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): adopted by **40+ orgs, ~6k executions/week**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
 - **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (64k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
 - **Multimodal RAG in production** — zero-migration overlay now serving **77% of ~18K enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
 - **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
@@ -49,7 +49,7 @@ Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex
 
 #### Agent Middleware
 <details>
-<summary>Sandboxed per-tenant hook layer around the AI agent — 77k executions/week across 10 enterprise orgs</summary>
+<summary>Sandboxed per-tenant hook layer around the AI agent — adopted by 40+ orgs, ~6k executions/week</summary>
 
 ```mermaid
 flowchart LR
@@ -72,8 +72,7 @@ flowchart LR
 
 **Result:**
 
-- **77k hook executions per week** against 28k agent messages per week — **~2.7 hook runs per message**, showing adopters chain multiple hooks and attach them to both input and output paths.
-- **10 enterprise organizations** (of 100+ on the platform) run custom hooks in production.
+- **40+ organizations** (of 100+ on the platform) run custom hooks in production — **~6k hook executions per week**.
 - Zero-deployment delivery in practice: new per-customer hooks ship through admin, not through the release cycle.
   
 
