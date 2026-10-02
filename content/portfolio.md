@@ -27,10 +27,10 @@ AI Engineer with production experience across the full LLM agent stack — agent
 
 ## Highlights
 
-- **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): **77k executions/week across 10 enterprise orgs**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
-- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (58k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
-- **Multimodal RAG in production** — zero-migration overlay now serving **72% of 9,026 enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
-- **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
+- **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): adopted by **40+ orgs, ~6k executions/week**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
+- **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (64k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
+- **Multimodal RAG in production** — zero-migration overlay now serving **77% of ~18K enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
+- **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus agent scheduling that enterprises use to automate their own workflows (**9k+ runs/week**). → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
 - **End-to-end encrypted application** — designed and built OffNote AI's encrypted sync across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
@@ -41,7 +41,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 
 ## Work Experience
 
-### MaiAgent (AI Engineer, 2025.12 - , Taipei)
+### MaiAgent (AI Agent Engineer, 2025.12 - , Taipei)
 
 AI Agent platform for Enterprise [maiagent.ai](https://maiagent.ai/en/about)
 
@@ -49,7 +49,7 @@ Shipped full-stack AI features end-to-end inside an existing Django + LlamaIndex
 
 #### Agent Middleware
 <details>
-<summary>Sandboxed per-tenant hook layer around the AI agent — 77k executions/week across 10 enterprise orgs</summary>
+<summary>Sandboxed per-tenant hook layer around the AI agent — adopted by 40+ orgs, ~6k executions/week</summary>
 
 ```mermaid
 flowchart LR
@@ -72,8 +72,7 @@ flowchart LR
 
 **Result:**
 
-- **77k hook executions per week** against 28k agent messages per week — **~2.7 hook runs per message**, showing adopters chain multiple hooks and attach them to both input and output paths.
-- **10 enterprise organizations** (of 107 active on the platform) run custom hooks in production.
+- **40+ organizations** (of 100+ on the platform) run custom hooks in production — **~6k hook executions per week**.
 - Zero-deployment delivery in practice: new per-customer hooks ship through admin, not through the release cycle.
   
 
@@ -88,7 +87,7 @@ Design write-ups with the full thought process:
 
 #### Multimodal RAG
 <details>
-<summary>Zero-migration multimodal overlay on the existing RAG pipeline — image ingestion, cross-modal retrieval, and image-grounded answers in 6,534 of 9,026 production knowledge bases</summary>
+<summary>Zero-migration multimodal overlay on the existing RAG pipeline — image ingestion, cross-modal retrieval, and image-grounded answers in 77% of ~18K enterprise knowledge bases</summary>
 
 **Goal:** The requirement arrived as a single abstract sentence — "make our RAG support images" — on a platform whose only image handling was chat attachments: no ingestion, no retrieval, no image-aware generation. I scoped it into a concrete end-to-end contract: knowledge bases ingest images (standalone or embedded in documents), and both the RAG chatbot and the agentic chatbot use them at inference — under the same configuration as text, not a separate mode.  
   
@@ -103,7 +102,7 @@ Design write-ups with the full thought process:
 - **Patched LlamaIndex's native engines to carry the custom image structure:** Both inference paths drop images by design — the chat engine's synthesizer flattens every retrieved node to a text string, and the agent framework returns tool results as text only. Extended both: a custom synthesizer that builds LLM messages with real image blocks, and agent-side injection of tool-result images into the scratchpad (budgeted, and cleaned out before memory persistence). Each patch engages only when tagged image nodes actually appear and the LLM is multimodal; otherwise the stock path runs, and images are skipped with a log line — never an error, never a different behavior for the user.
   
 **Result:**  
-- **72% of active knowledge bases (6,534 of 9,026) now run on the multimodal pipeline** — the overlay design serves the majority of production, not a niche opt-in. The remaining text-only knowledge bases run the same code path with the image logic dormant: the graceful-degradation design carrying both populations in production.
+- **77% of enterprise knowledge bases (13,716 of 17,818) now run on the multimodal pipeline** — the overlay design serves the majority of production, not a niche opt-in. The remaining text-only knowledge bases run the same code path with the image logic dormant: the graceful-degradation design carrying both populations in production.
 - Enterprise customers can **upload and search images in their knowledge bases for the first time**, in both RAG and agentic chatbots — with cross-modal search (text→image, image→text, image→image) exposed to end users and to the agent as a tool.
 - Images went from a failure case — a hard error or a silently different LLM call path — to a **supported modality under unchanged chatbot configuration**, shipped with zero index migration.
 
@@ -293,7 +292,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 
 #### Agent Schedule
 <details>
-<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9,600 runs/week from 143 self-serve production schedules</summary>
+<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9k+ runs/week from 140+ schedules enterprises set up to automate their own work</summary>
   
 
 **Goal:** The requirement arrived as a one-line verbal request inspired by a competitor feature — "our agents should be able to run on a schedule." I scoped it into a concrete end-to-end contract: any AI agent on the platform can execute autonomously — on a cron expression, a fixed interval, or a one-time trigger — with its result delivered to the places people already watch (existing conversations, external systems via webhook), every run recorded in an auditable history, and the whole thing configured self-serve by enterprise admins under per-tenant limits, not provisioned by engineers.  
@@ -319,9 +318,9 @@ Demo: the agent recovering the exact wording of the first message in a long conv
   
 
 **Result:**  
-- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 107 active organizations, scheduled execution went from nonexistent to a continuously running workload.
+- **9,600 autonomous agent runs per week** from **143 schedules** enterprises set up to automate their own work — on a platform serving 100+ organizations, scheduled execution went from nonexistent to a continuously running workload.
 - **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
-- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
+- **Every run is accountable:** each of those weekly runs writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
 - Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
 
 <details>
@@ -474,7 +473,7 @@ I had the opportunity to experience data infrastructure and AI systems in a fast
 **Result:**  
 - **Memory recall accuracy 0.23 → 0.71 (~3×)** on the real-user evaluation set, through two documented, metric-verified improvement rounds
 - **Buy-vs-build settled with evidence** — the managed service scored 0.10 vs. the in-house 0.23 baseline, ending the POC decisively
-- **Production data repaired, root cause fixed upstream** — backfill batches corrected wrong-format and duplicated memories, and the duplication fix landed in mem0 itself (58k-star open-source project)
+- **Production data repaired, root cause fixed upstream** — backfill batches corrected wrong-format and duplicated memories, and the duplication fix landed in mem0 itself (64k-star open-source project)
 - The memory feature shipped as **the core of the Wrtn 3.0 release** — covered by AI Times: "Memory is the core of wrtn 3.0"
   
 
@@ -758,7 +757,7 @@ Retool interface of evaluation result (translated)
 ### Mem0 AI Assistant Memory System
 
 <details>
-<summary>mem0 is an open source AI assistant memory system that has received over 58k stars on GitHub. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
+<summary>mem0 is an open source AI assistant memory system that has received over 64k stars on GitHub. I contributed to the project by improving customization for actions and queries, and fixing critical data duplication issues.</summary>    
   
 - GitHub: [mem0ai/mem0](https://github.com/mem0ai/mem0)
 - All contributions: [Pull Requests](https://github.com/mem0ai/mem0/pulls?q=is%3Apr+author%3Arst0070)
