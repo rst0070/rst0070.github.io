@@ -30,7 +30,7 @@ AI Engineer with production experience across the full LLM agent stack — agent
 - **Agent guardrails at scale** — designed a gVisor-sandboxed, per-tenant middleware layer for AI agents (prompt-injection blocking, PII redaction): adopted by **40+ orgs, ~6k executions/week**, zero-deployment rule delivery. → [Agent Middleware](#agent-middleware)
 - **Memory systems specialist** — fixed silently-failing long-term memory (**0/4 → 4/4 recall across 8,000+ turns**, zero added LLM cost) at MaiAgent → [Agent Conversation Memory](#agent-conversation-memory); previously improved recall **23% → 71%** on a 5M-MAU platform at Wrtn; contributor to **Mem0 (64k★)** → [Mem0 AI Assistant Memory System](#mem0-ai-assistant-memory-system)
 - **Multimodal RAG in production** — zero-migration overlay now serving **77% of ~18K enterprise knowledge bases** with cross-modal search. → [Multimodal RAG](#multimodal-rag)
-- **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus self-serve agent scheduling running **9,600 autonomous runs/week**. → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
+- **Autonomous agents** — deep-research agent bridging LangGraph and LlamaIndex via a cross-framework interrupt protocol, plus agent scheduling that enterprises use to automate their own workflows (**9k+ runs/week**). → [Deep Research](#deep-research) · [Agent Schedule](#agent-schedule)
 - **RL fine-tuning, end to end** — trained a **0.8B model with GRPO** (from-scratch implementation, reference-free NLI reward) to **95% of Gemini 2.5 Flash Lite's score** on knowledge-graph extraction, on a single 16GB consumer GPU. → [Tiny Graph Extractor](#tiny-graph-extractor-—-sub-1b-llm-for-knowledge-graph-extraction)
 - **End-to-end encrypted application** — designed and built OffNote AI's encrypted sync across iOS and web: a one-way client-side key chain, AES-GCM envelopes bound to their row id, and a Postgres server that arbitrates on timestamps it can read and content it cannot. → [OffNote AI](#offnote-ai-—-on-device-note-ai-with-end-to-end-encrypted-sync-ios-web)
 - **Research** — 1st-author paper on noise-robust speaker verification ([arXiv](https://arxiv.org/abs/2307.10628)).
@@ -292,7 +292,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
 
 #### Agent Schedule
 <details>
-<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9,600 runs/week from 143 self-serve production schedules</summary>
+<summary>Autonomous agent scheduling (cron / interval / one-shot) built by injecting synthetic user messages into the unchanged reply pipeline — 9k+ runs/week from 140+ schedules enterprises set up to automate their own work</summary>
   
 
 **Goal:** The requirement arrived as a one-line verbal request inspired by a competitor feature — "our agents should be able to run on a schedule." I scoped it into a concrete end-to-end contract: any AI agent on the platform can execute autonomously — on a cron expression, a fixed interval, or a one-time trigger — with its result delivered to the places people already watch (existing conversations, external systems via webhook), every run recorded in an auditable history, and the whole thing configured self-serve by enterprise admins under per-tenant limits, not provisioned by engineers.  
@@ -318,9 +318,9 @@ Demo: the agent recovering the exact wording of the first message in a long conv
   
 
 **Result:**  
-- **9,600 autonomous agent runs per week** from **143 production schedules** — on a platform serving 100+ organizations, scheduled execution went from nonexistent to a continuously running workload.
+- **9,600 autonomous agent runs per week** from **143 schedules** enterprises set up to automate their own work — on a platform serving 100+ organizations, scheduled execution went from nonexistent to a continuously running workload.
 - **Zero-engineer provisioning in practice:** every schedule was configured self-serve by customers through the API and admin UI — none required a deployment or engineering involvement, the contract the design promised.
-- **Every run is accountable:** each of those 9,600 weekly executions writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
+- **Every run is accountable:** each of those weekly runs writes an audit record with status, errors, and token usage — unattended failures surface as queryable records, not silent gaps or customer complaints.
 - Delivered end-to-end: data models, service layer, REST API (CRUD, pause/resume, run-now), Celery task and Beat integration, and admin frontend.
 
 <details>
