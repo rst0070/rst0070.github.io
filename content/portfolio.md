@@ -359,7 +359,7 @@ Demo: the agent recovering the exact wording of the first message in a long conv
   
 
 **Result:**  
-- **400+ stranded test cases → none in the N weeks since** the rebuild shipped (Sep 2026).
+- **400+ stranded test cases → none since** the rebuild shipped.
 - A deploy mid-run costs one batch, not a run the customer has to notice and restart.
 - Users get a verdict and a fix list instead of 8+ raw scores.
 
