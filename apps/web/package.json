@@ -12,7 +12,7 @@
   "dependencies": {
     "@rst0070/content": "workspace:*",
     "@tailwindcss/postcss": "4.0.17",
-    "next": "16.2.6",
+    "next": "16.3.8",
     "postcss": "8.5.12",
     "react": "19.1.0",
     "react-dom": "19.1.0",
