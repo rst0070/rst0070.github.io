@@ -31,7 +31,7 @@ export function walk(dir: string, prefix = ''): string[] {
 export function urlToDistFile(url: string): string {
     if (url === '/') return 'index.html'
     if (url === '404') return '404.html'
-    if (url === '/notes' || url === '/portfolio') return `${url.slice(1)}.html`
+    if (url === '/notes' || url === '/portfolio' || url === '/ko/portfolio') return `${url.slice(1)}.html`
     if (/^\/notes\/[^/]+$/.test(url)) return `${url.slice(1)}.html`
     return url.slice(1)
 }

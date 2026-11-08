@@ -7,6 +7,13 @@ export const siteName = 'rst0070 - notes'
 export const siteDescription =
     'Notes on software engineering, machine learning, and infrastructure by rst0070.'
 
+/** The languages a page can be in. `en` is the default; `ko` is spelled the same in files, URLs, `lang` and storage. */
+export type Lang = 'en' | 'ko'
+export const defaultLang: Lang = 'en'
+
+/** A page's versions by language, as site paths. Known at build time. */
+export type Alternates = Partial<Record<Lang, string>>
+
 export type HeadImage = { url: string; width?: number; height?: number; alt?: string }
 
 export type Head = {
@@ -37,6 +44,11 @@ export type Head = {
     robots?: string
     /** Serialized into <script type="application/ld+json">. */
     jsonLd: object[]
+    /**
+     * Other-language versions of this page. With more than one entry, the head
+     * gets an hreflang link per language plus x-default (the default language).
+     */
+    alternates?: Alternates
 }
 
 /** "%s | rst0070", the title template every page but home uses. */
