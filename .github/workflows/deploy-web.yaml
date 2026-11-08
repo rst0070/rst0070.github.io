@@ -61,6 +61,15 @@ jobs:
     needs: changes
     if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
+    # Job-level so the build and the tests see the same value: the dev-server
+    # test compares `pnpm dev` HTML to the built dist/, so both must agree on
+    # whether the chat island renders.
+    env:
+      # The chat widget's backend (apps/ai-backend), inlined into the
+      # client bundle. Public by design; the Worker holds no secrets the
+      # browser can reach. Without it the widget is not rendered, so the
+      # deployed URL is the fallback until the repository variable is set.
+      VITE_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -108,12 +117,6 @@ jobs:
       # rendered, which ships in the Pages artifact.
       - name: Build site
         run: pnpm --filter @rst0070/web build
-        env:
-          # The chat widget's backend (apps/ai-backend), inlined into the
-          # client bundle. Public by design; the Worker holds no secrets the
-          # browser can reach. Without it the widget is not rendered, so the
-          # deployed URL is the fallback until the repository variable is set.
-          VITE_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
       # After the build: the suite includes checks over the built apps/web/dist.
       - name: Test @rst0070/web
         run: pnpm --filter @rst0070/web test

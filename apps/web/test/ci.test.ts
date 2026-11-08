@@ -42,7 +42,8 @@ describe('CI and dependencies', () => {
         expect(build).not.toMatch(/^ {4}if:.*pull_request/m)
         expect(build).toContain('run: pnpm --filter @rst0070/web build')
         expect(build).toContain('run: pnpm --filter @rst0070/web test')
-        expect(build).toMatch(/^ {10}VITE_AI_API_URL: /m)
+        // Job-level, so the build and the dev-server test agree on the chat island.
+        expect(build).toMatch(/^ {4}env:\n(?: {6}.*\n)*? {6}VITE_AI_API_URL: /m)
         expect(build).toMatch(/uses: actions\/upload-pages-artifact@v3\n {8}with:\n {10}path: \.\/apps\/web\/dist/)
 
         // The deploy job deploys the build only on a push or a manual run.
