@@ -210,6 +210,15 @@ describe('pnpm dev', () => {
                 expect(bodyWithoutScripts(await res.text()), url).toBe(bodyWithoutScripts(readFileSync(built, 'utf8')))
             }
 
+            // Every link is a full page load, so the CSS must be in <head>
+            // like the build's <link>, not injected later by the client
+            // entry: with JS off, Tailwind's preflight already zeroes the
+            // button border the browser would otherwise draw.
+            const unscripted = await freshPage('dark')
+            await unscripted.setJavaScriptEnabled(false)
+            await open(unscripted, '/notes', dev.url)
+            expect(await unscripted.$eval(TOGGLE, (el) => getComputedStyle(el).borderTopWidth)).toBe('0px')
+
             const page = await freshPage('light')
             await open(page, '/', dev.url)
             expect(await eventually(page, `document.querySelector('${TOGGLE}')?.getAttribute('aria-label') === 'Switch to dark theme'`, 15_000)).toBe(true)

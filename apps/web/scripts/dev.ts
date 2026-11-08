@@ -18,6 +18,14 @@ const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
 const CONTENT_ROOT = path.resolve(ROOT, '..', '..', 'content')
 const PORT = Number(process.env.PORT ?? 3000)
 
+/**
+ * The build puts the CSS in a render-blocking <link>; in dev, Vite would only
+ * inject it when the client entry runs, so every page load (every link click)
+ * would first paint unstyled. This link stands in for the build's until
+ * entry-client removes it in favour of Vite's hot-updatable <style>.
+ */
+const DEV_CSS_LINK = '<link rel="stylesheet" href="/src/styles/globals.css?direct" data-dev-css>'
+
 type Route = { path: string; outFile: string }
 type EntryServer = {
     routes(): Route[]
@@ -67,7 +75,8 @@ http.on('request', (req, res) => {
             const entry = (await vite.ssrLoadModule('/src/entry-server.tsx')) as EntryServer
             const wanted = routePath(pathname)
             const route = entry.routes().find((r) => r.path === wanted) ?? entry.notFound
-            const template = await vite.transformIndexHtml(req.url ?? '/', await readFile(path.join(ROOT, 'index.html'), 'utf8'))
+            const template = (await vite.transformIndexHtml(req.url ?? '/', await readFile(path.join(ROOT, 'index.html'), 'utf8')))
+                .replace('</head>', `  ${DEV_CSS_LINK}\n  </head>`)
             const html = await entry.renderDocument(template, route)
             res.writeHead(route.outFile === entry.notFound.outFile ? 404 : 200, { 'content-type': 'text/html; charset=utf-8' })
             res.end(html)
