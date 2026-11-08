@@ -30,13 +30,13 @@ function distNoteFiles(): string[] {
 }
 
 describe('build output (dist/)', () => {
-    it.fails('AC-1: every URL of the Next build has a file in dist at the Build output path', () => {
+    it('AC-1: every URL of the Next build has a file in dist at the Build output path', () => {
         expect(isDir(DIST), 'dist/ was built').toBe(true)
         const missing = referenceUrls.filter((url) => !isFile(path.join(DIST, urlToDistFile(url))))
         expect(missing).toEqual([])
     })
 
-    it.fails('AC-1: every public/ file is copied into dist byte-identical', () => {
+    it('AC-1: every public/ file is copied into dist byte-identical', () => {
         expect(isDir(DIST), 'dist/ was built').toBe(true)
         const publicFiles = walk(PUBLIC_DIR)
         expect(publicFiles.length).toBeGreaterThan(0)
@@ -47,7 +47,7 @@ describe('build output (dist/)', () => {
         expect(differing).toEqual([])
     })
 
-    it.fails('AC-1: sitemap.xml and robots.txt keep the same entries as the Next build', () => {
+    it('AC-1: sitemap.xml and robots.txt keep the same entries as the Next build', () => {
         expect(isFile(path.join(DIST, 'sitemap.xml')), 'dist/sitemap.xml was built').toBe(true)
         const before = sitemapEntries(readReference('next-sitemap.xml'))
         const after = sitemapEntries(readFileSync(path.join(DIST, 'sitemap.xml'), 'utf8'))
@@ -58,7 +58,7 @@ describe('build output (dist/)', () => {
         expect(readFileSync(path.join(DIST, 'robots.txt'), 'utf8')).toBe(readReference('next-robots.txt'))
     })
 
-    it.fails('AC-2: /notes/<slug> is served with 200 and no trailing-slash redirect; an unknown path gets the 404 page', () => {
+    it('AC-2: /notes/<slug> is served with 200 and no trailing-slash redirect; an unknown path gets the 404 page', () => {
         expect(isDir(DIST), 'dist/ was built').toBe(true)
         const fixture = servePages(DIST, `/notes/${FIXTURE_SLUG}`)
         expect(fixture.status).toBe(200)
@@ -73,7 +73,7 @@ describe('build output (dist/)', () => {
         expect(unknown.body).toContain('404 - Page Not Found')
     })
 
-    it.fails('AC-3: the fixture note has the same head tags, JSON-LD and body as the Next build', () => {
+    it('AC-3: the fixture note has the same head tags, JSON-LD and body as the Next build', () => {
         const file = path.join(DIST, 'notes', `${FIXTURE_SLUG}.html`)
         expect(isFile(file), `dist/notes/${FIXTURE_SLUG}.html was built`).toBe(true)
         const reference = JSON.parse(readReference(`next-head-${FIXTURE_SLUG}.json`))
@@ -89,7 +89,7 @@ describe('build output (dist/)', () => {
         expect(html).toContain(reference.body)
     })
 
-    it.fails('AC-3: every note page carries its content, head tags and both JSON-LD blocks without JS', () => {
+    it('AC-3: every note page carries its content, head tags and both JSON-LD blocks without JS', () => {
         expect(isDir(path.join(DIST, 'notes')), 'dist/notes was built').toBe(true)
         const files = distNoteFiles()
         expect(files.length).toBeGreaterThanOrEqual(referenceNoteUrls.length)

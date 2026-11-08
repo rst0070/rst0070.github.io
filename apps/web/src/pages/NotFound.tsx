@@ -1,4 +1,4 @@
-export default function NotFound() {
+export function NotFound() {
     return (
       <section>
         <h1 className="mb-8 text-2xl font-semibold tracking-tighter">

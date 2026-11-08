@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Before any paint: the theme from localStorage, else the OS. -->
+    <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDVVPEEMR0"></script>
+    <script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-CDVVPEEMR0');</script>
+    <!--app-head-->
+    <link rel="icon" href="/icon.jpg" sizes="1254x1254" type="image/jpeg" />
+    <script type="module" src="/src/entry-client.tsx"></script>
+  </head>
+  <body>
+    <!--app-html-->
+  </body>
+</html>

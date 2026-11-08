@@ -114,8 +114,6 @@ jobs:
       # checked without Node types, so any fs/path/process use fails here.
       - name: Typecheck @rst0070/content
         run: pnpm --filter @rst0070/content typecheck
-      - name: Test @rst0070/web
-        run: pnpm --filter @rst0070/web test
       # The package's `build` script rather than `next build` directly: it also
       # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
       - name: Build with Next.js
@@ -126,10 +124,13 @@ jobs:
           # browser can reach. Without it the widget is not rendered, so the
           # deployed URL is the fallback until the repository variable is set.
           NEXT_PUBLIC_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
+      # After the build: the suite includes checks over the built apps/web/dist.
+      - name: Test @rst0070/web
+        run: pnpm --filter @rst0070/web test
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps/web/out
+          path: ./apps/web/dist
 
   # Deployment job
   deploy:
