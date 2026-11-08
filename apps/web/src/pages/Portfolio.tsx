@@ -1,8 +1,6 @@
 import type { TocItem } from '@/infra/markdown'
 import { baseUrl } from '@/head'
-import { Toc } from './note/toc'
-import { ReadingProgress } from './note/reading-progress'
-import { NoteScripts } from './note/note-scripts'
+import { Island } from '@/islands/Island'
 
 export type PortfolioData = { html: string; toc: TocItem[] }
 
@@ -64,7 +62,7 @@ export function Portfolio({ data }: { data: PortfolioData }) {
 
   return (
     <>
-      <ReadingProgress />
+      <Island name="reading-progress" props={{}} />
       <div className="post-layout">
         <article className="post-article">
           <div className="pdf-download-row">
@@ -85,10 +83,12 @@ export function Portfolio({ data }: { data: PortfolioData }) {
           />
         </article>
         <aside className="post-toc-wrapper">
-          <Toc items={toc} />
+          <Island name="toc" props={{ items: toc }} />
         </aside>
       </div>
-      <NoteScripts />
+      <Island name="note-scripts" props={{}} />
+      <Island name="copy-buttons" props={{}} />
+      <Island name="mermaid-fullscreen" props={{}} />
     </>
   )
 }

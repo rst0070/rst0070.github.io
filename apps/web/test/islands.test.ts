@@ -70,7 +70,7 @@ async function open(page: Page, url: string, base = site.url) {
 const TOGGLE = 'header button[aria-label^="Switch to"]'
 
 describe('islands in the built site', () => {
-    it.fails('AC-4: a stored dark theme is on <html> before first paint, and the toggle flips the theme and localStorage', async () => {
+    it('AC-4: a stored dark theme is on <html> before first paint, and the toggle flips the theme and localStorage', async () => {
         for (const url of PAGES) {
             const page = await freshPage('dark')
             await open(page, url)
@@ -95,7 +95,7 @@ describe('islands in the built site', () => {
         }
     }, 120_000)
 
-    it.fails('AC-5: TOC links scroll to their headings and the TOC marks the heading in view; prev/next link the neighbours by date', async () => {
+    it('AC-5: TOC links scroll to their headings and the TOC marks the heading in view; prev/next link the neighbours by date', async () => {
         const page = await freshPage('light')
         await page.setViewport({ width: 1280, height: 800 })
         await open(page, `/notes/${NOTE_SLUG}`)
@@ -111,7 +111,7 @@ describe('islands in the built site', () => {
         expect(await eventually(page, `document.querySelector('.toc-active a')?.getAttribute('href') === ${JSON.stringify(href)}`)).toBe(true)
     }, 60_000)
 
-    it.fails('AC-5: the reading progress bar moves as the page scrolls', async () => {
+    it('AC-5: the reading progress bar moves as the page scrolls', async () => {
         const page = await freshPage('light')
         await open(page, `/notes/${NOTE_SLUG}`)
         await page.evaluate(() => window.scrollTo(0, (document.documentElement.scrollHeight - innerHeight) / 2))
@@ -123,7 +123,7 @@ describe('islands in the built site', () => {
         ).toBe(true)
     }, 60_000)
 
-    it.fails('AC-5: a copy button copies its code block', async () => {
+    it('AC-5: a copy button copies its code block', async () => {
         const page = await freshPage('light')
         await page.browserContext().overridePermissions(site.url, ['clipboard-read', 'clipboard-write', 'clipboard-sanitized-write'])
         await open(page, `/notes/${NOTE_SLUG}`)
@@ -133,7 +133,7 @@ describe('islands in the built site', () => {
         expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(code)
     }, 60_000)
 
-    it.fails('AC-5: math is typeset, Mermaid renders in the theme of the page, and its fullscreen button opens and Escape closes it', async () => {
+    it('AC-5: math is typeset, Mermaid renders in the theme of the page, and its fullscreen button opens and Escape closes it', async () => {
         const math = await freshPage('light')
         await open(math, `/notes/${MATH_SLUG}`)
         expect(await eventually(math, `document.querySelectorAll('.MathJax_CHTML, .MathJax, mjx-container').length > 0`, CDN_TIMEOUT)).toBe(true)
@@ -165,7 +165,7 @@ describe('client bundle (dist/assets)', () => {
             .map((f) => ({ file: f, text: readFileSync(path.join(DIST, 'assets', f), 'utf8') }))
     }
 
-    it.fails('AC-8: the client assets hold the islands but no markdown pipeline and no note text', () => {
+    it('AC-8: the client assets hold the islands but no markdown pipeline and no note text', () => {
         const assets = clientJs()
         const all = assets.map((a) => a.text).join('\n')
         // The search covers the real islands bundle, not an empty build.
@@ -196,7 +196,7 @@ describe('client bundle (dist/assets)', () => {
 })
 
 describe('pnpm dev', () => {
-    it.fails('AC-10: serves /, /notes, a note and /portfolio with the build\'s HTML and working islands, and reloads on a page edit', async () => {
+    it('AC-10: serves /, /notes, a note and /portfolio with the build\'s HTML and working islands, and reloads on a page edit', async () => {
         const dev = await startDevServer(4317)
         const homeSource = path.join(WEB_ROOT, 'src/pages/Home.tsx')
         const original = readFileSync(homeSource, 'utf8')

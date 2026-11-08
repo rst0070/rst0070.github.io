@@ -16,19 +16,10 @@ const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
 const DIST = path.join(ROOT, 'dist')
 const BASE_URL = 'https://rst0070.github.io'
 
-type Rendered = { html: string; head: string }
 type EntryServer = {
     routes(): { path: string; outFile: string }[]
-    render(route: unknown): Promise<Rendered>
+    renderDocument(template: string, route: unknown): Promise<string>
     sitemapEntries(): { url: string; lastModified: string }[]
-}
-
-/** Fills the template's two slots; the comments are removed with them. */
-export function fillTemplate(template: string, { html, head }: Rendered): string {
-    for (const slot of ['<!--app-head-->', '<!--app-html-->']) {
-        if (!template.includes(slot)) throw new Error(`index.html is missing the ${slot} slot`)
-    }
-    return template.replace('<!--app-head-->', () => head).replace('<!--app-html-->', () => html)
 }
 
 function sitemapXml(entries: { url: string; lastModified: string }[]): string {
@@ -64,7 +55,7 @@ async function main() {
         for (const route of routes) {
             if (seen.has(route.outFile)) throw new Error(`Two routes write ${route.outFile}`)
             seen.add(route.outFile)
-            await write(route.outFile, fillTemplate(template, await entry.render(route)))
+            await write(route.outFile, await entry.renderDocument(template, route))
         }
         await write('sitemap.xml', sitemapXml(entry.sitemapEntries()))
         await write('robots.txt', robotsTxt)

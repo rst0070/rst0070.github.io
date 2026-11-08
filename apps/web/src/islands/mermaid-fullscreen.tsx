@@ -1,11 +1,6 @@
-'use client';
-
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 
 export function MermaidFullscreen() {
-    const pathname = usePathname();
-
     useEffect(() => {
         const buttons = Array.from(
             document.querySelectorAll<HTMLButtonElement>('button.mermaid-fullscreen')
@@ -30,7 +25,7 @@ export function MermaidFullscreen() {
         cleanups.push(() => document.removeEventListener('keydown', onKey));
 
         return () => cleanups.forEach(fn => fn());
-    }, [pathname]);
+    }, []);
 
     return null;
 }
