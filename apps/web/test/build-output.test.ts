@@ -1,12 +1,15 @@
 // Checks over the built site in apps/web/dist. Run after `pnpm build`.
 // The reference files in ./reference were taken from the last Next.js build
 // (`next build`, output in out/) at the commit this migration started from.
-import { readFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { readPortfolio } from '@rst0070/content/node'
 import { describe, expect, it } from 'vitest'
 import {
     BASE_URL,
     DIST,
+    decodeEntities,
     PUBLIC_DIR,
     isDir,
     isFile,
@@ -108,5 +111,120 @@ describe('build output (dist/)', () => {
             expect(head.jsonLd.map((b) => b['@type']).sort(), slug).toEqual(['BlogPosting', 'BreadcrumbList'])
             expect(html, slug).toMatch(/<div class="prose post-body">[\s\S]+?<\/div>/)
         }
+    })
+})
+
+const REPO_CONTENT = path.resolve(DIST, '../../../content')
+
+/** Every `<link rel="alternate" hreflang>` in the head, as hreflang -> href. */
+function hreflangs(html: string): Record<string, string> {
+    const head = html.slice(0, html.indexOf('</head>'))
+    const out: Record<string, string> = {}
+    for (const m of head.matchAll(/<link\b[^>]*>/g)) {
+        if (!/rel="alternate"/.test(m[0])) continue
+        const lang = /hreflang="([^"]*)"/.exec(m[0])?.[1]
+        const href = /href="([^"]*)"/.exec(m[0])?.[1]
+        if (lang && href) out[lang] = href
+    }
+    return out
+}
+
+/** The text a reader sees, tags stripped and entities decoded. */
+function visibleText(html: string): string {
+    return decodeEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ')
+}
+
+/** The `#`-headings of a markdown file, as plain text. */
+function markdownHeadings(md: string): string[] {
+    return md
+        .split('\n')
+        .filter((line) => /^#{1,4} /.test(line))
+        .map((line) =>
+            line
+                .replace(/^#+ /, '')
+                .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+                .replace(/[*`]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim(),
+        )
+        .filter(Boolean)
+}
+
+const HREFLANGS = {
+    en: `${BASE_URL}/portfolio`,
+    ko: `${BASE_URL}/ko/portfolio`,
+    'x-default': `${BASE_URL}/portfolio`,
+}
+
+describe('Korean portfolio (dist/)', () => {
+    it.fails('AC-7: dist/ko/portfolio.html has lang="ko" and the rendered portfolio.ko.md; both portfolio pages carry the hreflang links; the sitemap lists /ko/portfolio', () => {
+        const koFile = path.join(DIST, 'ko', 'portfolio.html')
+        expect(isFile(koFile), 'dist/ko/portfolio.html was built').toBe(true)
+        const ko = readFileSync(koFile, 'utf8')
+        expect(ko).toMatch(/<html lang="ko"/)
+
+        const koSource = path.join(REPO_CONTENT, 'portfolio.ko.md')
+        expect(isFile(koSource), 'content/portfolio.ko.md exists').toBe(true)
+        const headings = markdownHeadings(readFileSync(koSource, 'utf8'))
+        expect(headings.length).toBeGreaterThan(5)
+        const text = visibleText(ko)
+        expect(headings.filter((h) => !text.includes(h)), 'portfolio.ko.md headings missing from the page').toEqual([])
+
+        const en = readFileSync(path.join(DIST, 'portfolio.html'), 'utf8')
+        expect(hreflangs(en), '/portfolio hreflang').toEqual(HREFLANGS)
+        expect(hreflangs(ko), '/ko/portfolio hreflang').toEqual(HREFLANGS)
+        expect(parseDocument(en).canonical).toBe(`${BASE_URL}/portfolio`)
+        expect(parseDocument(ko).canonical).toBe(`${BASE_URL}/ko/portfolio`)
+
+        const sitemap = sitemapEntries(readFileSync(path.join(DIST, 'sitemap.xml'), 'utf8'))
+        expect(sitemap.has(`${BASE_URL}/ko/portfolio`), 'sitemap lists /ko/portfolio').toBe(true)
+        expect(servePages(DIST, '/ko/portfolio').status).toBe(200)
+    })
+
+    it.fails('AC-8: with content/portfolio.ko.md missing, loading the Korean portfolio fails naming the file', () => {
+        const root = mkdtempSync(path.join(tmpdir(), 'content-'))
+        try {
+            writeFileSync(path.join(root, 'portfolio.md'), '# English only\n')
+            expect(() => readPortfolio(root, 'ko')).toThrow(/portfolio\.ko\.md/)
+        } finally {
+            rmSync(root, { recursive: true, force: true })
+        }
+    })
+
+    it.fails('AC-9: dist/portfolio.html without JS is the English portfolio, with no redirect markup but the inline detection script', () => {
+        const html = readFileSync(path.join(DIST, 'portfolio.html'), 'utf8')
+        expect(html).toMatch(/<html lang="en"/)
+        const english = markdownHeadings(readFileSync(path.join(REPO_CONTENT, 'portfolio.md'), 'utf8'))
+        const text = visibleText(html.slice(html.indexOf('<body')))
+        expect(english.filter((h) => !text.includes(h)), 'portfolio.md headings missing from the page').toEqual([])
+
+        expect(html).not.toMatch(/<meta\b[^>]*http-equiv="refresh"/i)
+        expect(html).not.toMatch(/<noscript\b/i)
+        const redirecting = Array.from(html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)).filter(([, , body]) =>
+            /location\s*\.\s*(replace|assign|href)|location\s*=/.test(body),
+        )
+        expect(redirecting.length, 'exactly one script redirects').toBe(1)
+        const [tag, attrs, body] = redirecting[0]
+        expect(attrs, 'detection script is inline').not.toMatch(/\bsrc=/)
+        expect(body).toContain('/ko/portfolio')
+        expect(body).toContain('location.replace')
+        // Before first paint: in <head>, ahead of any stylesheet and of <body>.
+        const at = html.indexOf(tag)
+        expect(at).toBeLessThan(html.indexOf('</head>'))
+        const stylesheet = html.search(/<link\b[^>]*rel="stylesheet"/)
+        if (stylesheet !== -1) expect(at).toBeLessThan(stylesheet)
+    })
+
+    it.fails('AC-10: a production build has dist/portfolio.ko.pdf, and /ko/portfolio links to it', () => {
+        const pdf = path.join(DIST, 'portfolio.ko.pdf')
+        expect(isFile(pdf), 'dist/portfolio.ko.pdf was built').toBe(true)
+        expect(readFileSync(pdf).subarray(0, 5).toString()).toBe('%PDF-')
+        const ko = readFileSync(path.join(DIST, 'ko', 'portfolio.html'), 'utf8')
+        const link = /<a\b[^>]*class="pdf-download"[^>]*>/.exec(ko)?.[0]
+        expect(link, 'download link on /ko/portfolio').toBeDefined()
+        expect(link).toContain('href="/portfolio.ko.pdf"')
+        expect(link).toContain('download="Wonbin-Kim-Portfolio-ko.pdf"')
+        const en = readFileSync(path.join(DIST, 'portfolio.html'), 'utf8')
+        expect(/<a\b[^>]*class="pdf-download"[^>]*>/.exec(en)?.[0]).toContain('href="/portfolio.pdf"')
     })
 })
