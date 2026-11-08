@@ -7,13 +7,11 @@
     "dev": "node --experimental-strip-types scripts/dev.ts",
     "build": "vite build && node --experimental-strip-types scripts/prerender.ts && pnpm run build:pdf",
     "build:pdf": "node scripts/generate-pdf.mjs",
-    "start": "next start",
     "test": "vitest run"
   },
   "dependencies": {
     "@rst0070/content": "workspace:*",
     "@tailwindcss/postcss": "4.0.17",
-    "next": "16.2.6",
     "postcss": "8.5.12",
     "react": "19.1.0",
     "react-dom": "19.1.0",

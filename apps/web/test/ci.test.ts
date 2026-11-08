@@ -32,7 +32,7 @@ function sources(dir: string): string[] {
 }
 
 describe('CI and dependencies', () => {
-    it.fails('AC-9: a pull request builds and tests the site without deploying; a push to main deploys apps/web/dist', () => {
+    it('AC-9: a pull request builds and tests the site without deploying; a push to main deploys apps/web/dist', () => {
         // Triggers: pull requests (any base) and pushes to main.
         expect(WORKFLOW).toMatch(/^on:\n(?:.*\n)*? {2}pull_request:/m)
         expect(WORKFLOW).toMatch(/^ {2}push:\n {4}branches: \["main"\]/m)
@@ -58,7 +58,7 @@ describe('CI and dependencies', () => {
         expect(WORKFLOW).not.toMatch(/\bout\//)
     })
 
-    it.fails('AC-9: `pnpm why next` in apps/web finds nothing, and no package or file depends on next', () => {
+    it('AC-9: `pnpm why next` in apps/web finds nothing, and no package or file depends on next', () => {
         const why = spawnSync('pnpm', ['why', 'next'], { cwd: WEB_ROOT, encoding: 'utf8' })
         expect(why.status).toBe(0)
         expect(why.stdout).not.toMatch(/next@/)

@@ -117,10 +117,10 @@ The widget turns each marker into a link.
 ## The widget
 
 ```tsx
-<RootLayout> (apps/web/src/app/layout.tsx)
-  <ChatWidget> (apps/web/src/app/_chat/chat-widget.tsx)
-    usePathname() -> pageSlugFromPath()      # /notes/<slug> or /portfolio, else undefined
-    useChat(API_URL, slug)                   # turns held here so they survive navigation
+<Layout> (apps/web/src/pages/Layout.tsx)  # prerendered; emits the "chat" island marker
+  <ChatWidget> (apps/web/src/islands/chat/chat-widget.tsx, mounted by entry-client)
+    location.pathname -> pageSlugFromPath()  # /notes/<slug> or /portfolio, else undefined
+    useChat(API_URL, slug)                   # turns saved to sessionStorage, so they survive page loads
     <ChatPanel> (lazy, loaded on first open)
       scope switch: "This page" | "Whole site"
       <ReactMarkdown> with citation markers linked
@@ -131,13 +131,13 @@ Scope follows the page. On a note, retrieval is filtered to that note and the pr
 it, so "this post" means what the reader expects:
 
 ```text
-on navigation
+on a page load in the same tab (sessionStorage key "chat")
   if the chat is empty: nothing to do
   if it was site-wide: pin scope to "site", keep the conversation
   if it was about a page: reset, the new page is a new conversation
 ```
 
-The widget is not rendered at all unless `NEXT_PUBLIC_AI_API_URL` was set at build time,
+The widget is not rendered at all unless `VITE_AI_API_URL` was set at build time,
 so a checkout without a Worker still builds a working site.
 
 ## What it costs and where the limits are
@@ -200,7 +200,7 @@ apps/ai-backend/src/
 apps/ai-backend/script/
 ├── reindex.ts               # the indexer CI runs
 └── ask.ts                   # run a question file against /chat, for eval
-apps/web/src/app/_chat/      # the widget
+apps/web/src/islands/chat/   # the widget
 ```
 
 ## Running it locally
@@ -215,7 +215,7 @@ pnpm --filter @rst0070/ai-backend dev
 
 # terminal 2: fill the index, then the site with the widget pointed at the Worker
 pnpm --filter @rst0070/ai-backend reindex
-NEXT_PUBLIC_AI_API_URL=http://localhost:8787 pnpm --filter @rst0070/web dev
+VITE_AI_API_URL=http://localhost:8787 pnpm --filter @rst0070/web dev
 ```
 
 To judge answers without the UI, write a question file and run it:
