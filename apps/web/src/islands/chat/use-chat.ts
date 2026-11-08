@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChatMessage, ChatRequestError, Citation, streamChat } from './chat-api';
 
@@ -20,9 +18,9 @@ export type Turn =
 const MAX_SENT_MESSAGES = 20;
 
 /**
- * A chat held in memory. Every turn sends the conversation so far; nothing is
- * stored, so unmounting (or a reload) starts over. `slug` limits retrieval to
- * one page.
+ * A chat held in memory. Every turn sends the conversation so far. The widget
+ * stores it per tab (see persisted-chat.ts) and hands it back with `restore`
+ * after a page load. `slug` limits retrieval to one page.
  */
 export function useChat(apiUrl: string, slug: string | undefined): Chat {
     const [turns, setTurns] = useState<Turn[]>([]);
@@ -89,9 +87,19 @@ export function useChat(apiUrl: string, slug: string | undefined): Chat {
         setTurns([]);
     }, []);
 
+    /** Replaces the conversation with one saved earlier, e.g. on the previous page. */
+    const restore = useCallback((saved: Turn[]) => {
+        controller.current?.abort();
+        nextId.current = saved.reduce((max, turn) => Math.max(max, turn.id + 1), 0);
+        setTurns(saved);
+    }, []);
+
     const last = turns.at(-1);
     const streaming = last?.role === 'assistant' && last.status === 'streaming';
-    return useMemo(() => ({ turns, streaming, send, retry, stop, reset }), [turns, streaming, send, retry, stop, reset]);
+    return useMemo(
+        () => ({ turns, streaming, send, retry, stop, reset, restore }),
+        [turns, streaming, send, retry, stop, reset, restore],
+    );
 }
 
 export interface Chat {
@@ -102,6 +110,7 @@ export interface Chat {
     retry: () => void;
     stop: () => void;
     reset: () => void;
+    restore: (turns: Turn[]) => void;
 }
 
 /** The conversation without an answer still being generated. */

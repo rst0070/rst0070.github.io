@@ -83,7 +83,7 @@ async function ask(page: Page) {
 }
 
 describe('chat island', () => {
-    it.fails('AC-6: a site-wide chat is still shown after following links in the same tab', async () => {
+    it('AC-6: a site-wide chat is still shown after following links in the same tab', async () => {
         expect(withApi.built, withApi.log).toBe(true)
         const page = await freshPage()
         await open(page, withApi, '/')
@@ -99,7 +99,7 @@ describe('chat island', () => {
         expect(await panelText(page), 'site-wide chat carries on onto a note page').toContain(ANSWER)
     }, 120_000)
 
-    it.fails('AC-6: a page-scoped chat starts empty on the next page', async () => {
+    it('AC-6: a page-scoped chat starts empty on the next page', async () => {
         expect(withApi.built, withApi.log).toBe(true)
         const page = await freshPage()
         await open(page, withApi, `/notes/${NOTE_SLUG}`)
@@ -115,7 +115,7 @@ describe('chat island', () => {
         expect(await page.$$('#chat-panel .chat-turn')).toHaveLength(0)
     }, 120_000)
 
-    it.fails('AC-7: with VITE_AI_API_URL unset, no page has a chat widget', async () => {
+    it('AC-7: with VITE_AI_API_URL unset, no page has a chat widget', async () => {
         expect(withoutApi.built, withoutApi.log).toBe(true)
         const page = await freshPage()
         for (const url of PAGES) {
@@ -124,7 +124,7 @@ describe('chat island', () => {
         }
     }, 120_000)
 
-    it.fails('AC-7: with VITE_AI_API_URL set, the chat panel chunk is requested only after the first open', async () => {
+    it('AC-7: with VITE_AI_API_URL set, the chat panel chunk is requested only after the first open', async () => {
         expect(withApi.built, withApi.log).toBe(true)
         const assets = path.join(withApi.dir, 'assets')
         const panelChunks = walk(assets)

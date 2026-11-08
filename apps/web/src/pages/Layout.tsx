@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Island } from '@/islands/Island'
+import { API_URL } from '@/islands/chat/chat-widget'
 
 const navItems = {
   '/': {
@@ -112,6 +113,8 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      {/* Not rendered at all when the build has no VITE_AI_API_URL. */}
+      {API_URL !== '' && <Island name="chat" props={{}} />}
     </>
   )
 }

@@ -1,50 +1,45 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ChatIcon, CloseIcon } from './icons';
 import { pageSlugFromPath, Scope } from './page-scope';
+import { loadChat, resumeOn, saveChat } from './persisted-chat';
 import { useChat } from './use-chat';
 import './chat.css';
 
 // The Worker's URL, inlined at build time. Unset (a local build without
 // .env.local, for example), the widget is not rendered at all.
-const API_URL = process.env.NEXT_PUBLIC_AI_API_URL ?? '';
+export const API_URL = import.meta.env.VITE_AI_API_URL ?? '';
 
 // Loaded on first open, so pages don't ship the chat UI and Markdown renderer
 // until someone uses it.
-const ChatPanel = dynamic(() => import('./chat-panel').then((module) => module.ChatPanel), {
-    ssr: false,
-    loading: () => <div className="chat-panel" aria-busy="true" />,
-});
+const ChatPanel = lazy(() => import('./chat-panel').then((module) => ({ default: module.ChatPanel })));
 
 export function ChatWidget() {
-    const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const [opened, setOpened] = useState(false);
     const [scope, setScope] = useState<Scope>('page');
-    const pageSlug = pageSlugFromPath(pathname);
+    // Read once on mount: the page never changes in place.
+    const [pageSlug, setPageSlug] = useState<string | undefined>(undefined);
     const slug = scope === 'page' ? pageSlug : undefined;
-    // Held here, not in the lazy panel, so the conversation survives
-    // client-side navigation and closing the panel.
     const chat = useChat(API_URL, slug);
+    const resumed = useRef(false);
 
-    // When navigation changes what the chat searches: a site-wide chat carries
-    // on (pinning the scope to the whole site), a chat about one page starts
-    // over. Scope changes by the reader reset the chat themselves.
-    const lastSlug = useRef(slug);
+    // After hydration, so the server HTML (a closed launcher) still matches.
     useEffect(() => {
-        const previous = lastSlug.current;
-        lastSlug.current = slug;
-        if (previous === slug || chat.turns.length === 0) return;
-        if (previous === undefined) {
-            lastSlug.current = undefined;
-            setScope('site');
-        } else {
-            chat.reset();
+        const current = pageSlugFromPath(window.location.pathname);
+        setPageSlug(current);
+        const resume = resumeOn(loadChat(), current);
+        if (resume !== null) {
+            setScope(resume.scope);
+            chat.restore(resume.turns);
+            setOpened(resume.open);
+            setOpen(resume.open);
         }
-    }, [slug, chat]);
+        resumed.current = true;
+    }, []);
+
+    useEffect(() => {
+        if (resumed.current) saveChat({ slug, open, turns: chat.turns });
+    }, [slug, open, chat.turns]);
 
     if (API_URL === '') return null;
 
@@ -63,15 +58,17 @@ export function ChatWidget() {
         <div className="chat-widget">
             {opened && (
                 <div hidden={!open}>
-                    <ChatPanel
-                        chat={chat}
-                        scopedToPage={slug !== undefined}
-                        pageSlug={pageSlug}
-                        scope={slug === undefined ? 'site' : 'page'}
-                        onScopeChange={changeScope}
-                        open={open}
-                        onClose={() => setOpen(false)}
-                    />
+                    <Suspense fallback={<div className="chat-panel" aria-busy="true" />}>
+                        <ChatPanel
+                            chat={chat}
+                            scopedToPage={slug !== undefined}
+                            pageSlug={pageSlug}
+                            scope={slug === undefined ? 'site' : 'page'}
+                            onScopeChange={changeScope}
+                            open={open}
+                            onClose={() => setOpen(false)}
+                        />
+                    </Suspense>
                 </div>
             )}
             <button
