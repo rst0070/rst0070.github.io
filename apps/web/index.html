@@ -1,8 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="<!--app-lang-->">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Before any paint, on /portfolio only: a Korean visitor goes to /ko/portfolio. The
+         choice the language dropdown stored wins; else the browser's first language.
+         Reads localStorage["lang"], never writes it. /ko/portfolio never redirects. -->
+    <script>(function(){var p=location.pathname;if(p!=='/portfolio'&&p!=='/portfolio.html')return;var s=null;try{s=localStorage.getItem('lang');}catch(e){}var ko=s==='ko';if(s!=='ko'&&s!=='en'){var n=navigator,l=(n.languages&&n.languages[0])||n.language||'';ko=/^ko/i.test(l);}if(ko){document.documentElement.style.visibility='hidden';location.replace('/ko/portfolio'+location.search+location.hash);}})();</script>
     <!-- Before any paint: the theme from localStorage, else the OS. -->
     <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme='light';}})();</script>
     <!-- Google tag (gtag.js) -->

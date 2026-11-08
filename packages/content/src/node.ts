@@ -75,11 +75,16 @@ export function findAllNotes(contentRoot: string): Note[] {
 /**
  * Read the raw portfolio markdown source. Unlike notes, the portfolio is a
  * single document with no frontmatter, so this simply returns its content.
+ *
+ * `lang` picks the translation: `portfolio.md` for the default language
+ * (`en`, or omitted), `portfolio.<lang>.md` for any other. A missing file is
+ * an error naming it, so a build never ships a page without its content.
  */
-export function readPortfolio(contentRoot: string): string {
-    const portfolioPath = path.join(
-        contentRoot,
-        'portfolio.md'
-    )
+export function readPortfolio(contentRoot: string, lang: string = 'en'): string {
+    const fileName = lang === 'en' ? 'portfolio.md' : `portfolio.${lang}.md`
+    const portfolioPath = path.join(contentRoot, fileName)
+    if (!fs.existsSync(portfolioPath)) {
+        throw new Error(`Portfolio content not found: ${fileName} (expected at ${portfolioPath})`)
+    }
     return fs.readFileSync(portfolioPath, 'utf-8')
 }

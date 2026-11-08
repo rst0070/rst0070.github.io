@@ -8,7 +8,9 @@ import { extractToc, estimateReadingMinutes, parseMarkdownToHtml } from '@/infra
 import { findAdjacentNotes, findAllNotes, findNoteBySlug, getNoteDescription } from '@/infra/note'
 import { readPortfolio } from '@/infra/portfolio'
 import {
+    type Alternates,
     type Head,
+    type Lang,
     absoluteUrl,
     baseUrl,
     pageTitle,
@@ -38,6 +40,10 @@ export type Route<D> = {
     load(): D | Promise<D>
     head(data: D): Head
     Page(props: { data: D }): ReactNode
+    /** The page's language, `<html lang>` and the dropdown's selection. Default `en`. */
+    lang?: Lang
+    /** The page's versions by language. Default: only itself, in `lang`. */
+    alternates?: Alternates
 }
 
 export type AnyRoute = Route<any>
@@ -157,29 +163,47 @@ function noteRoute(slug: string): Route<NoteData> {
     }
 }
 
-const portfolio = route<PortfolioData>({
-    path: '/portfolio',
-    outFile: 'portfolio.html',
-    async load() {
-        const html = await parseMarkdownToHtml(readPortfolio())
-        return { html, toc: extractToc(html) }
-    },
-    head: () => ({
-        title: pageTitle(portfolioTitle),
-        description: portfolioDescription,
-        canonical: '/portfolio',
-        openGraph: {
-            type: 'profile',
-            title: portfolioTitle,
-            description: portfolioDescription,
-            url: absoluteUrl('/portfolio'),
-            images: [],
+/** The portfolio in every language: its path, output file and PDF (see scripts/generate-pdf.mjs). */
+const portfolioAlternates = { en: '/portfolio', ko: '/ko/portfolio' } satisfies Record<Lang, string>
+
+const portfolioPdf: Record<Lang, PortfolioData['pdf']> = {
+    en: { href: '/portfolio.pdf', fileName: 'Wonbin-Kim-Portfolio.pdf' },
+    ko: { href: '/portfolio.ko.pdf', fileName: 'Wonbin-Kim-Portfolio-ko.pdf' },
+}
+
+function portfolioRoute(lang: Lang): Route<PortfolioData> {
+    const path = portfolioAlternates[lang]
+    return {
+        path,
+        outFile: `${path.slice(1)}.html`,
+        lang,
+        alternates: portfolioAlternates,
+        async load() {
+            const html = await parseMarkdownToHtml(readPortfolio(lang))
+            return { html, toc: extractToc(html), pdf: portfolioPdf[lang] }
         },
-        twitter: { card: 'summary', title: portfolioTitle, description: portfolioDescription, images: [] },
-        jsonLd: [portfolioJsonLd],
-    }),
-    Page: Portfolio,
-})
+        // Title, description, Open Graph and JSON-LD stay English in every language.
+        head: () => ({
+            title: pageTitle(portfolioTitle),
+            description: portfolioDescription,
+            canonical: path,
+            openGraph: {
+                type: 'profile',
+                title: portfolioTitle,
+                description: portfolioDescription,
+                url: absoluteUrl(path),
+                images: [],
+            },
+            twitter: { card: 'summary', title: portfolioTitle, description: portfolioDescription, images: [] },
+            jsonLd: [portfolioJsonLd],
+            alternates: portfolioAlternates,
+        }),
+        Page: Portfolio,
+    }
+}
+
+const portfolio = portfolioRoute('en')
+const portfolioKo = portfolioRoute('ko')
 
 export const notFound = route<null>({
     path: '/404',
@@ -192,13 +216,13 @@ export const notFound = route<null>({
 /** Every route, note slugs enumerated from content/ (replaces generateStaticParams). */
 export function routes(): AnyRoute[] {
     const notes = findAllNotes().map((note) => noteRoute(note.slug))
-    return [home, notesList, ...notes, portfolio, notFound]
+    return [home, notesList, ...notes, portfolio, portfolioKo, notFound]
 }
 
 /** The sitemap's entries: every page but the 404, in Next's order. */
 export function sitemapEntries(): { url: string; lastModified: string }[] {
     const today = new Date().toISOString().split('T')[0]
-    const statics = ['/', '/notes', '/portfolio'].map((p) => ({ url: absoluteUrl(p), lastModified: today }))
+    const statics = ['/', '/notes', '/portfolio', '/ko/portfolio'].map((p) => ({ url: absoluteUrl(p), lastModified: today }))
     const notes = findAllNotes().map((note) => ({
         url: absoluteUrl(`/notes/${note.slug}`),
         lastModified: note.metadata.lastmod || note.metadata.date,

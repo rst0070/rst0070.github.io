@@ -4,6 +4,7 @@
 import type { ComponentType } from 'react'
 import { ChatWidget } from './chat/chat-widget'
 import { CopyButtons } from './copy-buttons'
+import { LangSwitcher } from './lang-switcher'
 import { MermaidFullscreen } from './mermaid-fullscreen'
 import { NoteScripts } from './note-scripts'
 import { ReadingProgress } from './reading-progress'
@@ -12,6 +13,7 @@ import { Toc } from './toc'
 
 export const islands = {
     'theme-toggle': ThemeToggle,
+    'lang-switcher': LangSwitcher,
     'toc': Toc,
     'reading-progress': ReadingProgress,
     'copy-buttons': CopyButtons,

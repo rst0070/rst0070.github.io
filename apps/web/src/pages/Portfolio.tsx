@@ -2,7 +2,12 @@ import type { TocItem } from '@/infra/markdown'
 import { baseUrl } from '@/head'
 import { Island } from '@/islands/Island'
 
-export type PortfolioData = { html: string; toc: TocItem[] }
+export type PortfolioData = {
+  html: string
+  toc: TocItem[]
+  /** The PDF of this language's page, written by scripts/generate-pdf.mjs. */
+  pdf: { href: string; fileName: string }
+}
 
 export const title = 'Wonbin Kim - AI Engineer | Portfolio'
 export const description =
@@ -58,7 +63,7 @@ function DownloadIcon() {
 }
 
 export function Portfolio({ data }: { data: PortfolioData }) {
-  const { html, toc } = data
+  const { html, toc, pdf } = data
 
   return (
     <>
@@ -70,8 +75,8 @@ export function Portfolio({ data }: { data: PortfolioData }) {
                 404s under the dev server until a production build has run. */}
             <a
               className="pdf-download"
-              href="/portfolio.pdf"
-              download="Wonbin-Kim-Portfolio.pdf"
+              href={pdf.href}
+              download={pdf.fileName}
             >
               <DownloadIcon />
               Download PDF

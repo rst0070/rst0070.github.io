@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { Alternates, Lang } from '@/head'
 import { Island } from '@/islands/Island'
 import { API_URL } from '@/islands/chat/chat-widget'
 
@@ -14,7 +15,7 @@ const navItems = {
   },
 }
 
-export function Header() {
+export function Header({ lang, alternates }: { lang: Lang; alternates: Alternates }) {
   return (
     <header>
         <nav
@@ -34,7 +35,8 @@ export function Header() {
                 )
             })}
             </div>
-            <div className="ml-auto">
+            <div className="ml-auto flex flex-row items-center">
+                <Island name="lang-switcher" props={{ lang, alternates }} />
                 <Island name="theme-toggle" props={{}} />
             </div>
         </nav>
@@ -105,10 +107,10 @@ export function Footer() {
 
 
 /** The document body shared by every page: header, main, footer. */
-export function Layout({ children }: { children: ReactNode }) {
+export function Layout({ lang, alternates, children }: { lang: Lang; alternates: Alternates; children?: ReactNode }) {
   return (
     <>
-      <Header />
+      <Header lang={lang} alternates={alternates} />
       <main>
         {children}
       </main>

@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
- * Renders the prerendered /portfolio route to dist/portfolio.pdf with headless
- * Chrome. Runs after the prerender (scripts/prerender.ts), so the PDF lands inside the directory the
- * Pages workflow uploads and the download button on the page resolves to a
- * real static asset.
+ * Renders the prerendered portfolio pages to PDFs with headless Chrome:
+ * /portfolio to dist/portfolio.pdf and /ko/portfolio to dist/portfolio.ko.pdf. Runs after the prerender (scripts/prerender.ts), so the PDF lands inside the directory the
+ * Pages workflow uploads and the download button on each page resolves to a
+ * real static asset. The Korean PDF needs a CJK font on the build machine
+ * (deploy-web.yaml installs fonts-noto-cjk).
  *
  * The built HTML uses root-absolute asset paths, which file:// can't
  * resolve, so dist/ is served over a throwaway localhost server first.
@@ -17,8 +18,11 @@ import puppeteer from 'puppeteer'
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
 const OUT_DIR = path.join(ROOT, 'dist')
-const PDF_PATH = path.join(OUT_DIR, 'portfolio.pdf')
-const ROUTE = '/portfolio'
+/** Each portfolio page and the PDF it is rendered to, by language. */
+const PDFS = [
+  { route: '/portfolio', html: 'portfolio.html', pdf: 'portfolio.pdf' },
+  { route: '/ko/portfolio', html: 'ko/portfolio.html', pdf: 'portfolio.ko.pdf' },
+]
 
 const NAV_TIMEOUT_MS = 120_000
 const RENDER_TIMEOUT_MS = 60_000
@@ -166,34 +170,30 @@ const FOOTER_TEMPLATE = `
     <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
   </div>`
 
-async function main() {
-  if (!(await isFile(path.join(OUT_DIR, 'portfolio.html')))) {
-    throw new Error(`dist/portfolio.html not found — run the prerender before ${path.basename(process.argv[1])}.`)
-  }
-
-  const server = await startServer()
-  const { port } = server.address()
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
-  })
-
+async function renderPdf(browser, port, { route, pdf }) {
+  const page = await browser.newPage()
+  const pdfPath = path.join(OUT_DIR, pdf)
   try {
-    const page = await browser.newPage()
-
     // index.html's inline theme script reads localStorage before falling back
     // to the OS preference. Seed both so the PDF is deterministically light
-    // whatever the build machine prefers.
+    // whatever the build machine prefers. Its language detection reads the
+    // browser's languages: pin them to English so /portfolio is never sent to
+    // /ko/portfolio on a Korean build machine (without storing a choice).
     await page.evaluateOnNewDocument(() => {
       try {
         localStorage.setItem('theme', 'light')
       } catch {}
+      Object.defineProperty(Navigator.prototype, 'languages', { get: () => ['en-US'], configurable: true })
+      Object.defineProperty(Navigator.prototype, 'language', { get: () => 'en-US', configurable: true })
     })
     await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'light' }])
 
-    await page.goto(`http://127.0.0.1:${port}${ROUTE}`, {
+    await page.goto(`http://127.0.0.1:${port}${route}`, {
       waitUntil: 'domcontentloaded',
       timeout: NAV_TIMEOUT_MS,
     })
+    const landed = new URL(page.url()).pathname
+    if (landed !== route) throw new Error(`${route} redirected to ${landed} while rendering its PDF`)
 
     // Expand before the CDN scripts run so mermaid lays diagrams out inside
     // visible containers, then again in case React re-rendered in between.
@@ -205,7 +205,7 @@ async function main() {
     await waitForImages(page)
 
     await page.pdf({
-      path: PDF_PATH,
+      path: pdfPath,
       format: 'A4',
       printBackground: true,
       margin: { top: '14mm', bottom: '16mm', left: '12mm', right: '12mm' },
@@ -214,8 +214,28 @@ async function main() {
       footerTemplate: FOOTER_TEMPLATE,
     })
 
-    const { size } = await stat(PDF_PATH)
-    console.log(`Wrote dist/portfolio.pdf (${(size / 1024 / 1024).toFixed(1)} MB)`)
+    const { size } = await stat(pdfPath)
+    console.log(`Wrote dist/${pdf} (${(size / 1024 / 1024).toFixed(1)} MB)`)
+  } finally {
+    await page.close()
+  }
+}
+
+async function main() {
+  for (const { html } of PDFS) {
+    if (!(await isFile(path.join(OUT_DIR, html)))) {
+      throw new Error(`dist/${html} not found — run the prerender before ${path.basename(process.argv[1])}.`)
+    }
+  }
+
+  const server = await startServer()
+  const { port } = server.address()
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+  })
+
+  try {
+    for (const target of PDFS) await renderPdf(browser, port, target)
   } finally {
     await browser.close()
     server.close()

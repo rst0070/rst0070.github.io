@@ -3,7 +3,7 @@
 // client entry or an island.
 import { createElement } from 'react'
 import { renderToString } from 'react-dom/server'
-import { type Head, absoluteUrl } from '@/head'
+import { type Alternates, type Head, absoluteUrl, defaultLang } from '@/head'
 import { Layout } from '@/pages/Layout'
 import type { AnyRoute } from '@/routes'
 
@@ -25,6 +25,16 @@ function scriptJson(value: object): string {
     return JSON.stringify(value).replace(/</g, '\\u003c')
 }
 
+/** One hreflang link per language, then x-default (the default language's version). Only for a page with translations. */
+function hreflangLinks(alternates: Alternates | undefined): string[] {
+    const entries = Object.entries(alternates ?? {})
+    if (entries.length < 2) return []
+    const link = (lang: string, href: string) =>
+        `<link rel="alternate" hreflang="${lang}" href="${escapeHtml(absoluteUrl(href))}"/>`
+    const fallback = alternates?.[defaultLang]
+    return [...entries.map(([lang, href]) => link(lang, href)), ...(fallback ? [link('x-default', fallback)] : [])]
+}
+
 /** Serializes a Head in the order Next's metadata API wrote the same tags. */
 export function renderHead(head: Head): string {
     const { openGraph: og, twitter } = head
@@ -33,6 +43,7 @@ export function renderHead(head: Head): string {
         meta('name', 'description', head.description),
         ...(head.robots ? [meta('name', 'robots', head.robots)] : []),
         `<link rel="canonical" href="${escapeHtml(absoluteUrl(head.canonical))}"/>`,
+        ...hreflangLinks(head.alternates),
         meta('property', 'og:title', og.title),
         meta('property', 'og:description', og.description),
         meta('property', 'og:url', og.url),
@@ -57,18 +68,30 @@ export function renderHead(head: Head): string {
     return tags.join('\n    ')
 }
 
-export async function render(route: AnyRoute): Promise<{ html: string; head: string }> {
+export type Rendered = { html: string; head: string; lang: string }
+
+export async function render(route: AnyRoute): Promise<Rendered> {
     const data = await route.load()
-    const html = renderToString(createElement(Layout, null, createElement(route.Page, { data })))
-    return { html, head: renderHead(route.head(data)) }
+    const lang = route.lang ?? defaultLang
+    // The dropdown gets the page's language and its versions, nothing else.
+    const alternates: Alternates = route.alternates ?? { [lang]: route.path }
+    const html = renderToString(
+        createElement(Layout, { lang, alternates }, createElement(route.Page, { data })),
+    )
+    return { html, head: renderHead(route.head(data)), lang }
 }
 
-/** Fills index.html's two slots with a rendered route; the slot comments go with them. */
-export function fillTemplate(template: string, { html, head }: { html: string; head: string }): string {
-    for (const slot of ['<!--app-head-->', '<!--app-html-->']) {
+const SLOTS = ['<!--app-lang-->', '<!--app-head-->', '<!--app-html-->'] as const
+
+/** Fills index.html's slots with a rendered route; the slot comments go with them. */
+export function fillTemplate(template: string, { html, head, lang }: Rendered): string {
+    for (const slot of SLOTS) {
         if (!template.includes(slot)) throw new Error(`index.html is missing the ${slot} slot`)
     }
-    return template.replace('<!--app-head-->', () => head).replace('<!--app-html-->', () => html)
+    return template
+        .replace('<!--app-lang-->', () => escapeHtml(lang))
+        .replace('<!--app-head-->', () => head)
+        .replace('<!--app-html-->', () => html)
 }
 
 /** The whole document for one route: what the prerender writes and the dev server answers. */

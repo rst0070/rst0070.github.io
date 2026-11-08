@@ -157,7 +157,7 @@ const HREFLANGS = {
 }
 
 describe('Korean portfolio (dist/)', () => {
-    it.fails('AC-7: dist/ko/portfolio.html has lang="ko" and the rendered portfolio.ko.md; both portfolio pages carry the hreflang links; the sitemap lists /ko/portfolio', () => {
+    it('AC-7: dist/ko/portfolio.html has lang="ko" and the rendered portfolio.ko.md; both portfolio pages carry the hreflang links; the sitemap lists /ko/portfolio', () => {
         const koFile = path.join(DIST, 'ko', 'portfolio.html')
         expect(isFile(koFile), 'dist/ko/portfolio.html was built').toBe(true)
         const ko = readFileSync(koFile, 'utf8')
@@ -181,7 +181,7 @@ describe('Korean portfolio (dist/)', () => {
         expect(servePages(DIST, '/ko/portfolio').status).toBe(200)
     })
 
-    it.fails('AC-8: with content/portfolio.ko.md missing, loading the Korean portfolio fails naming the file', () => {
+    it('AC-8: with content/portfolio.ko.md missing, loading the Korean portfolio fails naming the file', () => {
         const root = mkdtempSync(path.join(tmpdir(), 'content-'))
         try {
             writeFileSync(path.join(root, 'portfolio.md'), '# English only\n')
@@ -191,7 +191,7 @@ describe('Korean portfolio (dist/)', () => {
         }
     })
 
-    it.fails('AC-9: dist/portfolio.html without JS is the English portfolio, with no redirect markup but the inline detection script', () => {
+    it('AC-9: dist/portfolio.html without JS is the English portfolio, with no redirect markup but the inline detection script', () => {
         const html = readFileSync(path.join(DIST, 'portfolio.html'), 'utf8')
         expect(html).toMatch(/<html lang="en"/)
         const english = markdownHeadings(readFileSync(path.join(REPO_CONTENT, 'portfolio.md'), 'utf8'))
@@ -215,7 +215,7 @@ describe('Korean portfolio (dist/)', () => {
         if (stylesheet !== -1) expect(at).toBeLessThan(stylesheet)
     })
 
-    it.fails('AC-10: a production build has dist/portfolio.ko.pdf, and /ko/portfolio links to it', () => {
+    it('AC-10: a production build has dist/portfolio.ko.pdf, and /ko/portfolio links to it', () => {
         const pdf = path.join(DIST, 'portfolio.ko.pdf')
         expect(isFile(pdf), 'dist/portfolio.ko.pdf was built').toBe(true)
         expect(readFileSync(pdf).subarray(0, 5).toString()).toBe('%PDF-')

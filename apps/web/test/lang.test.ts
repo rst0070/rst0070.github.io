@@ -60,7 +60,7 @@ async function open(page: Page, url: string) {
 const pathname = (page: Page) => new URL(page.url()).pathname
 
 describe('language detection on /portfolio', () => {
-    it.fails('AC-1: no stored lang and browser languages ["ko-KR"] -> /portfolio becomes /ko/portfolio', async () => {
+    it('AC-1: no stored lang and browser languages ["ko-KR"] -> /portfolio becomes /ko/portfolio', async () => {
         const page = await visitor(['ko-KR'])
         await open(page, '/portfolio')
         expect(await eventually(page, `location.pathname === '/ko/portfolio'`)).toBe(true)
@@ -69,7 +69,7 @@ describe('language detection on /portfolio', () => {
         expect(await page.evaluate(() => localStorage.getItem('lang'))).toBeNull()
     }, 60_000)
 
-    it.fails('AC-2: no stored lang and browser languages ["en-US"] -> stays at /portfolio', async () => {
+    it('AC-2: no stored lang and browser languages ["en-US"] -> stays at /portfolio', async () => {
         const page = await visitor(['en-US'])
         await open(page, '/portfolio')
         expect(pathname(page)).toBe('/portfolio')
@@ -77,7 +77,7 @@ describe('language detection on /portfolio', () => {
         expect(await page.$eval(SELECT, (el) => (el as HTMLSelectElement).value).catch(() => null), 'dropdown shows EN').toBe('en')
     }, 60_000)
 
-    it.fails('AC-3: a stored lang overrides the browser language, in both directions', async () => {
+    it('AC-3: a stored lang overrides the browser language, in both directions', async () => {
         const en = await visitor(['ko-KR'], 'en')
         await open(en, '/portfolio')
         expect(pathname(en)).toBe('/portfolio')
@@ -90,7 +90,7 @@ describe('language detection on /portfolio', () => {
 })
 
 describe('language dropdown', () => {
-    it.fails('AC-4: /, /notes, a note, /portfolio and /ko/portfolio show the dropdown, set to EN except on /ko/portfolio', async () => {
+    it('AC-4: /, /notes, a note, /portfolio and /ko/portfolio show the dropdown, set to EN except on /ko/portfolio', async () => {
         const expected: [string, string, string][] = [
             ['/', 'en', 'EN'],
             ['/notes', 'en', 'EN'],
@@ -117,7 +117,7 @@ describe('language dropdown', () => {
         }
     }, 120_000)
 
-    it.fails('AC-5: on /portfolio picking 한국어 stores "ko" and goes to /ko/portfolio; picking EN there stores "en" and returns', async () => {
+    it('AC-5: on /portfolio picking 한국어 stores "ko" and goes to /ko/portfolio; picking EN there stores "en" and returns', async () => {
         const page = await visitor(['en-US'])
         await open(page, '/portfolio')
         expect(pathname(page)).toBe('/portfolio')
@@ -136,7 +136,7 @@ describe('language dropdown', () => {
         expect(pathname(page)).toBe('/portfolio')
     }, 60_000)
 
-    it.fails('AC-6: on /notes picking 한국어 stores "ko" and the URL stays /notes', async () => {
+    it('AC-6: on /notes picking 한국어 stores "ko" and the URL stays /notes', async () => {
         const page = await visitor(['en-US'])
         await open(page, '/notes')
         expect(await page.$(SELECT), 'dropdown in the nav').not.toBeNull()
