@@ -13,7 +13,12 @@ import { fileURLToPath } from 'node:url'
 import { createServer } from 'vite'
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
-const DIST = path.join(ROOT, 'dist')
+/** `--outDir <dir>`, as passed to `vite build`, relative to apps/web; default dist/. */
+function outDirArg(): string {
+    const i = process.argv.indexOf('--outDir')
+    return i === -1 ? 'dist' : process.argv[i + 1]
+}
+const DIST = path.resolve(ROOT, outDirArg())
 const BASE_URL = 'https://rst0070.github.io'
 
 type EntryServer = {
@@ -39,11 +44,13 @@ async function write(rel: string, content: string) {
 
 async function main() {
     const template = await readFile(path.join(DIST, 'index.html'), 'utf8').catch(() => {
-        throw new Error('dist/index.html not found: run `vite build` before the prerender.')
+        throw new Error(`${path.join(DIST, 'index.html')} not found: run \`vite build\` before the prerender.`)
     })
 
     const vite = await createServer({
         root: ROOT,
+        // The env files and import.meta.env of a production build, as the client got.
+        mode: 'production',
         logLevel: 'error',
         appType: 'custom',
         server: { middlewareMode: true, hmr: false, watch: null },
@@ -59,7 +66,7 @@ async function main() {
         }
         await write('sitemap.xml', sitemapXml(entry.sitemapEntries()))
         await write('robots.txt', robotsTxt)
-        console.log(`Prerendered ${routes.length} pages, sitemap.xml and robots.txt into dist/`)
+        console.log(`Prerendered ${routes.length} pages, sitemap.xml and robots.txt into ${path.relative(ROOT, DIST) || '.'}/`)
     } finally {
         await vite.close()
     }

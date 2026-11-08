@@ -1,6 +1,3 @@
-'use client';
-
-import Link from 'next/link';
 import { FormEvent, KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ReactMarkdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -182,7 +179,7 @@ function TurnView({ turn, scopedToPage, onRetry }: { turn: Turn; scopedToPage: b
                 <ol className="chat-sources" aria-label="Sources">
                     {turn.citations.map((citation) => (
                         <li key={citation.slug}>
-                            <Link href={citation.url}>{citation.title}</Link>
+                            <a href={citation.url}>{citation.title}</a>
                         </li>
                     ))}
                 </ol>
@@ -194,11 +191,11 @@ function TurnView({ turn, scopedToPage, onRetry }: { turn: Turn; scopedToPage: b
     );
 }
 
-// Links in answers: site pages navigate in place (client-side, so a site-wide
-// chat stays open), anything else opens in a new tab.
+// Links in answers: site pages open in this tab (a site-wide chat carries
+// over, see persisted-chat.ts), anything else in a new tab.
 const MARKDOWN_COMPONENTS: Components = {
     a: ({ href, children }) => {
-        if (href?.startsWith('/') && !href.startsWith('//')) return <Link href={href}>{children}</Link>;
+        if (href?.startsWith('/') && !href.startsWith('//')) return <a href={href}>{children}</a>;
         return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
     },
 };

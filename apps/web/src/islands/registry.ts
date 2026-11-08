@@ -2,6 +2,7 @@
 // server emits a marker naming one of these (see Island.tsx); entry-client
 // mounts the named component there and nowhere else.
 import type { ComponentType } from 'react'
+import { ChatWidget } from './chat/chat-widget'
 import { CopyButtons } from './copy-buttons'
 import { MermaidFullscreen } from './mermaid-fullscreen'
 import { NoteScripts } from './note-scripts'
@@ -16,6 +17,7 @@ export const islands = {
     'copy-buttons': CopyButtons,
     'note-scripts': NoteScripts,
     'mermaid-fullscreen': MermaidFullscreen,
+    'chat': ChatWidget,
 } satisfies Record<string, ComponentType<any>>
 
 export type IslandName = keyof typeof islands
