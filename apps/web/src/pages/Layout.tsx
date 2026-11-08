@@ -1,7 +1,4 @@
-'use client'
-
-import Link from 'next/link'
-import { useTheme } from './theme-provider'
+import type { ReactNode } from 'react'
 
 const navItems = {
   '/': {
@@ -25,13 +22,13 @@ export function Header() {
             <div className="flex flex-row space-x-0 pr-10">
             {Object.entries(navItems).map(([path, { name }]) => {
                 return (
-                <Link
+                <a
                     key={path}
                     href={path}
                     className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2 m-1"
                 >
                     {name}
-                </Link>
+                </a>
                 )
             })}
             </div>
@@ -44,14 +41,14 @@ export function Header() {
 }
 
 
+// Rendered as the light theme's button, as Next's server render did. It is
+// static until the theme-toggle island takes it over.
 function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme()
-  const isDark = theme === 'dark'
+  const isDark = false
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
       title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
       className="flex items-center justify-center rounded-md p-2 m-1 transition-colors text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-neutral-100"
@@ -140,3 +137,17 @@ export function Footer() {
       </footer>
     )
   }
+
+
+/** The document body shared by every page: header, main, footer. */
+export function Layout({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <Header />
+      <main>
+        {children}
+      </main>
+      <Footer />
+    </>
+  )
+}

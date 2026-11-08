@@ -1,4 +1,4 @@
-import { NoteMetadata } from "@rst0070/content";
+import type { NoteMetadata } from "@rst0070/content";
 
 function formatDate(iso: string): string {
     const d = new Date(iso);

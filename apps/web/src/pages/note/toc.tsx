@@ -1,7 +1,5 @@
-'use client';
-
 import { useEffect, useState } from 'react';
-import { TocItem } from '@/infra/markdown';
+import type { TocItem } from '@/infra/markdown';
 
 export function Toc({ items }: { items: TocItem[] }) {
     const [activeId, setActiveId] = useState<string>('');
