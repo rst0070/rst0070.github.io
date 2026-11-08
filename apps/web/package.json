@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --experimental-strip-types scripts/dev.ts",
     "build": "vite build && node --experimental-strip-types scripts/prerender.ts && pnpm run build:pdf",
     "build:pdf": "node scripts/generate-pdf.mjs",
     "start": "next start",

@@ -1,11 +1,6 @@
-'use client';
-
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 
 export function CopyButtons() {
-    const pathname = usePathname();
-
     useEffect(() => {
         const buttons = Array.from(
             document.querySelectorAll<HTMLButtonElement>('button.code-copy')
@@ -35,7 +30,7 @@ export function CopyButtons() {
         });
 
         return () => cleanups.forEach(fn => fn());
-    }, [pathname]);
+    }, []);
 
     return null;
 }

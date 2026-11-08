@@ -1,10 +1,8 @@
 import type { Note as NoteEntity } from "@rst0070/content";
 import type { TocItem } from "@/infra/markdown";
 import { PostHeader } from "./note/post-header";
-import { Toc } from "./note/toc";
 import { PrevNext } from "./note/prev-next";
-import { ReadingProgress } from "./note/reading-progress";
-import { NoteScripts } from "./note/note-scripts";
+import { Island } from "@/islands/Island";
 
 export type NoteData = {
     note: NoteEntity;
@@ -22,7 +20,7 @@ export function Note({ data }: { data: NoteData }) {
 
     return (
         <>
-            <ReadingProgress />
+            <Island name="reading-progress" props={{}} />
             <div className="post-layout">
                 <article className="post-article">
                     <PostHeader metadata={note.metadata} readingMinutes={readingMinutes} />
@@ -30,10 +28,12 @@ export function Note({ data }: { data: NoteData }) {
                     <PrevNext older={older} newer={newer} />
                 </article>
                 <aside className="post-toc-wrapper">
-                    <Toc items={toc} />
+                    <Island name="toc" props={{ items: toc }} />
                 </aside>
             </div>
-            <NoteScripts />
+            <Island name="note-scripts" props={{}} />
+            <Island name="copy-buttons" props={{}} />
+            <Island name="mermaid-fullscreen" props={{}} />
         </>
     );
 }

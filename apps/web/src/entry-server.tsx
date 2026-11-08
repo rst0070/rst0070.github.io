@@ -7,7 +7,7 @@ import { type Head, absoluteUrl } from '@/head'
 import { Layout } from '@/pages/Layout'
 import type { AnyRoute } from '@/routes'
 
-export { routes, sitemapEntries } from '@/routes'
+export { notFound, routes, sitemapEntries } from '@/routes'
 
 function escapeHtml(value: string): string {
     return value
@@ -61,4 +61,17 @@ export async function render(route: AnyRoute): Promise<{ html: string; head: str
     const data = await route.load()
     const html = renderToString(createElement(Layout, null, createElement(route.Page, { data })))
     return { html, head: renderHead(route.head(data)) }
+}
+
+/** Fills index.html's two slots with a rendered route; the slot comments go with them. */
+export function fillTemplate(template: string, { html, head }: { html: string; head: string }): string {
+    for (const slot of ['<!--app-head-->', '<!--app-html-->']) {
+        if (!template.includes(slot)) throw new Error(`index.html is missing the ${slot} slot`)
+    }
+    return template.replace('<!--app-head-->', () => head).replace('<!--app-html-->', () => html)
+}
+
+/** The whole document for one route: what the prerender writes and the dev server answers. */
+export async function renderDocument(template: string, route: AnyRoute): Promise<string> {
+    return fillTemplate(template, await render(route))
 }
