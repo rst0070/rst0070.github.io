@@ -70,7 +70,7 @@ across chunks.
 ```text
 git push origin main (content/notes/26/04-28-utilize-slm.md)
   deploy-web.yaml
-    build                  # next build + portfolio.pdf, then publish to Pages
+    build                  # vite build + prerender + portfolio.pdf, then publish to Pages
   ai-backend.yaml
     changes                # index = "changed": only content/ moved
     index

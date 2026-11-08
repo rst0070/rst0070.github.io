@@ -3,7 +3,7 @@
 # Path filtering is per job, not in `on:`, so the workflow always reports a
 # status on a pull request: a workflow that never starts leaves a required
 # check waiting forever.
-name: Deploy Next.js site to Pages
+name: Deploy site to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -61,6 +61,15 @@ jobs:
     needs: changes
     if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
+    # Job-level so the build and the tests see the same value: the dev-server
+    # test compares `pnpm dev` HTML to the built dist/, so both must agree on
+    # whether the chat island renders.
+    env:
+      # The chat widget's backend (apps/ai-backend), inlined into the
+      # client bundle. Public by design; the Worker holds no secrets the
+      # browser can reach. Without it the widget is not rendered, so the
+      # deployed URL is the fallback until the repository variable is set.
+      VITE_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,21 +82,10 @@ jobs:
         with:
           node-version: "24"
           cache: pnpm
-      # No actions/configure-pages step: it can only inject into a .js/.cjs/.mjs
-      # Next config. apps/web/next.config.ts already sets `output: 'export'`,
-      # basePath stays empty for this user site (rst0070.github.io), and
-      # images.unoptimized is moot because next/image is not used.
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            apps/web/.next/cache
-          # Generate a new cache whenever packages, source files or content change.
-          # packages/content is TypeScript source compiled into the app's build.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.[jt]s', 'apps/web/**/*.[jt]sx', 'packages/content/**', 'content/**') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+      # No actions/configure-pages step: the site is a user site
+      # (rst0070.github.io), so Vite's `base` stays "/". No build cache step
+      # either: Vite keeps no cache between builds, and pnpm's store is cached
+      # by setup-node.
       # Puppeteer downloads Chromium on install; cache it so only lockfile
       # changes pay the ~150MB download.
       - name: Cache Puppeteer browsers
@@ -114,22 +112,18 @@ jobs:
       # checked without Node types, so any fs/path/process use fails here.
       - name: Typecheck @rst0070/content
         run: pnpm --filter @rst0070/content typecheck
+      # The package's `build` script: `vite build`, then the prerender writes
+      # every page into apps/web/dist, then apps/web/dist/portfolio.pdf is
+      # rendered, which ships in the Pages artifact.
+      - name: Build site
+        run: pnpm --filter @rst0070/web build
+      # After the build: the suite includes checks over the built apps/web/dist.
       - name: Test @rst0070/web
         run: pnpm --filter @rst0070/web test
-      # The package's `build` script rather than `next build` directly: it also
-      # renders apps/web/out/portfolio.pdf, which ships in the Pages artifact.
-      - name: Build with Next.js
-        run: pnpm --filter @rst0070/web build
-        env:
-          # The chat widget's backend (apps/ai-backend), inlined into the
-          # client bundle. Public by design; the Worker holds no secrets the
-          # browser can reach. Without it the widget is not rendered, so the
-          # deployed URL is the fallback until the repository variable is set.
-          NEXT_PUBLIC_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps/web/out
+          path: ./apps/web/dist
 
   # Deployment job
   deploy:

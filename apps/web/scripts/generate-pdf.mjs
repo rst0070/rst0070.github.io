@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Renders the exported /portfolio route to out/portfolio.pdf with headless
- * Chrome. Runs after `next build`, so the PDF lands inside the directory the
+ * Renders the prerendered /portfolio route to dist/portfolio.pdf with headless
+ * Chrome. Runs after the prerender (scripts/prerender.ts), so the PDF lands inside the directory the
  * Pages workflow uploads and the download button on the page resolves to a
  * real static asset.
  *
- * The exported HTML uses root-absolute asset paths, which file:// can't
- * resolve, so out/ is served over a throwaway localhost server first.
+ * The built HTML uses root-absolute asset paths, which file:// can't
+ * resolve, so dist/ is served over a throwaway localhost server first.
  */
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url'
 import puppeteer from 'puppeteer'
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)))
-const OUT_DIR = path.join(ROOT, 'out')
+const OUT_DIR = path.join(ROOT, 'dist')
 const PDF_PATH = path.join(OUT_DIR, 'portfolio.pdf')
 const ROUTE = '/portfolio'
 
@@ -50,12 +50,12 @@ async function isFile(candidate) {
 }
 
 /**
- * Next's static export writes `/portfolio` as `portfolio.html`, and the root
+ * The prerender writes `/portfolio` as `portfolio.html`, and the root
  * as `index.html`. Try both shapes before giving up.
  */
 async function resolveFile(urlPath) {
   const resolved = path.resolve(OUT_DIR, `.${urlPath}`)
-  // Refuse anything that escapes out/ via `..` segments.
+  // Refuse anything that escapes dist/ via `..` segments.
   if (resolved !== OUT_DIR && !resolved.startsWith(OUT_DIR + path.sep)) return null
 
   for (const candidate of [resolved, `${resolved}.html`, path.join(resolved, 'index.html')]) {
@@ -168,7 +168,7 @@ const FOOTER_TEMPLATE = `
 
 async function main() {
   if (!(await isFile(path.join(OUT_DIR, 'portfolio.html')))) {
-    throw new Error(`out/portfolio.html not found — run \`next build\` before ${path.basename(process.argv[1])}.`)
+    throw new Error(`dist/portfolio.html not found — run the prerender before ${path.basename(process.argv[1])}.`)
   }
 
   const server = await startServer()
@@ -180,7 +180,7 @@ async function main() {
   try {
     const page = await browser.newPage()
 
-    // layout.tsx's inline theme script reads localStorage before falling back
+    // index.html's inline theme script reads localStorage before falling back
     // to the OS preference. Seed both so the PDF is deterministically light
     // whatever the build machine prefers.
     await page.evaluateOnNewDocument(() => {
@@ -215,7 +215,7 @@ async function main() {
     })
 
     const { size } = await stat(PDF_PATH)
-    console.log(`Wrote out/portfolio.pdf (${(size / 1024 / 1024).toFixed(1)} MB)`)
+    console.log(`Wrote dist/portfolio.pdf (${(size / 1024 / 1024).toFixed(1)} MB)`)
   } finally {
     await browser.close()
     server.close()
