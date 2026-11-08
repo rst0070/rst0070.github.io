@@ -4,7 +4,8 @@ Personal notes and portfolio, published at [rst0070.github.io](https://rst0070.g
 with a chat assistant that answers questions from the site's own content and cites the
 notes it used.
 
-- **The site is static.** Next.js exports plain HTML at build time and GitHub Pages serves it.
+- **The site is static.** Vite and a prerender script write plain HTML at build time and
+  GitHub Pages serves it. Only small islands (theme, TOC, chat) run in the browser.
 - **The assistant is one Cloudflare Worker** on the Free plan: Workers AI for embeddings and
   chat, Vectorize for the search index. No database, no sessions. The browser holds the
   conversation and sends it back every turn.
@@ -13,7 +14,7 @@ notes it used.
 
 ```mermaid
 flowchart LR
-    md["content/*.md"] -->|next build| pages[GitHub Pages]
+    md["content/*.md"] -->|"vite build + prerender"| pages[GitHub Pages]
     md -->|"CI: chunk + embed"| vec[(Vectorize)]
     pages -->|"POST /chat"| worker[Worker]
     worker --> vec
@@ -26,7 +27,7 @@ flowchart LR
 ```text
 content/                 # the writing: notes/<yy>/<mm-dd-slug>.md and portfolio.md
 apps/
-├── web/                 # Next.js site, static export, renders content/ and hosts the chat widget
+├── web/                 # the site: React pages prerendered by Vite, renders content/ and hosts the chat widget
 └── ai-backend/          # Cloudflare Worker: /chat (RAG over the notes) and /admin/reindex
 packages/
 └── content/             # note types, slug rules and loaders shared by the site and the Worker

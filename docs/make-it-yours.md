@@ -7,8 +7,9 @@ Cloudflare and GitHub setup is most of it.
 ## 1. Fork and rename
 
 A GitHub *user site* must live in a repo named `<user>.github.io`. That is what keeps
-`basePath` empty in `apps/web/next.config.ts`. A project site (`<user>.github.io/<repo>`)
-needs a `basePath`, and every root-absolute asset path in `content/` would need it too.
+Vite's `base` at its default `/` in `apps/web/vite.config.ts`. A project site
+(`<user>.github.io/<repo>`) needs a `base`, every link in `apps/web/src/pages/` would need
+the prefix, and so would every root-absolute asset path in `content/`.
 
 ```sh
 gh repo fork rst0070/rst0070.github.io --clone --fork-name <user>.github.io
@@ -58,31 +59,43 @@ What the model is told it is answering about:
 +        'You answer questions about <user>.github.io, the personal site of <Name> (<user>): its notes and the portfolio.',
 ```
 
-The site's name, description, canonical URL, and analytics:
+The site's name, description, canonical URL, and title template:
 
 ```diff
- # apps/web/src/app/layout.tsx
--const siteName = "rst0070 - notes";
--const siteDescription =
--  "Notes on software engineering, machine learning, and infrastructure by rst0070.";
-+const siteName = "<user> - notes";
-+const siteDescription = "...";
+ # apps/web/src/head.ts
+-export const baseUrl = 'https://rst0070.github.io'
+-export const siteName = 'rst0070 - notes'
++export const baseUrl = 'https://<user>.github.io'
++export const siteName = '<user> - notes'
  ...
--const gaMeasurementId = "G-CDVVPEEMR0";
-+const gaMeasurementId = "G-XXXXXXXXXX";   // or remove the three gtag lines in <head>
+-    return `${title} | rst0070`
++    return `${title} | <user>`
 ```
 
+The author name in the notes' JSON-LD, the header and footer:
+
 ```diff
- # apps/web/src/app/sitemap.ts
--export const baseUrl = 'https://rst0070.github.io'
-+export const baseUrl = 'https://<user>.github.io'
+ # apps/web/src/routes.ts, apps/web/src/pages/Layout.tsx, apps/web/src/pages/Home.tsx
+-rst0070
++<user>
+```
+
+Analytics, in the document template every page is written into:
+
+```diff
+ # apps/web/index.html
+-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDVVPEEMR0"></script>
++    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+ ...
+-gtag('config', 'G-CDVVPEEMR0');
++gtag('config', 'G-XXXXXXXXXX');   // or remove both gtag scripts
 ```
 
 The portfolio page carries a `Person` JSON-LD block and its own metadata. Rewrite the
 constants at the top of the file, and the download name:
 
 ```diff
- # apps/web/src/app/portfolio/page.tsx
+ # apps/web/src/pages/Portfolio.tsx
 -const title = 'Wonbin Kim - AI Engineer | Portfolio'
 -const description = 'Portfolio of Wonbin Kim — ...'
 -const jsonLd = { '@type': 'Person', name: 'Wonbin Kim', ... }
@@ -104,14 +117,14 @@ The PDF footer and the Worker URL the site falls back to when no variable is set
 
 ```diff
  # .github/workflows/deploy-web.yaml
--          NEXT_PUBLIC_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
-+          NEXT_PUBLIC_AI_API_URL: ${{ vars.AI_BACKEND_URL }}
+-          VITE_AI_API_URL: ${{ vars.AI_BACKEND_URL || 'https://rst0070-ai-backend.kwb0711.workers.dev' }}
++          VITE_AI_API_URL: ${{ vars.AI_BACKEND_URL }}
 ```
 
 The empty-state suggestions in the widget mention my topics:
 
 ```diff
- # apps/web/src/app/_chat/chat-panel.tsx
+ # apps/web/src/islands/chat/chat-panel.tsx
 -const SITE_SUGGESTIONS = ['What does the author work on?', 'Which notes are about Kubernetes?'];
 +const SITE_SUGGESTIONS = ['What does the author work on?', 'Which notes are about <topic>?'];
 ```
@@ -123,10 +136,9 @@ Files to delete, not edit. They verify *my* ownership with Google, Naver, and Ad
 -├── ads.txt
 -├── google46bad5644771cd27.html
 -├── naver1e2feb11078d7ad32b6f3b4e53609e3c.html
- ├── og-image.jpg                # replace with yours, 1254×1254 is what layout.tsx declares
- └── assets/                     # my note images and portfolio media, replace with yours
- apps/web/src/app/
- └── icon.jpg                    # replace: the favicon
+ ├── icon.jpg                    # replace: the favicon
+├── og-image.jpg                # replace with yours, 1254×1254 is what src/head.ts declares
+└── assets/                     # my note images and portfolio media, replace with yours
 ```
 
 And the content itself:
@@ -165,7 +177,7 @@ Settings → Environments, restricted to `main`, and add:
 | Repository variable | `AI_BACKEND_URL` | `https://<user>-ai-backend.<subdomain>.workers.dev`, shown after the first deploy |
 
 `AI_BACKEND_URL` does double duty: the index job posts to it, and the site build inlines it
-into the widget as `NEXT_PUBLIC_AI_API_URL`.
+into the widget as `VITE_AI_API_URL`.
 
 Then Settings → Pages → Source: **GitHub Actions**. The Pages workflow uploads its own
 artifact and needs no branch.
@@ -188,7 +200,7 @@ set AI_BACKEND_URL
 Actions -> ai-backend -> Run workflow, reindex: all
   deploy
   index                 # embeds every note, a few minutes
-Actions -> Deploy Next.js site to Pages -> Run workflow
+Actions -> Deploy site to Pages -> Run workflow
   build                 # now inlines the real URL, the widget appears
 ```
 
